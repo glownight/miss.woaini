@@ -168,7 +168,7 @@ a:hover {
 .table-header,
 .track-row {
   display: grid;
-  grid-template-columns: 1fr 120px 80px 200px;
+  grid-template-columns: 1fr 120px;
   align-items: center;
 }
 .table-header {
@@ -191,6 +191,22 @@ a:hover {
 }
 .track-title {
   color: #dde4e2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.track-title:hover {
+  color: var(--accent);
+}
+.track-title::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: inline-block;
 }
 .dot {
   width: 6px;
@@ -447,6 +463,6 @@ a:hover {
   }
   .table-header,
   .track-row {
-    grid-template-columns: 1fr 100px 60px 160px;
+    grid-template-columns: 1fr 100px;
   }
 }

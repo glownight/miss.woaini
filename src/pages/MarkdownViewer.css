@@ -1,0 +1,95 @@
+.markdown-viewer {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.markdown-header {
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.back-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.back-link:hover {
+  color: #fff;
+}
+
+.markdown-content h1 {
+  color: #fff;
+  font-size: 28px;
+  margin: 20px 0 15px 0;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--accent);
+}
+
+.markdown-content h2 {
+  color: #e6e6e6;
+  font-size: 22px;
+  margin: 18px 0 12px 0;
+  padding-left: 10px;
+  border-left: 3px solid var(--accent);
+}
+
+.markdown-content h3 {
+  color: #d0d0d0;
+  font-size: 18px;
+  margin: 15px 0 10px 0;
+}
+
+.markdown-content p {
+  margin: 10px 0;
+  color: var(--text);
+}
+
+.markdown-content li {
+  margin: 5px 0;
+  color: var(--text);
+  list-style-type: disc;
+  margin-left: 20px;
+}
+
+.markdown-content strong {
+  color: #fff;
+  font-weight: 700;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-weak);
+}
+
+.error {
+  color: #ff6b6b;
+}
+
+/* 响应式设计 */
+@media (max-width: 860px) {
+  .markdown-viewer {
+    margin: 10px;
+    padding: 15px;
+  }
+  
+  .markdown-content h1 {
+    font-size: 24px;
+  }
+  
+  .markdown-content h2 {
+    font-size: 20px;
+  }
+  
+  .markdown-content h3 {
+    font-size: 16px;
+  }
+}

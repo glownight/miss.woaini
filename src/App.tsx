@@ -2,22 +2,21 @@ import { Routes, Route, Link, Navigate, useLocation } from "react-router-dom";
 import "./App.css";
 import Fireworks from "./components/Fireworks";
 import TypeWriter from "./components/TypeWriter";
+import MarkdownViewer from "./pages/MarkdownViewer";
 import { useState } from "react";
 
 function App() {
   const location = useLocation();
   const [fireworksOn, setFireworksOn] = useState(false);
   const musicTracks = [
-    { title: "Html", plays: "熟悉", comments: "0" },
-    { title: "Css", plays: "熟悉", comments: "0" },
-    { title: "Javascript", plays: "熟悉", comments: "0" },
-    { title: "Typescript", plays: "熟悉", comments: "0" },
-    { title: "React", plays: "熟悉", comments: "0" },
-    { title: "Vue", plays: "熟悉", comments: "0" },
-    { title: "Node", plays: "熟悉", comments: "0" },
-    { title: "Taro", plays: "熟悉", comments: "0" },
-    { title: "小程序", plays: "熟悉", comments: "0" },
-    { title: "C++", plays: "熟悉", comments: "0" },
+    { title: "Cagayake", plays: "34653", comments: "0" },
+    { title: "Dont stop believin", plays: "28778", comments: "0" },
+    { title: "Fuwa Fuwa Time", plays: "19871", comments: "0" },
+    { title: "Fude Pen ~Ball Pen~", plays: "7798", comments: "0" },
+    { title: "Girly Storm 疾走 Stick", plays: "6314", comments: "0" },
+    { title: "Gohan wa Okazu", plays: "5906", comments: "0" },
+    { title: "Honey sweet tea time", plays: "4362", comments: "0" },
+    { title: "Listen!!", plays: "1308", comments: "0" },
   ];
 
   // const shortTracks = [
@@ -56,8 +55,16 @@ function App() {
     },
   ];
 
-  const isHome = location.pathname === "/" || location.pathname === "/home";
+  // 将歌曲标题转换为文件名格式
+  const getMarkdownFilename = (title: string) => {
+    return title
+      .replace(/\s+/g, "-")
+      .replace(/[~!]/g, "")
+      .replace(/'/g, "")
+      .replace(/\s*-\s*/g, "-");
+  };
 
+  const isHome = location.pathname === "/" || location.pathname === "/home";
   // 统一外链格式：去掉首尾反引号/空格，若无协议则自动补 https://
   const toUrl = (url: string) => {
     if (!url) return "#";
@@ -74,14 +81,20 @@ function App() {
         <div className="container header-inner">
           <div className="header-left">
             <h1 className="site-title">
-              <TypeWriter text="欢迎来到我的主页~" />
+              <TypeWriter text="热爱可抵岁月漫长~" />
             </h1>
             <div className="subnav">
               <Link className={isHome ? "active" : ""} to="/">
-                主页
+                「荒诞故事」
               </Link>
               <Link className={!isHome ? "active" : ""} to="/projects">
-                项目集
+                印记
+              </Link>
+              <Link className={!isHome ? "active" : ""} to="/projects">
+                奔走
+              </Link>
+              <Link className={!isHome ? "active" : ""} to="/projects">
+                多言
               </Link>
             </div>
           </div>
@@ -115,30 +128,38 @@ function App() {
                 <>
                   {/* 公告板（主页） */}
                   <section className="card notice-card">
-                    <section className="card profile-card">
-                      <div className="profile-header">
-                        <h3 className="profile-name">sl</h3>
-                        <p className="profile-subtitle">前端开发</p>
-                      </div>
-                    </section>
+                    <div className="notice-box">
+                      <p>我的音乐在豆瓣上的所有作品都是免费的。</p>
+                      <p>
+                        我是一个音乐人，我的音乐风格比较多样化，主要以流行、摇滚、民谣为主。
+                        我的音乐作品都是原创的，希望大家能够喜欢。
+                        我会不定期的发布新的音乐作品，敬请期待。
+                      </p>
+                      <p>
+                        如果你喜欢我的音乐，可以关注我的豆瓣音乐人主页，
+                        也可以在各大音乐平台搜索我的名字。 谢谢大家的支持！
+                      </p>
+                      <p>联系方式：邮箱</p>
+                    </div>
                   </section>
 
-                  {/* 个人优势（主页内容） */}
                   <section className="card music-card">
                     <div className="section-header">
-                      <h2>「个人优势」</h2>
+                      <h2>「更新中」</h2>
                     </div>
                     <div className="music-table">
                       <div className="table-header">
-                        <span className="col-title">技能</span>
-                        <span className="col-plays">掌握程度</span>
+                        <span className="col-title">歌曲名</span>
+                        <span className="col-plays">播放数</span>
                       </div>
                       {musicTracks.map((track, i) => (
                         <div key={i} className="track-row">
-                          <div className="track-info">
-                            <span className="dot" />
-                            <span className="track-title">{track.title}</span>
-                          </div>
+                          <Link
+                            to={`/song/${getMarkdownFilename(track.title)}`}
+                            className="track-title"
+                          >
+                            {track.title}
+                          </Link>
                           <span className="track-plays">{track.plays}</span>
                         </div>
                       ))}
@@ -213,6 +234,9 @@ function App() {
                 </>
               }
             />
+
+            {/* MD文档页面路由 */}
+            <Route path="/song/:filename" element={<MarkdownViewer />} />
 
             {/* 兼容 /home 与未知路由 */}
             <Route path="/home" element={<Navigate to="/" replace />} />
