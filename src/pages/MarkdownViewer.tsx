@@ -14,7 +14,7 @@ const MarkdownViewer = () => {
       
       try {
         setLoading(true);
-        // 动态导入MD文件
+        // 动态导入MD文件，使用原始文件名
         const mdModule = await import(`../datas/mds/${filename}.md?raw`);
         setContent(mdModule.default);
       } catch (err) {
