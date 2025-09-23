@@ -88,13 +88,13 @@ function App() {
               <Link className={isHome ? "active" : ""} to="/">
                 「荒诞故事」
               </Link>
-              <Link className={!isHome ? "active" : ""} to="/projects">
+              <Link className={!isHome ? "active" : ""} to="">
                 印记
               </Link>
-              <Link className={!isHome ? "active" : ""} to="/projects">
+              <Link className={!isHome ? "active" : ""} to="">
                 奔走
               </Link>
-              <Link className={!isHome ? "active" : ""} to="/projects">
+              <Link className={!isHome ? "active" : ""} to="">
                 多言
               </Link>
             </div>
