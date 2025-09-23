@@ -1,7 +1,7 @@
 import { Routes, Route, Link, Navigate, useLocation } from "react-router-dom";
 import "./App.css";
 import Fireworks from "./components/Fireworks";
-import TypeWriter from "./components/TypeWriter";
+// import TypeWriter from "./components/TypeWriter";
 import MarkdownViewer from "./pages/MarkdownViewer";
 import { getMdFileList, titleToFileName } from "./utils/mdUtils";
 import { useState, useEffect } from "react";
@@ -82,7 +82,7 @@ function App() {
         <div className="container header-inner">
           <div className="header-left">
             <h1 className="site-title">
-              <TypeWriter text="热爱可抵岁月漫长~" />
+              {/* <TypeWriter text="热爱可抵岁月漫长~" /> */}
             </h1>
             <div className="subnav">
               <Link className={isHome ? "active" : ""} to="/">
@@ -135,14 +135,14 @@ function App() {
                   </section>
 
                   <section className="card music-card">
-                    <div className="section-header">
+                    {/* <div className="section-header">
                       <h2>「个人发表」</h2>
-                    </div>
+                    </div> */}
                     <div className="music-table">
-                      <div className="table-header">
+                      {/* <div className="table-header">
                         <span className="col-title">文章标题</span>
-                        {/* <span className="col-plays">阅读数</span> */}
-                      </div>
+                        <span className="col-plays">阅读数</span>
+                      </div> */}
                       {musicTracks.map((track, i) => (
                         <div key={i} className="track-row">
                           <Link
