@@ -39,9 +39,9 @@ a:hover {
 }
 
 .container {
-  max-width: 980px;
+  max-width: 1600px;
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 0 20px;
 }
 
 /* 顶部黑条 */
@@ -117,16 +117,27 @@ a:hover {
   border: 2px solid rgba(255, 255, 255, 0.15);
 }
 
-/* 两栏布局 */
+/* 优化布局 */
 .columns {
-  display: grid;
-  grid-template-columns: 3fr 480px;
+  display: flex;
+  flex-direction: row;
   gap: 40px;
-  padding: 20px 0 80px;
+  width: 100%;
+  padding: 20px;
+  align-items: flex-start;
 }
 
-/* 右侧侧栏 */
+.main-left {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 如果sidebar存在，调整比例 */
 .sidebar-right {
+  flex: 0.8;
+  min-width: 350px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -160,6 +171,13 @@ a:hover {
   transition: all 0.2s ease;
   border-bottom: 2px solid transparent;
   white-space: nowrap;
+  outline: none;
+}
+
+.tab-btn:focus {
+  outline: none;
+  border: none;
+  box-shadow: none;
 }
 
 .tab-btn:hover {
@@ -217,12 +235,19 @@ a:hover {
   border: 1px solid var(--line);
 }
 
-/* 卡片 */
+/* 卡片优化 */
 .card {
   background: var(--panel);
-  /* border: 1px solid var(--line); */
-  border-radius: 6px;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2) inset;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  transition: box-shadow 0.3s ease;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
 }
 .card + .card {
   margin-top: 16px;
@@ -243,16 +268,30 @@ a:hover {
   font-size: 15px;
 }
 
-/* 公告板 */
+/* 公告板优化 */
+.notice-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 .notice-card .notice-box {
-  padding: 12px 14px;
+  padding: 32px 40px;
   background: var(--panel-2);
   color: #c8cfcd;
-  min-width: 700px;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
+
 .notice-card .notice-box p {
-  margin: 4px 0;
-  line-height: 1.6;
+  margin: 12px 0;
+  line-height: 1.8;
+  font-size: 16px;
+  color: var(--text);
 }
 
 /* 音乐表格 */
@@ -543,14 +582,28 @@ a:hover {
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
 
-/* 响应式 */
+/* 响应式优化 */
 @media (max-width: 860px) {
   .columns {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    gap: 20px;
+    padding: 16px;
   }
-  .sidebar-right {
-    order: -1; /* 在移动端将侧栏放在上方 */
+  
+  .main-left {
+    flex: none;
+    width: 100%;
   }
+  
+  .notice-card .notice-box {
+    padding: 24px 20px;
+    text-align: center;
+  }
+  
+  .notice-card .notice-box p {
+    font-size: 14px;
+  }
+  
   .header-inner {
     align-items: center;
   }
