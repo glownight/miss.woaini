@@ -5,7 +5,7 @@
   --panel: #111615;
   --panel-2: #0e1312;
   --primary: #372627; /* 豆瓣音乐人页头栗红 */
-  --text: #e6e6e6;
+  --text: #746d64;
   --text-weak: #9aa0a4;
   --line: #1c2220;
   --accent: #12b886; /* 绿 */
@@ -589,21 +589,22 @@ a:hover {
     gap: 20px;
     padding: 16px;
   }
-  
+
   .main-left {
     flex: none;
     width: 100%;
   }
-  
+
   .notice-card .notice-box {
     padding: 24px 20px;
     text-align: center;
   }
-  
+
   .notice-card .notice-box p {
     font-size: 14px;
+    color: #817665;
   }
-  
+
   .header-inner {
     align-items: center;
   }
