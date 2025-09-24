@@ -120,9 +120,101 @@ a:hover {
 /* 两栏布局 */
 .columns {
   display: grid;
-  grid-template-columns: 1fr 280px;
-  gap: 20px;
+  grid-template-columns: 3fr 480px;
+  gap: 40px;
   padding: 20px 0 80px;
+}
+
+/* 右侧侧栏 */
+.sidebar-right {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  opacity: 0;
+  transition: opacity 2s ease;
+}
+
+.sidebar-right:hover {
+  opacity: 1;
+}
+
+/* Tab卡片 */
+.tab-card {
+  /* 继承基础卡片样式 */
+}
+
+.tab-header {
+  display: flex;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel-2);
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  color: var(--text-weak);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+}
+
+.tab-btn:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.tab-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  background: rgba(18, 184, 134, 0.1);
+}
+
+.tab-content {
+  padding: 16px;
+}
+
+.tab-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.tab-stats .stat-item {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  text-align: center;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tab-stats .stat-number {
+  font-weight: 800;
+  font-size: 18px;
+  color: var(--accent);
+}
+
+.tab-stats .stat-label {
+  color: var(--text-weak);
+  font-size: 12px;
+}
+
+.tab-description {
+  color: var(--text-weak);
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: center;
+  padding: 12px;
+  background: var(--panel-2);
+  border-radius: 6px;
+  border: 1px solid var(--line);
 }
 
 /* 卡片 */
@@ -156,9 +248,11 @@ a:hover {
   padding: 12px 14px;
   background: var(--panel-2);
   color: #c8cfcd;
+  min-width: 700px;
 }
 .notice-card .notice-box p {
   margin: 4px 0;
+  line-height: 1.6;
 }
 
 /* 音乐表格 */
@@ -454,6 +548,9 @@ a:hover {
   .columns {
     grid-template-columns: 1fr;
   }
+  .sidebar-right {
+    order: -1; /* 在移动端将侧栏放在上方 */
+  }
   .header-inner {
     align-items: center;
   }
@@ -465,4 +562,40 @@ a:hover {
   .track-row {
     grid-template-columns: 1fr 100px;
   }
+  .tab-btn {
+    padding: 10px 6px;
+    font-size: 12px;
+  }
+}
+
+/* 分类按钮样式 */
+.category-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.category-btn {
+  padding: 12px 16px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.category-btn:hover {
+  background: var(--panel);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.category-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
 }

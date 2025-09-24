@@ -19,9 +19,34 @@ const MarkdownViewer = () => {
 
       try {
         setLoading(true);
-        // 动态导入MD文件，使用原始文件名
-        const mdModule = await import(`../datas/mds/${filename}.md?raw`);
-        setContent(mdModule.default);
+
+        console.log("加载文件:", filename);
+
+        // 使用 import.meta.glob 来动态加载所有 md 文件
+        const mdFiles = import.meta.glob("../datas/**/*.md", {
+          as: "raw",
+          eager: false,
+        });
+
+        console.log("可用文件:", Object.keys(mdFiles));
+
+        // 查找匹配的文件
+        let targetPath = null;
+        for (const path of Object.keys(mdFiles)) {
+          const pathFileName = path.split("/").pop()?.replace(".md", "") || "";
+          if (pathFileName === filename) {
+            targetPath = path;
+            break;
+          }
+        }
+
+        if (targetPath) {
+          console.log("找到文件:", targetPath);
+          const mdModule = await mdFiles[targetPath]();
+          setContent(mdModule as string);
+        } else {
+          throw new Error(`找不到文件: ${filename}.md`);
+        }
       } catch (err) {
         setError(`无法加载文档: ${filename}.md`);
         console.error("Error loading markdown:", err);

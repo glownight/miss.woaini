@@ -3,16 +3,26 @@ import "./App.css";
 import Fireworks from "./components/Fireworks";
 // import TypeWriter from "./components/TypeWriter";
 import MarkdownViewer from "./pages/MarkdownViewer";
-import { getMdFileList, titleToFileName } from "./utils/mdUtils";
+import {
+  getMdFileList,
+  titleToFileName,
+  getAllCategoriesData,
+  folderConfig,
+} from "./utils/mdUtils";
 import { useState, useEffect } from "react";
 
 function App() {
   const location = useLocation();
   const [fireworksOn, setFireworksOn] = useState(false);
+  const [activeTab, setActiveTab] = useState("all"); // 新增tab状态
+  const [categoriesData, setCategoriesData] = useState<Record<string, any[]>>(
+    {}
+  );
   const [musicTracks, setMusicTracks] = useState<
     Array<{
       title: string;
       fileName: string;
+      folderKey?: string;
       plays: string;
       comments: string;
     }>
@@ -20,6 +30,10 @@ function App() {
 
   // 动态加载MD文件列表
   useEffect(() => {
+    const allCategories = getAllCategoriesData();
+    setCategoriesData(allCategories);
+
+    // 合并所有数据作为默认显示
     const tracks = getMdFileList();
     setMusicTracks(tracks);
   }, []);
@@ -71,6 +85,18 @@ function App() {
     if (!url) return "#";
     const trimmed = url.trim().replace(/^`|`$/g, "");
     return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+  };
+
+  // 根据tab筛选数据
+  const getFilteredTracks = () => {
+    if (activeTab === "all") {
+      return musicTracks;
+    }
+    // 根据文件夹进行筛选
+    if (activeTab in categoriesData) {
+      return categoriesData[activeTab] || [];
+    }
+    return musicTracks;
   };
 
   return (
@@ -127,33 +153,16 @@ function App() {
               path="/"
               element={
                 <>
-                  {/* 公告板（主页） */}
                   <section className="card notice-card">
                     <div className="notice-box">
-                      <p>知足常乐。</p>
-                    </div>
-                  </section>
-
-                  <section className="card music-card">
-                    {/* <div className="section-header">
-                      <h2>「个人发表」</h2>
-                    </div> */}
-                    <div className="music-table">
-                      {/* <div className="table-header">
-                        <span className="col-title">文章标题</span>
-                        <span className="col-plays">阅读数</span>
-                      </div> */}
-                      {musicTracks.map((track, i) => (
-                        <div key={i} className="track-row">
-                          <Link
-                            to={`/song/${getMarkdownFilename(track.title)}`}
-                            className="track-title"
-                          >
-                            {track.title}
-                          </Link>
-                          {/* <span className="track-plays">{track.plays}</span> */}
-                        </div>
-                      ))}
+                      <p>
+                        任何一个你不喜欢又离不开的地方，任何一种你不喜欢又摆脱不了的生活就是监狱。
+                      </p>
+                      <p>
+                        如果你感到痛苦和不自由，希望你心里永远有一团不会熄灭的火焰，不要麻木，不要被同化，
+                      </p>
+                      <p>拼命成为那个有力量破釜沉舟的人。</p>
+                      {/* <p>-《肖申克的救赎》-</p> */}
                     </div>
                   </section>
                 </>
@@ -234,6 +243,49 @@ function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
+
+        {/* Right sidebar with tabs - 始终显示 */}
+        <aside className="sidebar-right">
+          <div className="card tab-card">
+            <div className="tab-header">
+              {Object.entries(folderConfig).map(([key, config]) => (
+                <button
+                  key={key}
+                  className={`tab-btn ${activeTab === key ? "active" : ""}`}
+                  onClick={() => setActiveTab(key)}
+                >
+                  {config.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 文章列表显示在右侧 - 只在选择了具体分类后显示 */}
+          {activeTab !== "all" && (
+            <div className="card music-card">
+              <div className="section-header">
+                <h2>
+                  「
+                  {folderConfig[activeTab as keyof typeof folderConfig]
+                    ?.label || activeTab}
+                  」
+                </h2>
+              </div>
+              <div className="music-table">
+                {getFilteredTracks().map((track, i) => (
+                  <div key={`${activeTab}-${i}`} className="track-row">
+                    <Link
+                      to={`/song/${getMarkdownFilename(track.title)}`}
+                      className="track-title"
+                    >
+                      {track.title}
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </aside>
       </div>
     </div>
   );
