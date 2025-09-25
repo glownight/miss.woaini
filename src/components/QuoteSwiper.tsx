@@ -1,6 +1,6 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, EffectFlip } from "swiper/modules";
+import { Autoplay } from "swiper/modules";
 import "./QuoteSwiper.css";
 
 interface QuoteItem {
@@ -35,26 +35,30 @@ const quoteItems: QuoteItem[] = [
       </div>
     ),
   },
+  {
+    content: (
+      <div className="notice-box">
+        <p>
+          我正在寻找一个能与自己同生共死，能与自己同死共生，能与自己同生共生，能与自己同死共生，能与自己同生共生，能与自己同死共生，能与自己同生共生，能与自己同死共生，能与自己同生共生，能与自己同死共生，能与自己同生共生，能与
+        </p>
+      </div>
+    ),
+  },
 ];
 
 const QuoteSwiper: React.FC = () => {
   return (
     <div className="quote-swiper-container">
       <Swiper
-        modules={[Autoplay, EffectFlip]}
-        effect="flip"
+        modules={[Autoplay]}
         grabCursor={true}
         spaceBetween={30}
         slidesPerView={1}
-        speed={2000}
+        speed={800}
         autoplay={{
           delay: 5000,
           disableOnInteraction: false,
           pauseOnMouseEnter: true,
-        }}
-        flipEffect={{
-          slideShadows: true,
-          limitRotation: true,
         }}
         loop={true}
         className="quote-swiper"
