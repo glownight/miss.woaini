@@ -49,10 +49,6 @@ const quoteItems: QuoteItem[] = [
 const QuoteSwiper: React.FC = () => {
   return (
     <div className="quote-swiper-container">
-      {/* 拖拽测试：鼠标点击并左右拖动切换 - 无平移效果 */}
-      <div style={{ fontSize: "12px", color: "#666", marginBottom: "10px" }}>
-        拖拽测试：鼠标点击并左右拖动切换 - 无平移效果
-      </div>
       <Swiper
         modules={[Autoplay, EffectFade]}
         effect="fade"
