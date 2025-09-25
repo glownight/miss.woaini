@@ -1,5 +1,5 @@
 /* 舒适护眼字体导入 */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600&family=Source+Serif+Pro:wght@400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600&family=Source+Serif+Pro:wght@400;500;600&display=swap");
 
 /* Swiper 基础样式 - 简化版本 + 强制fade效果 */
 .swiper {
@@ -116,7 +116,8 @@
 }
 
 .swiper-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet,
-.swiper-pagination-horizontal.swiper-pagination-bullets .swiper-pagination-bullet {
+.swiper-pagination-horizontal.swiper-pagination-bullets
+  .swiper-pagination-bullet {
   margin: 0 4px;
 }
 
@@ -163,64 +164,90 @@
   padding: 50px 60px 45px 60px;
   margin: 15px;
   min-height: 180px;
-  
+
   /* 真实魔法书羊皮纸背景 */
   background: 
-    /* 古旧斑点效果 */
-    radial-gradient(circle at 25% 25%, rgba(139, 105, 20, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 75% 60%, rgba(101, 67, 33, 0.06) 0%, transparent 50%),
-    radial-gradient(circle at 40% 80%, rgba(160, 82, 45, 0.05) 0%, transparent 50%),
+    /* 古旧斑点效果 */ radial-gradient(
+      circle at 25% 25%,
+      rgba(139, 105, 20, 0.08) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 75% 60%,
+      rgba(101, 67, 33, 0.06) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 40% 80%,
+      rgba(160, 82, 45, 0.05) 0%,
+      transparent 50%
+    ),
     /* 主背景渐变 */
-    linear-gradient(135deg, #f7f3e9 0%, #f1ebe1 25%, #ede6d3 50%, #e8dfc6 75%, #e3d7b7 100%);
-  
+      linear-gradient(
+        135deg,
+        #f7f3e9 0%,
+        #f1ebe1 25%,
+        #ede6d3 50%,
+        #e8dfc6 75%,
+        #e3d7b7 100%
+      );
+
   /* 古书纸张纹理 */
   background-image: 
-    /* 细微纹理 */
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-opacity='0.03'%3E%3Cpolygon fill='%23000' points='50 0 60 40 100 50 60 60 50 100 40 60 0 50 40 40'/%3E%3C/g%3E%3C/svg%3E"),
+    /* 细微纹理 */ url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-opacity='0.03'%3E%3Cpolygon fill='%23000' points='50 0 60 40 100 50 60 60 50 100 40 60 0 50 40 40'/%3E%3C/g%3E%3C/svg%3E"),
     /* 纸张纹理 */
-    repeating-linear-gradient(45deg, transparent, transparent 1px, rgba(139, 105, 20, 0.02) 1px, rgba(139, 105, 20, 0.02) 2px),
-    repeating-linear-gradient(-45deg, transparent, transparent 1px, rgba(101, 67, 33, 0.015) 1px, rgba(101, 67, 33, 0.015) 2px);
-  
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 1px,
+        rgba(139, 105, 20, 0.02) 1px,
+        rgba(139, 105, 20, 0.02) 2px
+      ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 1px,
+      rgba(101, 67, 33, 0.015) 1px,
+      rgba(101, 67, 33, 0.015) 2px
+    );
+
   /* 深色系装饰边框 - 移除边框 */
   border: none;
-  
+
   /* 深度阴影系统 - 魔法书厚度 */
   box-shadow: 
-    /* 内阴影 - 纸张凹陷感 */
-    inset 0 2px 4px rgba(255, 255, 255, 0.6),
+    /* 内阴影 - 纸张凹陷感 */ inset 0 2px 4px
+      rgba(255, 255, 255, 0.6),
     inset 0 -2px 3px rgba(139, 105, 20, 0.1),
     inset 2px 0 3px rgba(139, 105, 20, 0.05),
     inset -2px 0 3px rgba(139, 105, 20, 0.05),
-    /* 外阴影 - 书籍厚度 */
-    0 3px 6px rgba(61, 48, 32, 0.12),
-    0 6px 12px rgba(61, 48, 32, 0.09),
-    0 12px 24px rgba(61, 48, 32, 0.07),
+    /* 外阴影 - 书籍厚度 */ 0 3px 6px rgba(61, 48, 32, 0.12),
+    0 6px 12px rgba(61, 48, 32, 0.09), 0 12px 24px rgba(61, 48, 32, 0.07),
     0 24px 48px rgba(61, 48, 32, 0.05),
-    /* 护眼光晕 */
-    0 0 30px rgba(138, 148, 144, 0.1);
-  
+    /* 护眼光晕 */ 0 0 30px rgba(138, 148, 144, 0.1);
+
   border-radius: 18px;
   color: #2c1810;
   text-align: left;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  
+
   /* 3D 魔法书透视 */
   transform: perspective(1500px) rotateX(2deg) rotateY(-1deg);
   transform-origin: center center;
   transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  
+
   /* 确保3D变换上下文 */
   transform-style: preserve-3d;
-  
+
   /* 魔法光泽效果 */
   overflow: hidden;
 }
 
 /* 魔法书页装饰边框 - 移除边框保留装饰 */
 .quote-slide .notice-box::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 20px;
   left: 20px;
@@ -229,13 +256,33 @@
   border: none;
   border-radius: 14px;
   background: 
-    /* 角落装饰 */
-    radial-gradient(circle at 40px 40px, #6b7975 3px, transparent 3px),
-    radial-gradient(circle at calc(100% - 40px) 40px, #6b7975 3px, transparent 3px),
-    radial-gradient(circle at 40px calc(100% - 40px), #6b7975 3px, transparent 3px),
-    radial-gradient(circle at calc(100% - 40px) calc(100% - 40px), #6b7975 3px, transparent 3px),
+    /* 角落装饰 */ radial-gradient(
+      circle at 40px 40px,
+      #6b7975 3px,
+      transparent 3px
+    ),
+    radial-gradient(
+      circle at calc(100% - 40px) 40px,
+      #6b7975 3px,
+      transparent 3px
+    ),
+    radial-gradient(
+      circle at 40px calc(100% - 40px),
+      #6b7975 3px,
+      transparent 3px
+    ),
+    radial-gradient(
+      circle at calc(100% - 40px) calc(100% - 40px),
+      #6b7975 3px,
+      transparent 3px
+    ),
     /* 光效 */
-    linear-gradient(45deg, transparent 30%, rgba(138, 148, 144, 0.08) 50%, transparent 70%);
+      linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(138, 148, 144, 0.08) 50%,
+        transparent 70%
+      );
   background-size: 80px 80px, 80px 80px, 80px 80px, 80px 80px, 100% 100%;
   background-repeat: no-repeat;
   pointer-events: none;
@@ -244,20 +291,22 @@
 
 /* 魔法书页光芒效果 */
 .quote-slide .notice-box::after {
-  content: '';
+  content: "";
   position: absolute;
   top: -3px;
   left: -3px;
   right: -3px;
   bottom: -3px;
-  background: linear-gradient(45deg, 
-    rgba(138, 148, 144, 0.3), 
-    transparent 20%, 
-    transparent 40%, 
-    rgba(107, 121, 117, 0.2) 50%, 
-    transparent 60%, 
-    transparent 80%, 
-    rgba(138, 148, 144, 0.3));
+  background: linear-gradient(
+    45deg,
+    rgba(138, 148, 144, 0.3),
+    transparent 20%,
+    transparent 40%,
+    rgba(107, 121, 117, 0.2) 50%,
+    transparent 60%,
+    transparent 80%,
+    rgba(138, 148, 144, 0.3)
+  );
   border-radius: 21px;
   opacity: 0;
   transition: opacity 0.8s ease;
@@ -267,17 +316,14 @@
 
 /* 魔法书悬停效果 */
 .quote-slide .notice-box:hover {
-  transform: perspective(1500px) rotateX(0deg) rotateY(0deg) translateY(-10px) scale(1.02);
-  box-shadow: 
-    inset 0 3px 6px rgba(255, 255, 255, 0.8),
+  transform: perspective(1500px) rotateX(0deg) rotateY(0deg) translateY(-10px)
+    scale(1.02);
+  box-shadow: inset 0 3px 6px rgba(255, 255, 255, 0.8),
     inset 0 -3px 4px rgba(139, 105, 20, 0.15),
     inset 3px 0 4px rgba(139, 105, 20, 0.08),
-    inset -3px 0 4px rgba(139, 105, 20, 0.08),
-    0 6px 12px rgba(61, 48, 32, 0.18),
-    0 12px 24px rgba(61, 48, 32, 0.14),
-    0 24px 48px rgba(61, 48, 32, 0.1),
-    0 48px 96px rgba(61, 48, 32, 0.06),
-    0 0 50px rgba(138, 148, 144, 0.2);
+    inset -3px 0 4px rgba(139, 105, 20, 0.08), 0 6px 12px rgba(61, 48, 32, 0.18),
+    0 12px 24px rgba(61, 48, 32, 0.14), 0 24px 48px rgba(61, 48, 32, 0.1),
+    0 48px 96px rgba(61, 48, 32, 0.06), 0 0 50px rgba(138, 148, 144, 0.2);
 }
 
 .quote-slide .notice-box:hover::after {
@@ -286,8 +332,13 @@
 }
 
 @keyframes magicShimmer {
-  0%, 100% { opacity: 0.2; }
-  50% { opacity: 0.6; }
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.6;
+  }
 }
 
 /* 整个容器的水波切换效果 - 兼容标准滑动 */
@@ -335,14 +386,16 @@
   line-height: 1.8;
   font-size: 16px;
   color: #7a8680;
-  font-family: 'Noto Serif SC', 'Source Serif Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-family: "Noto Serif SC", "Source Serif Pro", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei",
+    sans-serif;
   font-weight: 400;
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.2);
   position: relative;
   z-index: 5;
   letter-spacing: 0.2px;
   word-spacing: 0.5px;
-  
+
   /* 默认可见状态 - 为碎片动画做准备 */
   opacity: 1;
   transform: translateY(0) scale(1) rotateZ(0deg);
@@ -363,14 +416,18 @@
   transform-origin: center center !important;
 }
 
-.quote-swiper .swiper-slide:not(.swiper-slide-active) .notice-box p:first-child::first-letter {
+.quote-swiper
+  .swiper-slide:not(.swiper-slide-active)
+  .notice-box
+  p:first-child::first-letter {
   animation: firstLetterShatter 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
   animation-fill-mode: forwards !important;
   transform-origin: center center !important;
 }
 
 .quote-swiper .swiper-slide-active .notice-box p:first-child::first-letter {
-  animation: firstLetterReassemble 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards !important;
+  animation: firstLetterReassemble 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+    forwards !important;
   animation-fill-mode: forwards !important;
   transform-origin: center center !important;
 }
@@ -391,24 +448,24 @@
   line-height: 48px;
   padding: 6px 10px 0 0;
   margin: 0 8px 2px 0;
-  font-family: 'Noto Serif SC', 'Source Serif Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: "Noto Serif SC", "Source Serif Pro", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-weight: 500;
   color: #5a6b65;
-  
+
   /* 柔和文字效果 */
-  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.3), 0 0 1px rgba(90, 107, 101, 0.1);
-  
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.3),
+    0 0 1px rgba(90, 107, 101, 0.1);
+
   /* 柔和装饰框 - 移除边框 */
   border: none;
   border-radius: 6px;
   background-color: rgba(250, 248, 245, 0.5);
-  
+
   /* 动画延迟 */
   animation-delay: 0.3s;
   position: relative;
 }
-
-
 
 /* 字体碎片效果 - 原来字体碎掉 */
 @keyframes textShatter {
@@ -422,16 +479,14 @@
     opacity: 0.9;
     transform: translateY(-3px) scale(1.02) rotateZ(1deg);
     filter: blur(0.5px) brightness(1.1);
-    text-shadow: 
-      2px 1px 3px rgba(122, 134, 128, 0.3),
+    text-shadow: 2px 1px 3px rgba(122, 134, 128, 0.3),
       -1px 2px 2px rgba(122, 134, 128, 0.2);
   }
   50% {
     opacity: 0.6;
     transform: translateY(2px) scale(0.95) rotateZ(-2deg);
     filter: blur(1px) brightness(0.9);
-    text-shadow: 
-      3px -2px 4px rgba(122, 134, 128, 0.4),
+    text-shadow: 3px -2px 4px rgba(122, 134, 128, 0.4),
       -2px 3px 3px rgba(122, 134, 128, 0.3),
       1px 1px 2px rgba(122, 134, 128, 0.2);
   }
@@ -439,8 +494,7 @@
     opacity: 0.3;
     transform: translateY(-1px) scale(0.8) rotateZ(3deg);
     filter: blur(2px) brightness(0.7);
-    text-shadow: 
-      5px -3px 6px rgba(122, 134, 128, 0.5),
+    text-shadow: 5px -3px 6px rgba(122, 134, 128, 0.5),
       -3px 4px 5px rgba(122, 134, 128, 0.4),
       2px -1px 3px rgba(122, 134, 128, 0.3),
       -1px 3px 4px rgba(122, 134, 128, 0.2);
@@ -449,8 +503,7 @@
     opacity: 0;
     transform: translateY(0) scale(0.3) rotateZ(-5deg);
     filter: blur(4px) brightness(0.5);
-    text-shadow: 
-      8px -5px 10px rgba(122, 134, 128, 0.6),
+    text-shadow: 8px -5px 10px rgba(122, 134, 128, 0.6),
       -4px 6px 8px rgba(122, 134, 128, 0.5),
       3px -2px 5px rgba(122, 134, 128, 0.4),
       -2px 4px 6px rgba(122, 134, 128, 0.3),
@@ -464,8 +517,7 @@
     opacity: 0;
     transform: translateY(0) scale(0.3) rotateZ(-5deg);
     filter: blur(4px) brightness(0.5);
-    text-shadow: 
-      8px -5px 10px rgba(122, 134, 128, 0.6),
+    text-shadow: 8px -5px 10px rgba(122, 134, 128, 0.6),
       -4px 6px 8px rgba(122, 134, 128, 0.5),
       3px -2px 5px rgba(122, 134, 128, 0.4),
       -2px 4px 6px rgba(122, 134, 128, 0.3),
@@ -475,8 +527,7 @@
     opacity: 0.3;
     transform: translateY(-1px) scale(0.8) rotateZ(3deg);
     filter: blur(2px) brightness(0.7);
-    text-shadow: 
-      5px -3px 6px rgba(122, 134, 128, 0.5),
+    text-shadow: 5px -3px 6px rgba(122, 134, 128, 0.5),
       -3px 4px 5px rgba(122, 134, 128, 0.4),
       2px -1px 3px rgba(122, 134, 128, 0.3),
       -1px 3px 4px rgba(122, 134, 128, 0.2);
@@ -485,8 +536,7 @@
     opacity: 0.6;
     transform: translateY(2px) scale(0.95) rotateZ(-2deg);
     filter: blur(1px) brightness(0.9);
-    text-shadow: 
-      3px -2px 4px rgba(122, 134, 128, 0.4),
+    text-shadow: 3px -2px 4px rgba(122, 134, 128, 0.4),
       -2px 3px 3px rgba(122, 134, 128, 0.3),
       1px 1px 2px rgba(122, 134, 128, 0.2);
   }
@@ -494,8 +544,7 @@
     opacity: 0.9;
     transform: translateY(-3px) scale(1.02) rotateZ(1deg);
     filter: blur(0.5px) brightness(1.1);
-    text-shadow: 
-      2px 1px 3px rgba(122, 134, 128, 0.3),
+    text-shadow: 2px 1px 3px rgba(122, 134, 128, 0.3),
       -1px 2px 2px rgba(122, 134, 128, 0.2);
   }
   100% {
@@ -518,49 +567,40 @@
     opacity: 0.9;
     transform: scale(1.05) rotateZ(2deg) translateX(-2px) translateY(-3px);
     filter: blur(0.5px) brightness(1.1);
-    text-shadow: 
-      3px 2px 5px rgba(90, 107, 101, 0.4),
+    text-shadow: 3px 2px 5px rgba(90, 107, 101, 0.4),
       -2px 3px 4px rgba(90, 107, 101, 0.3);
   }
   40% {
     opacity: 0.7;
     transform: scale(0.9) rotateZ(-3deg) translateX(3px) translateY(2px);
     filter: blur(1px) brightness(0.9);
-    text-shadow: 
-      5px -3px 7px rgba(90, 107, 101, 0.5),
-      -3px 4px 6px rgba(90, 107, 101, 0.4),
-      2px 1px 3px rgba(90, 107, 101, 0.3);
+    text-shadow: 5px -3px 7px rgba(90, 107, 101, 0.5),
+      -3px 4px 6px rgba(90, 107, 101, 0.4), 2px 1px 3px rgba(90, 107, 101, 0.3);
   }
   60% {
     opacity: 0.5;
     transform: scale(0.7) rotateZ(4deg) translateX(-4px) translateY(-1px);
     filter: blur(2px) brightness(0.8);
-    text-shadow: 
-      7px -4px 9px rgba(90, 107, 101, 0.6),
-      -4px 5px 8px rgba(90, 107, 101, 0.5),
-      3px -1px 5px rgba(90, 107, 101, 0.4),
+    text-shadow: 7px -4px 9px rgba(90, 107, 101, 0.6),
+      -4px 5px 8px rgba(90, 107, 101, 0.5), 3px -1px 5px rgba(90, 107, 101, 0.4),
       -1px 3px 4px rgba(90, 107, 101, 0.3);
   }
   80% {
     opacity: 0.2;
     transform: scale(0.4) rotateZ(-6deg) translateX(6px) translateY(4px);
     filter: blur(3px) brightness(0.6);
-    text-shadow: 
-      10px -6px 12px rgba(90, 107, 101, 0.7),
+    text-shadow: 10px -6px 12px rgba(90, 107, 101, 0.7),
       -5px 7px 10px rgba(90, 107, 101, 0.6),
-      4px -2px 7px rgba(90, 107, 101, 0.5),
-      -2px 4px 6px rgba(90, 107, 101, 0.4),
+      4px -2px 7px rgba(90, 107, 101, 0.5), -2px 4px 6px rgba(90, 107, 101, 0.4),
       1px 1px 3px rgba(90, 107, 101, 0.3);
   }
   100% {
     opacity: 0;
     transform: scale(0.2) rotateZ(8deg) translateX(-8px) translateY(-6px);
     filter: blur(5px) brightness(0.4);
-    text-shadow: 
-      15px -8px 15px rgba(90, 107, 101, 0.8),
+    text-shadow: 15px -8px 15px rgba(90, 107, 101, 0.8),
       -6px 9px 12px rgba(90, 107, 101, 0.7),
-      5px -3px 9px rgba(90, 107, 101, 0.6),
-      -3px 5px 8px rgba(90, 107, 101, 0.5),
+      5px -3px 9px rgba(90, 107, 101, 0.6), -3px 5px 8px rgba(90, 107, 101, 0.5),
       2px -1px 5px rgba(90, 107, 101, 0.4);
   }
 }
@@ -571,49 +611,40 @@
     opacity: 0;
     transform: scale(0.2) rotateZ(8deg) translateX(-8px) translateY(-6px);
     filter: blur(5px) brightness(0.4);
-    text-shadow: 
-      15px -8px 15px rgba(90, 107, 101, 0.8),
+    text-shadow: 15px -8px 15px rgba(90, 107, 101, 0.8),
       -6px 9px 12px rgba(90, 107, 101, 0.7),
-      5px -3px 9px rgba(90, 107, 101, 0.6),
-      -3px 5px 8px rgba(90, 107, 101, 0.5),
+      5px -3px 9px rgba(90, 107, 101, 0.6), -3px 5px 8px rgba(90, 107, 101, 0.5),
       2px -1px 5px rgba(90, 107, 101, 0.4);
   }
   20% {
     opacity: 0.2;
     transform: scale(0.4) rotateZ(-6deg) translateX(6px) translateY(4px);
     filter: blur(3px) brightness(0.6);
-    text-shadow: 
-      10px -6px 12px rgba(90, 107, 101, 0.7),
+    text-shadow: 10px -6px 12px rgba(90, 107, 101, 0.7),
       -5px 7px 10px rgba(90, 107, 101, 0.6),
-      4px -2px 7px rgba(90, 107, 101, 0.5),
-      -2px 4px 6px rgba(90, 107, 101, 0.4),
+      4px -2px 7px rgba(90, 107, 101, 0.5), -2px 4px 6px rgba(90, 107, 101, 0.4),
       1px 1px 3px rgba(90, 107, 101, 0.3);
   }
   40% {
     opacity: 0.5;
     transform: scale(0.7) rotateZ(4deg) translateX(-4px) translateY(-1px);
     filter: blur(2px) brightness(0.8);
-    text-shadow: 
-      7px -4px 9px rgba(90, 107, 101, 0.6),
-      -4px 5px 8px rgba(90, 107, 101, 0.5),
-      3px -1px 5px rgba(90, 107, 101, 0.4),
+    text-shadow: 7px -4px 9px rgba(90, 107, 101, 0.6),
+      -4px 5px 8px rgba(90, 107, 101, 0.5), 3px -1px 5px rgba(90, 107, 101, 0.4),
       -1px 3px 4px rgba(90, 107, 101, 0.3);
   }
   60% {
     opacity: 0.7;
     transform: scale(0.9) rotateZ(-3deg) translateX(3px) translateY(2px);
     filter: blur(1px) brightness(0.9);
-    text-shadow: 
-      5px -3px 7px rgba(90, 107, 101, 0.5),
-      -3px 4px 6px rgba(90, 107, 101, 0.4),
-      2px 1px 3px rgba(90, 107, 101, 0.3);
+    text-shadow: 5px -3px 7px rgba(90, 107, 101, 0.5),
+      -3px 4px 6px rgba(90, 107, 101, 0.4), 2px 1px 3px rgba(90, 107, 101, 0.3);
   }
   80% {
     opacity: 0.9;
     transform: scale(1.05) rotateZ(2deg) translateX(-2px) translateY(-3px);
     filter: blur(0.5px) brightness(1.1);
-    text-shadow: 
-      3px 2px 5px rgba(90, 107, 101, 0.4),
+    text-shadow: 3px 2px 5px rgba(90, 107, 101, 0.4),
       -2px 3px 4px rgba(90, 107, 101, 0.3);
   }
   100% {
@@ -646,23 +677,38 @@
 }
 
 /* 消失时的分段延迟（反向）- 超强优先级 */
-.quote-swiper .swiper-slide:not(.swiper-slide-active) .notice-box p:nth-child(1) {
+.quote-swiper
+  .swiper-slide:not(.swiper-slide-active)
+  .notice-box
+  p:nth-child(1) {
   animation-delay: 0.4s !important;
 }
 
-.quote-swiper .swiper-slide:not(.swiper-slide-active) .notice-box p:nth-child(2) {
+.quote-swiper
+  .swiper-slide:not(.swiper-slide-active)
+  .notice-box
+  p:nth-child(2) {
   animation-delay: 0.3s !important;
 }
 
-.quote-swiper .swiper-slide:not(.swiper-slide-active) .notice-box p:nth-child(3) {
+.quote-swiper
+  .swiper-slide:not(.swiper-slide-active)
+  .notice-box
+  p:nth-child(3) {
   animation-delay: 0.2s !important;
 }
 
-.quote-swiper .swiper-slide:not(.swiper-slide-active) .notice-box p:nth-child(4) {
+.quote-swiper
+  .swiper-slide:not(.swiper-slide-active)
+  .notice-box
+  p:nth-child(4) {
   animation-delay: 0.1s !important;
 }
 
-.quote-swiper .swiper-slide:not(.swiper-slide-active) .notice-box p:nth-child(5) {
+.quote-swiper
+  .swiper-slide:not(.swiper-slide-active)
+  .notice-box
+  p:nth-child(5) {
   animation-delay: 0s !important;
 }
 
@@ -791,7 +837,8 @@
   }
 
   .quote-slide .notice-box:hover {
-    transform: perspective(800px) rotateX(0deg) rotateY(0deg) translateY(-5px) scale(1.01);
+    transform: perspective(800px) rotateX(0deg) rotateY(0deg) translateY(-5px)
+      scale(1.01);
   }
 }
 
@@ -819,7 +866,8 @@
 @keyframes magicPageSlide {
   from {
     opacity: 0;
-    transform: perspective(1200px) rotateX(15deg) rotateY(-8deg) translateY(40px);
+    transform: perspective(1200px) rotateX(15deg) rotateY(-8deg)
+      translateY(40px);
   }
   to {
     opacity: 1;
