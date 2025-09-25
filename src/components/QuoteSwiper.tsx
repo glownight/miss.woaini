@@ -62,7 +62,7 @@ const QuoteSwiper: React.FC = () => {
         slidesPerView={1}
         speed={900}
         autoplay={{
-          delay: 60000,
+          delay: 600000,
           disableOnInteraction: false,
           pauseOnMouseEnter: true,
         }}
