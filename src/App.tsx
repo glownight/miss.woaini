@@ -2,6 +2,7 @@ import { Routes, Route, Link, Navigate, useLocation } from "react-router-dom";
 import "./App.css";
 import Fireworks from "./components/Fireworks";
 // import TypeWriter from "./components/TypeWriter";
+import QuoteSwiper from "./components/QuoteSwiper";
 import MarkdownViewer from "./pages/MarkdownViewer";
 import {
   getMdFileList,
@@ -154,16 +155,7 @@ function App() {
               element={
                 <>
                   <section className="card notice-card">
-                    <div className="notice-box">
-                      <p>
-                        任何一个你不喜欢又离不开的地方，任何一种你不喜欢又摆脱不了的生活就是监狱。
-                      </p>
-                      <p>
-                        如果你感到痛苦和不自由，希望你心里永远有一团不会熄灭的火焰，不要麻木，不要被同化。
-                      </p>
-                      <p>拼命成为那个有力量破釜沉舟的人。</p>
-                      {/* <p>-《肖申克的救赎》-</p> */}
-                    </div>
+                    <QuoteSwiper />
                   </section>
                 </>
               }
