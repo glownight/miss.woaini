@@ -1,6 +1,6 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper/modules";
+import { Autoplay, EffectFade } from "swiper/modules";
 import "./QuoteSwiper.css";
 
 interface QuoteItem {
@@ -39,7 +39,7 @@ const quoteItems: QuoteItem[] = [
     content: (
       <div className="notice-box">
         <p>
-          我正在寻找一个能与自己同生共死，能与自己同死共生，能与自己同生共生，能与自己同死共生，能与自己同生共生，能与自己同死共生，能与自己同生共生，能与自己同死共生，能与自己同生共生，能与自己同死共生，能与自己同生共生，能与
+          人的一生中，最光辉的一天并非是功成名就那天，而是从悲叹与绝望中产生对人生的挑战，以勇敢迈向意志那天。
         </p>
       </div>
     ),
@@ -50,9 +50,14 @@ const QuoteSwiper: React.FC = () => {
   return (
     <div className="quote-swiper-container">
       <Swiper
-        modules={[Autoplay]}
-        grabCursor={true}
-        spaceBetween={30}
+        modules={[Autoplay, EffectFade]}
+        effect="fade"
+        fadeEffect={{
+          crossFade: true,
+        }}
+        grabCursor={false}
+        allowTouchMove={false}
+        spaceBetween={0}
         slidesPerView={1}
         speed={800}
         autoplay={{

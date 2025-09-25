@@ -1,3 +1,6 @@
+/* 舒适护眼字体导入 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600&family=Source+Serif+Pro:wght@400;500;600&display=swap');
+
 /* Swiper 基础样式 - 必须的样式 */
 /* Swiper 基础样式 - 完整版本 */
 .swiper {
@@ -106,22 +109,367 @@
 }
 
 .quote-slide .notice-box {
-  padding: 32px 40px;
-  background: var(--panel-2);
-  color: #c8cfcd;
-  width: 100%;
+  position: relative;
+  padding: 50px 60px 45px 60px;
+  margin: 15px;
+  min-height: 180px;
+  
+  /* 真实魔法书羊皮纸背景 */
+  background: 
+    /* 古旧斑点效果 */
+    radial-gradient(circle at 25% 25%, rgba(139, 105, 20, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 75% 60%, rgba(101, 67, 33, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(160, 82, 45, 0.05) 0%, transparent 50%),
+    /* 主背景渐变 */
+    linear-gradient(135deg, #f7f3e9 0%, #f1ebe1 25%, #ede6d3 50%, #e8dfc6 75%, #e3d7b7 100%);
+  
+  /* 古书纸张纹理 */
+  background-image: 
+    /* 细微纹理 */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-opacity='0.03'%3E%3Cpolygon fill='%23000' points='50 0 60 40 100 50 60 60 50 100 40 60 0 50 40 40'/%3E%3C/g%3E%3C/svg%3E"),
+    /* 纸张纹理 */
+    repeating-linear-gradient(45deg, transparent, transparent 1px, rgba(139, 105, 20, 0.02) 1px, rgba(139, 105, 20, 0.02) 2px),
+    repeating-linear-gradient(-45deg, transparent, transparent 1px, rgba(101, 67, 33, 0.015) 1px, rgba(101, 67, 33, 0.015) 2px);
+  
+  /* 深色系装饰边框 - 移除边框 */
+  border: none;
+  
+  /* 深度阴影系统 - 魔法书厚度 */
+  box-shadow: 
+    /* 内阴影 - 纸张凹陷感 */
+    inset 0 2px 4px rgba(255, 255, 255, 0.6),
+    inset 0 -2px 3px rgba(139, 105, 20, 0.1),
+    inset 2px 0 3px rgba(139, 105, 20, 0.05),
+    inset -2px 0 3px rgba(139, 105, 20, 0.05),
+    /* 外阴影 - 书籍厚度 */
+    0 3px 6px rgba(61, 48, 32, 0.12),
+    0 6px 12px rgba(61, 48, 32, 0.09),
+    0 12px 24px rgba(61, 48, 32, 0.07),
+    0 24px 48px rgba(61, 48, 32, 0.05),
+    /* 护眼光晕 */
+    0 0 30px rgba(138, 148, 144, 0.1);
+  
+  border-radius: 18px;
+  color: #2c1810;
   text-align: left;
   display: flex;
   flex-direction: column;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  justify-content: center;
+  
+  /* 3D 魔法书透视 */
+  transform: perspective(1500px) rotateX(2deg) rotateY(-1deg);
+  transform-origin: center center;
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  
+  /* 确保3D变换上下文 */
+  transform-style: preserve-3d;
+  
+  /* 魔法光泽效果 */
+  overflow: hidden;
+}
+
+/* 魔法书页装饰边框 - 移除边框保留装饰 */
+.quote-slide .notice-box::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  border: none;
+  border-radius: 14px;
+  background: 
+    /* 角落装饰 */
+    radial-gradient(circle at 40px 40px, #6b7975 3px, transparent 3px),
+    radial-gradient(circle at calc(100% - 40px) 40px, #6b7975 3px, transparent 3px),
+    radial-gradient(circle at 40px calc(100% - 40px), #6b7975 3px, transparent 3px),
+    radial-gradient(circle at calc(100% - 40px) calc(100% - 40px), #6b7975 3px, transparent 3px),
+    /* 光效 */
+    linear-gradient(45deg, transparent 30%, rgba(138, 148, 144, 0.08) 50%, transparent 70%);
+  background-size: 80px 80px, 80px 80px, 80px 80px, 80px 80px, 100% 100%;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 魔法书页光芒效果 */
+.quote-slide .notice-box::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  background: linear-gradient(45deg, 
+    rgba(138, 148, 144, 0.3), 
+    transparent 20%, 
+    transparent 40%, 
+    rgba(107, 121, 117, 0.2) 50%, 
+    transparent 60%, 
+    transparent 80%, 
+    rgba(138, 148, 144, 0.3));
+  border-radius: 21px;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* 魔法书悬停效果 */
+.quote-slide .notice-box:hover {
+  transform: perspective(1500px) rotateX(0deg) rotateY(0deg) translateY(-10px) scale(1.02);
+  box-shadow: 
+    inset 0 3px 6px rgba(255, 255, 255, 0.8),
+    inset 0 -3px 4px rgba(139, 105, 20, 0.15),
+    inset 3px 0 4px rgba(139, 105, 20, 0.08),
+    inset -3px 0 4px rgba(139, 105, 20, 0.08),
+    0 6px 12px rgba(61, 48, 32, 0.18),
+    0 12px 24px rgba(61, 48, 32, 0.14),
+    0 24px 48px rgba(61, 48, 32, 0.1),
+    0 48px 96px rgba(61, 48, 32, 0.06),
+    0 0 50px rgba(138, 148, 144, 0.2);
+}
+
+.quote-slide .notice-box:hover::after {
+  opacity: 1;
+  animation: magicShimmer 3s ease-in-out infinite;
+}
+
+@keyframes magicShimmer {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.6; }
+}
+
+/* 整个容器的水波切换效果 - 针对fade过渡优化 */
+.swiper-slide {
+  opacity: 1;
+  transition: opacity 0.8s ease-in-out;
+}
+
+.swiper-slide:not(.swiper-slide-active) .notice-box {
+  animation: containerFadeOut 0.8s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+}
+
+.swiper-slide-active .notice-box {
+  animation: containerFadeIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* 容器淡出动画 - 配合水波效果 */
+@keyframes containerFadeOut {
+  0% {
+    transform: perspective(1500px) rotateX(2deg) rotateY(-1deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: perspective(1500px) rotateX(0deg) rotateY(0deg) scale(0.98);
+    opacity: 0;
+  }
+}
+
+/* 容器淡入动画 - 配合水波效果 */
+@keyframes containerFadeIn {
+  0% {
+    transform: perspective(1500px) rotateX(0deg) rotateY(0deg) scale(0.98);
+    opacity: 0;
+  }
+  100% {
+    transform: perspective(1500px) rotateX(2deg) rotateY(-1deg) scale(1);
+    opacity: 1;
+  }
 }
 
 .quote-slide .notice-box p {
-  margin: 12px 0;
+  margin: 0 0 18px 0;
   line-height: 1.8;
   font-size: 16px;
-  color: var(--text);
+  color: #7a8680;
+  font-family: 'Noto Serif SC', 'Source Serif Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-weight: 400;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.2);
+  position: relative;
+  z-index: 5;
+  letter-spacing: 0.2px;
+  word-spacing: 0.5px;
+  
+  /* 默认可见状态 */
+  opacity: 1;
+  transform: translateY(0) scaleY(1);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 文字水波消失效果 - 针对fade优化 */
+.swiper-slide:not(.swiper-slide-active) .notice-box p {
+  animation: waveDisappear 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* 文字水波出现效果 - 针对fade优化 */
+.swiper-slide-active .notice-box p {
+  animation: waveAppear 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* 首字母水波消失效果 - 针对fade优化 */
+.swiper-slide:not(.swiper-slide-active) .notice-box p:first-child::first-letter {
+  animation: firstLetterWaveDisappear 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* 首字母水波出现效果 - 针对fade优化 */
+.swiper-slide-active .notice-box p:first-child::first-letter {
+  animation: firstLetterWaveAppear 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* 去除最后一段的下边距 */
+.quote-slide .notice-box p:last-child {
+  margin-bottom: 0;
+}
+
+/* 魔法首字母容器 */
+.quote-slide .notice-box p:first-child {
+  margin-top: 0;
+}
+
+.quote-slide .notice-box p:first-child::first-letter {
+  float: left;
+  font-size: 56px;
+  line-height: 48px;
+  padding: 6px 10px 0 0;
+  margin: 0 8px 2px 0;
+  font-family: 'Noto Serif SC', 'Source Serif Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 500;
+  color: #5a6b65;
+  
+  /* 柔和文字效果 */
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.3), 0 0 1px rgba(90, 107, 101, 0.1);
+  
+  /* 柔和装饰框 - 移除边框 */
+  border: none;
+  border-radius: 6px;
+  background-color: rgba(250, 248, 245, 0.5);
+  
+  /* 动画延迟 */
+  animation-delay: 0.3s;
+  position: relative;
+}
+
+
+
+/* 文字水波消失动画 - 优化无平移版本 */
+@keyframes waveDisappear {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scaleY(1) scaleX(1);
+    filter: blur(0);
+  }
+  30% {
+    opacity: 0.7;
+    transform: translateY(-1px) scaleY(1.05) scaleX(0.98);
+    filter: blur(1px);
+  }
+  60% {
+    opacity: 0.3;
+    transform: translateY(1px) scaleY(0.6) scaleX(1.02);
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(0) scaleY(0.2) scaleX(1);
+    filter: blur(3px);
+  }
+}
+
+/* 文字水波出现动画 - 优化无平移版本 */
+@keyframes waveAppear {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scaleY(0.2) scaleX(1);
+    filter: blur(3px);
+  }
+  40% {
+    opacity: 0.3;
+    transform: translateY(1px) scaleY(0.6) scaleX(1.02);
+    filter: blur(2px);
+  }
+  70% {
+    opacity: 0.7;
+    transform: translateY(-1px) scaleY(1.05) scaleX(0.98);
+    filter: blur(1px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scaleY(1) scaleX(1);
+    filter: blur(0);
+  }
+}
+
+/* 首字母水波消失动画 - 优化无平移版本 */
+@keyframes firstLetterWaveDisappear {
+  0% {
+    opacity: 1;
+    transform: scale(1) rotateZ(0deg);
+    filter: blur(0);
+  }
+  40% {
+    opacity: 0.6;
+    transform: scale(1.02) rotateZ(1deg);
+    filter: blur(1px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.4) rotateZ(3deg);
+    filter: blur(2px);
+  }
+}
+
+/* 首字母水波出现动画 - 优化无平移版本 */
+@keyframes firstLetterWaveAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) rotateZ(3deg);
+    filter: blur(2px);
+  }
+  60% {
+    opacity: 0.6;
+    transform: scale(1.02) rotateZ(1deg);
+    filter: blur(1px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotateZ(0deg);
+    filter: blur(0);
+  }
+}
+
+/* 文字分段水波出现动画延迟 */
+.swiper-slide-active .notice-box p:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.swiper-slide-active .notice-box p:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.swiper-slide-active .notice-box p:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.swiper-slide-active .notice-box p:nth-child(4) {
+  animation-delay: 0.45s;
+}
+
+.swiper-slide-active .notice-box p:nth-child(5) {
+  animation-delay: 0.6s;
+}
+
+/* 当内容过多时智能缩小字体 */
+.quote-slide .notice-box:has(p:nth-child(4)) p {
+  font-size: 15px;
+  line-height: 1.65;
+  margin: 0 0 14px 0;
+}
+
+.quote-slide .notice-box:has(p:nth-child(4)) p:first-child::first-letter {
+  font-size: 56px;
+  line-height: 48px;
+  color: #5a6b65;
 }
 
 /* Swiper 分页器样式 */
@@ -194,86 +542,80 @@
   height: 20px;
 }
 
-/* 响应式适配 */
+/* 魔法书移动端适配 */
 @media (max-width: 860px) {
   .quote-swiper-container {
-    height: 200px; /* 移动端高度 */
+    height: 200px;
   }
 
   .quote-slide .notice-box {
-    padding: 24px 20px;
-    text-align: center;
+    padding: 35px 30px 30px 30px;
+    margin: 10px;
+    min-height: 140px;
+    transform: perspective(800px) rotateX(1deg) rotateY(-0.5deg);
   }
 
   .quote-slide .notice-box p {
-    font-size: 14px;
-    color: #817665;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0 0 14px 0;
+    letter-spacing: 0.2px;
+    word-spacing: 0.5px;
   }
 
-  .swiper-button-prev-custom,
-  .swiper-button-next-custom {
-    width: 36px;
-    height: 36px;
+  .quote-slide .notice-box p:first-child::first-letter {
+    font-size: 52px;
+    line-height: 44px;
+    padding: 6px 10px 0 0;
+    margin: 0 8px 2px 0;
   }
 
-  .swiper-button-prev-custom {
-    left: 12px;
+  /* 移动端内容过多时进一步缩小 */
+  .quote-slide .notice-box:has(p:nth-child(4)) p {
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0 0 12px 0;
   }
 
-  .swiper-button-next-custom {
-    right: 12px;
+  .quote-slide .notice-box:has(p:nth-child(4)) p:first-child::first-letter {
+    font-size: 42px;
+    line-height: 36px;
+    color: #5a6b65;
   }
 
-  .swiper-button-prev-custom svg,
-  .swiper-button-next-custom svg {
-    width: 18px;
-    height: 18px;
+  .quote-slide .notice-box:hover {
+    transform: perspective(800px) rotateX(0deg) rotateY(0deg) translateY(-5px) scale(1.01);
   }
 }
 
-/* 轮播图进入动画 */
+/* 魔法书轮播图进入动画 */
 .quote-swiper {
-  animation: fadeInUp 0.6s ease-out;
+  animation: magicBookAppear 1s ease-out;
 }
 
-@keyframes fadeInUp {
+@keyframes magicBookAppear {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(40px) rotateX(15deg);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) rotateX(0deg);
   }
 }
 
-/* 滑动切换时的文字动画 */
+/* 魔法书页切换动画 */
 .quote-slide .notice-box {
-  animation: slideInContent 0.6s ease-out;
+  animation: magicPageSlide 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.quote-slide .notice-box p {
-  animation: slideInText 0.8s ease-out;
-}
-
-@keyframes slideInContent {
+@keyframes magicPageSlide {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: perspective(1200px) rotateX(15deg) rotateY(-8deg) translateY(40px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideInText {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+    transform: perspective(1200px) rotateX(2deg) rotateY(-1deg) translateY(0);
   }
 }
