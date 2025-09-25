@@ -296,6 +296,7 @@
   transition: opacity 0.3s ease-in-out;
 }
 
+/* 删除旧的容器动画，优先使用碎片效果
 .swiper-slide:not(.swiper-slide-active) .notice-box {
   animation: containerSlideOut 0.6s cubic-bezier(0.4, 0, 0.6, 1) forwards;
 }
@@ -303,6 +304,7 @@
 .swiper-slide-active .notice-box {
   animation: containerSlideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
+*/
 
 /* 容器滑出动画 - 兼容标准切换 */
 @keyframes containerSlideOut {
@@ -341,27 +343,36 @@
   letter-spacing: 0.2px;
   word-spacing: 0.5px;
   
-  /* 默认可见状态 */
+  /* 默认可见状态 - 为碎片动画做准备 */
   opacity: 1;
-  transform: translateY(0) scaleY(1);
-  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: translateY(0) scale(1) rotateZ(0deg);
+  filter: blur(0) brightness(1);
+  transition: none !important;
 }
 
-/* 重新启用水波动画配合fade效果 */
-.swiper-slide:not(.swiper-slide-active) .notice-box p {
-  animation: waveSlideOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+/* 字体碎片效果 - 超强优先级，确保碎片效果生效 */
+.quote-swiper .swiper-slide:not(.swiper-slide-active) .notice-box p {
+  animation: textShatter 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+  animation-fill-mode: forwards !important;
+  transform-origin: center center !important;
 }
 
-.swiper-slide-active .notice-box p {
-  animation: waveSlideIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+.quote-swiper .swiper-slide-active .notice-box p {
+  animation: textReassemble 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards !important;
+  animation-fill-mode: forwards !important;
+  transform-origin: center center !important;
 }
 
-.swiper-slide:not(.swiper-slide-active) .notice-box p:first-child::first-letter {
-  animation: firstLetterSlideOut 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+.quote-swiper .swiper-slide:not(.swiper-slide-active) .notice-box p:first-child::first-letter {
+  animation: firstLetterShatter 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+  animation-fill-mode: forwards !important;
+  transform-origin: center center !important;
 }
 
-.swiper-slide-active .notice-box p:first-child::first-letter {
-  animation: firstLetterSlideIn 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+.quote-swiper .swiper-slide-active .notice-box p:first-child::first-letter {
+  animation: firstLetterReassemble 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards !important;
+  animation-fill-mode: forwards !important;
+  transform-origin: center center !important;
 }
 
 /* 去除最后一段的下边距 */
@@ -399,101 +410,260 @@
 
 
 
-/* 文字滑出水波动画 - 兼容标准切换 */
-@keyframes waveSlideOut {
+/* 字体碎片效果 - 原来字体碎掉 */
+@keyframes textShatter {
   0% {
     opacity: 1;
-    transform: translateY(0) scaleY(1) scaleX(1);
-    filter: blur(0);
+    transform: translateY(0) scale(1) rotateZ(0deg);
+    filter: blur(0) brightness(1);
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.2);
+  }
+  25% {
+    opacity: 0.9;
+    transform: translateY(-3px) scale(1.02) rotateZ(1deg);
+    filter: blur(0.5px) brightness(1.1);
+    text-shadow: 
+      2px 1px 3px rgba(122, 134, 128, 0.3),
+      -1px 2px 2px rgba(122, 134, 128, 0.2);
   }
   50% {
-    opacity: 0.4;
-    transform: translateY(-1px) scaleY(0.8) scaleX(1.02);
-    filter: blur(1px);
+    opacity: 0.6;
+    transform: translateY(2px) scale(0.95) rotateZ(-2deg);
+    filter: blur(1px) brightness(0.9);
+    text-shadow: 
+      3px -2px 4px rgba(122, 134, 128, 0.4),
+      -2px 3px 3px rgba(122, 134, 128, 0.3),
+      1px 1px 2px rgba(122, 134, 128, 0.2);
+  }
+  75% {
+    opacity: 0.3;
+    transform: translateY(-1px) scale(0.8) rotateZ(3deg);
+    filter: blur(2px) brightness(0.7);
+    text-shadow: 
+      5px -3px 6px rgba(122, 134, 128, 0.5),
+      -3px 4px 5px rgba(122, 134, 128, 0.4),
+      2px -1px 3px rgba(122, 134, 128, 0.3),
+      -1px 3px 4px rgba(122, 134, 128, 0.2);
   }
   100% {
     opacity: 0;
-    transform: translateY(0) scaleY(0.3) scaleX(1);
-    filter: blur(2px);
+    transform: translateY(0) scale(0.3) rotateZ(-5deg);
+    filter: blur(4px) brightness(0.5);
+    text-shadow: 
+      8px -5px 10px rgba(122, 134, 128, 0.6),
+      -4px 6px 8px rgba(122, 134, 128, 0.5),
+      3px -2px 5px rgba(122, 134, 128, 0.4),
+      -2px 4px 6px rgba(122, 134, 128, 0.3),
+      1px -1px 3px rgba(122, 134, 128, 0.2);
   }
 }
 
-/* 文字滑入水波动画 - 兼容标准切换 */
-@keyframes waveSlideIn {
+/* 字体重新组合效果 - 新字体从碎片中组合 */
+@keyframes textReassemble {
   0% {
     opacity: 0;
-    transform: translateY(0) scaleY(0.3) scaleX(1);
-    filter: blur(2px);
+    transform: translateY(0) scale(0.3) rotateZ(-5deg);
+    filter: blur(4px) brightness(0.5);
+    text-shadow: 
+      8px -5px 10px rgba(122, 134, 128, 0.6),
+      -4px 6px 8px rgba(122, 134, 128, 0.5),
+      3px -2px 5px rgba(122, 134, 128, 0.4),
+      -2px 4px 6px rgba(122, 134, 128, 0.3),
+      1px -1px 3px rgba(122, 134, 128, 0.2);
+  }
+  25% {
+    opacity: 0.3;
+    transform: translateY(-1px) scale(0.8) rotateZ(3deg);
+    filter: blur(2px) brightness(0.7);
+    text-shadow: 
+      5px -3px 6px rgba(122, 134, 128, 0.5),
+      -3px 4px 5px rgba(122, 134, 128, 0.4),
+      2px -1px 3px rgba(122, 134, 128, 0.3),
+      -1px 3px 4px rgba(122, 134, 128, 0.2);
   }
   50% {
-    opacity: 0.4;
-    transform: translateY(-1px) scaleY(0.8) scaleX(1.02);
-    filter: blur(1px);
+    opacity: 0.6;
+    transform: translateY(2px) scale(0.95) rotateZ(-2deg);
+    filter: blur(1px) brightness(0.9);
+    text-shadow: 
+      3px -2px 4px rgba(122, 134, 128, 0.4),
+      -2px 3px 3px rgba(122, 134, 128, 0.3),
+      1px 1px 2px rgba(122, 134, 128, 0.2);
+  }
+  75% {
+    opacity: 0.9;
+    transform: translateY(-3px) scale(1.02) rotateZ(1deg);
+    filter: blur(0.5px) brightness(1.1);
+    text-shadow: 
+      2px 1px 3px rgba(122, 134, 128, 0.3),
+      -1px 2px 2px rgba(122, 134, 128, 0.2);
   }
   100% {
     opacity: 1;
-    transform: translateY(0) scaleY(1) scaleX(1);
-    filter: blur(0);
+    transform: translateY(0) scale(1) rotateZ(0deg);
+    filter: blur(0) brightness(1);
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.2);
   }
 }
 
-/* 首字母滑出水波动画 - 兼容标准切换 */
-@keyframes firstLetterSlideOut {
+/* 首字母碎片效果 - 特殊的大字母碎掉 */
+@keyframes firstLetterShatter {
   0% {
     opacity: 1;
-    transform: scale(1) rotateZ(0deg);
-    filter: blur(0);
+    transform: scale(1) rotateZ(0deg) translateX(0) translateY(0);
+    filter: blur(0) brightness(1);
+    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.3);
   }
-  50% {
+  20% {
+    opacity: 0.9;
+    transform: scale(1.05) rotateZ(2deg) translateX(-2px) translateY(-3px);
+    filter: blur(0.5px) brightness(1.1);
+    text-shadow: 
+      3px 2px 5px rgba(90, 107, 101, 0.4),
+      -2px 3px 4px rgba(90, 107, 101, 0.3);
+  }
+  40% {
+    opacity: 0.7;
+    transform: scale(0.9) rotateZ(-3deg) translateX(3px) translateY(2px);
+    filter: blur(1px) brightness(0.9);
+    text-shadow: 
+      5px -3px 7px rgba(90, 107, 101, 0.5),
+      -3px 4px 6px rgba(90, 107, 101, 0.4),
+      2px 1px 3px rgba(90, 107, 101, 0.3);
+  }
+  60% {
     opacity: 0.5;
-    transform: scale(0.8) rotateZ(1deg);
-    filter: blur(1px);
+    transform: scale(0.7) rotateZ(4deg) translateX(-4px) translateY(-1px);
+    filter: blur(2px) brightness(0.8);
+    text-shadow: 
+      7px -4px 9px rgba(90, 107, 101, 0.6),
+      -4px 5px 8px rgba(90, 107, 101, 0.5),
+      3px -1px 5px rgba(90, 107, 101, 0.4),
+      -1px 3px 4px rgba(90, 107, 101, 0.3);
+  }
+  80% {
+    opacity: 0.2;
+    transform: scale(0.4) rotateZ(-6deg) translateX(6px) translateY(4px);
+    filter: blur(3px) brightness(0.6);
+    text-shadow: 
+      10px -6px 12px rgba(90, 107, 101, 0.7),
+      -5px 7px 10px rgba(90, 107, 101, 0.6),
+      4px -2px 7px rgba(90, 107, 101, 0.5),
+      -2px 4px 6px rgba(90, 107, 101, 0.4),
+      1px 1px 3px rgba(90, 107, 101, 0.3);
   }
   100% {
     opacity: 0;
-    transform: scale(0.5) rotateZ(2deg);
-    filter: blur(1.5px);
+    transform: scale(0.2) rotateZ(8deg) translateX(-8px) translateY(-6px);
+    filter: blur(5px) brightness(0.4);
+    text-shadow: 
+      15px -8px 15px rgba(90, 107, 101, 0.8),
+      -6px 9px 12px rgba(90, 107, 101, 0.7),
+      5px -3px 9px rgba(90, 107, 101, 0.6),
+      -3px 5px 8px rgba(90, 107, 101, 0.5),
+      2px -1px 5px rgba(90, 107, 101, 0.4);
   }
 }
 
-/* 首字母滑入水波动画 - 兼容标准切换 */
-@keyframes firstLetterSlideIn {
+/* 首字母重新组合效果 */
+@keyframes firstLetterReassemble {
   0% {
     opacity: 0;
-    transform: scale(0.5) rotateZ(2deg);
-    filter: blur(1.5px);
+    transform: scale(0.2) rotateZ(8deg) translateX(-8px) translateY(-6px);
+    filter: blur(5px) brightness(0.4);
+    text-shadow: 
+      15px -8px 15px rgba(90, 107, 101, 0.8),
+      -6px 9px 12px rgba(90, 107, 101, 0.7),
+      5px -3px 9px rgba(90, 107, 101, 0.6),
+      -3px 5px 8px rgba(90, 107, 101, 0.5),
+      2px -1px 5px rgba(90, 107, 101, 0.4);
   }
-  50% {
+  20% {
+    opacity: 0.2;
+    transform: scale(0.4) rotateZ(-6deg) translateX(6px) translateY(4px);
+    filter: blur(3px) brightness(0.6);
+    text-shadow: 
+      10px -6px 12px rgba(90, 107, 101, 0.7),
+      -5px 7px 10px rgba(90, 107, 101, 0.6),
+      4px -2px 7px rgba(90, 107, 101, 0.5),
+      -2px 4px 6px rgba(90, 107, 101, 0.4),
+      1px 1px 3px rgba(90, 107, 101, 0.3);
+  }
+  40% {
     opacity: 0.5;
-    transform: scale(0.8) rotateZ(1deg);
-    filter: blur(1px);
+    transform: scale(0.7) rotateZ(4deg) translateX(-4px) translateY(-1px);
+    filter: blur(2px) brightness(0.8);
+    text-shadow: 
+      7px -4px 9px rgba(90, 107, 101, 0.6),
+      -4px 5px 8px rgba(90, 107, 101, 0.5),
+      3px -1px 5px rgba(90, 107, 101, 0.4),
+      -1px 3px 4px rgba(90, 107, 101, 0.3);
+  }
+  60% {
+    opacity: 0.7;
+    transform: scale(0.9) rotateZ(-3deg) translateX(3px) translateY(2px);
+    filter: blur(1px) brightness(0.9);
+    text-shadow: 
+      5px -3px 7px rgba(90, 107, 101, 0.5),
+      -3px 4px 6px rgba(90, 107, 101, 0.4),
+      2px 1px 3px rgba(90, 107, 101, 0.3);
+  }
+  80% {
+    opacity: 0.9;
+    transform: scale(1.05) rotateZ(2deg) translateX(-2px) translateY(-3px);
+    filter: blur(0.5px) brightness(1.1);
+    text-shadow: 
+      3px 2px 5px rgba(90, 107, 101, 0.4),
+      -2px 3px 4px rgba(90, 107, 101, 0.3);
   }
   100% {
     opacity: 1;
-    transform: scale(1) rotateZ(0deg);
-    filter: blur(0);
+    transform: scale(1) rotateZ(0deg) translateX(0) translateY(0);
+    filter: blur(0) brightness(1);
+    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.3);
   }
 }
 
-/* 文字分段水波出现动画延迟 */
-.swiper-slide-active .notice-box p:nth-child(1) {
-  animation-delay: 0s;
+/* 字体碎片重组分段动画延迟 - 超强优先级 */
+.quote-swiper .swiper-slide-active .notice-box p:nth-child(1) {
+  animation-delay: 0s !important;
 }
 
-.swiper-slide-active .notice-box p:nth-child(2) {
-  animation-delay: 0.15s;
+.quote-swiper .swiper-slide-active .notice-box p:nth-child(2) {
+  animation-delay: 0.1s !important;
 }
 
-.swiper-slide-active .notice-box p:nth-child(3) {
-  animation-delay: 0.3s;
+.quote-swiper .swiper-slide-active .notice-box p:nth-child(3) {
+  animation-delay: 0.2s !important;
 }
 
-.swiper-slide-active .notice-box p:nth-child(4) {
-  animation-delay: 0.45s;
+.quote-swiper .swiper-slide-active .notice-box p:nth-child(4) {
+  animation-delay: 0.3s !important;
 }
 
-.swiper-slide-active .notice-box p:nth-child(5) {
-  animation-delay: 0.6s;
+.quote-swiper .swiper-slide-active .notice-box p:nth-child(5) {
+  animation-delay: 0.4s !important;
+}
+
+/* 消失时的分段延迟（反向）- 超强优先级 */
+.quote-swiper .swiper-slide:not(.swiper-slide-active) .notice-box p:nth-child(1) {
+  animation-delay: 0.4s !important;
+}
+
+.quote-swiper .swiper-slide:not(.swiper-slide-active) .notice-box p:nth-child(2) {
+  animation-delay: 0.3s !important;
+}
+
+.quote-swiper .swiper-slide:not(.swiper-slide-active) .notice-box p:nth-child(3) {
+  animation-delay: 0.2s !important;
+}
+
+.quote-swiper .swiper-slide:not(.swiper-slide-active) .notice-box p:nth-child(4) {
+  animation-delay: 0.1s !important;
+}
+
+.quote-swiper .swiper-slide:not(.swiper-slide-active) .notice-box p:nth-child(5) {
+  animation-delay: 0s !important;
 }
 
 /* 当内容过多时智能缩小字体 */
