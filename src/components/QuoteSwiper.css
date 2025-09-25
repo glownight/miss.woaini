@@ -1,8 +1,7 @@
 /* 舒适护眼字体导入 */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600&family=Source+Serif+Pro:wght@400;500;600&display=swap');
 
-/* Swiper 基础样式 - 必须的样式 */
-/* Swiper 基础样式 - 完整版本 */
+/* Swiper 基础样式 - 简化版本 + 强制fade效果 */
 .swiper {
   margin-left: auto;
   margin-right: auto;
@@ -21,9 +20,10 @@
   width: 100%;
   height: 100%;
   z-index: 1;
-  display: flex;
-  transition-property: transform;
-  transition-timing-function: var(--swiper-wrapper-transition-timing-function, initial);
+  /* 强制移除flex布局，让slides重叠 */
+  display: block !important;
+  transition-property: none !important;
+  transform: none !important;
   box-sizing: content-box;
 }
 
@@ -39,7 +39,43 @@
   height: 100%;
   position: relative;
   transition-property: transform;
-  pointer-events: auto;
+}
+
+/* 强制fade效果样式 */
+.swiper-fade .swiper-wrapper {
+  overflow: hidden !important;
+}
+
+.swiper-fade .swiper-slide {
+  pointer-events: none !important;
+  transition-property: opacity !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  opacity: 0 !important;
+}
+
+.swiper-fade .swiper-slide-active {
+  pointer-events: auto !important;
+  opacity: 1 !important;
+}
+
+/* 确保所有slides都在同一位置 */
+.quote-swiper .swiper-slide {
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  opacity: 0 !important;
+  transition: opacity 0.3s ease !important;
+}
+
+.quote-swiper .swiper-slide-active {
+  opacity: 1 !important;
+  z-index: 10 !important;
 }
 
 .swiper-pagination {
@@ -84,11 +120,13 @@
   margin: 0 4px;
 }
 
-/* 轮播图容器样式 */
+/* 轮播图容器样式 - fade效果下的拖拽支持 */
 .quote-swiper-container {
   position: relative;
   width: 100%;
   height: 240px; /* 给定明确高度 */
+  /* 保持触摸事件支持 */
+  touch-action: pan-x pan-y !important;
 }
 
 .quote-swiper {
@@ -96,6 +134,18 @@
   height: 100%;
   border-radius: 8px;
   overflow: hidden;
+  /* fade效果下的拖拽支持 */
+  cursor: grab !important;
+  touch-action: pan-x pan-y !important;
+}
+
+.quote-swiper:active {
+  cursor: grabbing !important;
+}
+
+/* 确保内容不阻止拖拽事件 */
+.quote-swiper .swiper-slide {
+  pointer-events: auto !important;
 }
 
 .quote-slide {
@@ -240,37 +290,37 @@
   50% { opacity: 0.6; }
 }
 
-/* 整个容器的水波切换效果 - 针对fade过渡优化 */
+/* 整个容器的水波切换效果 - 兼容标准滑动 */
 .swiper-slide {
   opacity: 1;
-  transition: opacity 0.8s ease-in-out;
+  transition: opacity 0.3s ease-in-out;
 }
 
 .swiper-slide:not(.swiper-slide-active) .notice-box {
-  animation: containerFadeOut 0.8s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+  animation: containerSlideOut 0.6s cubic-bezier(0.4, 0, 0.6, 1) forwards;
 }
 
 .swiper-slide-active .notice-box {
-  animation: containerFadeIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  animation: containerSlideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
-/* 容器淡出动画 - 配合水波效果 */
-@keyframes containerFadeOut {
+/* 容器滑出动画 - 兼容标准切换 */
+@keyframes containerSlideOut {
   0% {
     transform: perspective(1500px) rotateX(2deg) rotateY(-1deg) scale(1);
     opacity: 1;
   }
   100% {
-    transform: perspective(1500px) rotateX(0deg) rotateY(0deg) scale(0.98);
-    opacity: 0;
+    transform: perspective(1500px) rotateX(1deg) rotateY(-0.5deg) scale(0.95);
+    opacity: 0.5;
   }
 }
 
-/* 容器淡入动画 - 配合水波效果 */
-@keyframes containerFadeIn {
+/* 容器滑入动画 - 兼容标准切换 */
+@keyframes containerSlideIn {
   0% {
-    transform: perspective(1500px) rotateX(0deg) rotateY(0deg) scale(0.98);
-    opacity: 0;
+    transform: perspective(1500px) rotateX(1deg) rotateY(-0.5deg) scale(0.95);
+    opacity: 0.5;
   }
   100% {
     transform: perspective(1500px) rotateX(2deg) rotateY(-1deg) scale(1);
@@ -297,24 +347,21 @@
   transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* 文字水波消失效果 - 针对fade优化 */
+/* 重新启用水波动画配合fade效果 */
 .swiper-slide:not(.swiper-slide-active) .notice-box p {
-  animation: waveDisappear 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: waveSlideOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* 文字水波出现效果 - 针对fade优化 */
 .swiper-slide-active .notice-box p {
-  animation: waveAppear 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  animation: waveSlideIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
-/* 首字母水波消失效果 - 针对fade优化 */
 .swiper-slide:not(.swiper-slide-active) .notice-box p:first-child::first-letter {
-  animation: firstLetterWaveDisappear 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: firstLetterSlideOut 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* 首字母水波出现效果 - 针对fade优化 */
 .swiper-slide-active .notice-box p:first-child::first-letter {
-  animation: firstLetterWaveAppear 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  animation: firstLetterSlideIn 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 /* 去除最后一段的下边距 */
@@ -352,45 +399,35 @@
 
 
 
-/* 文字水波消失动画 - 优化无平移版本 */
-@keyframes waveDisappear {
+/* 文字滑出水波动画 - 兼容标准切换 */
+@keyframes waveSlideOut {
   0% {
     opacity: 1;
     transform: translateY(0) scaleY(1) scaleX(1);
     filter: blur(0);
   }
-  30% {
-    opacity: 0.7;
-    transform: translateY(-1px) scaleY(1.05) scaleX(0.98);
+  50% {
+    opacity: 0.4;
+    transform: translateY(-1px) scaleY(0.8) scaleX(1.02);
     filter: blur(1px);
-  }
-  60% {
-    opacity: 0.3;
-    transform: translateY(1px) scaleY(0.6) scaleX(1.02);
-    filter: blur(2px);
   }
   100% {
     opacity: 0;
-    transform: translateY(0) scaleY(0.2) scaleX(1);
-    filter: blur(3px);
+    transform: translateY(0) scaleY(0.3) scaleX(1);
+    filter: blur(2px);
   }
 }
 
-/* 文字水波出现动画 - 优化无平移版本 */
-@keyframes waveAppear {
+/* 文字滑入水波动画 - 兼容标准切换 */
+@keyframes waveSlideIn {
   0% {
     opacity: 0;
-    transform: translateY(0) scaleY(0.2) scaleX(1);
-    filter: blur(3px);
-  }
-  40% {
-    opacity: 0.3;
-    transform: translateY(1px) scaleY(0.6) scaleX(1.02);
+    transform: translateY(0) scaleY(0.3) scaleX(1);
     filter: blur(2px);
   }
-  70% {
-    opacity: 0.7;
-    transform: translateY(-1px) scaleY(1.05) scaleX(0.98);
+  50% {
+    opacity: 0.4;
+    transform: translateY(-1px) scaleY(0.8) scaleX(1.02);
     filter: blur(1px);
   }
   100% {
@@ -400,35 +437,35 @@
   }
 }
 
-/* 首字母水波消失动画 - 优化无平移版本 */
-@keyframes firstLetterWaveDisappear {
+/* 首字母滑出水波动画 - 兼容标准切换 */
+@keyframes firstLetterSlideOut {
   0% {
     opacity: 1;
     transform: scale(1) rotateZ(0deg);
     filter: blur(0);
   }
-  40% {
-    opacity: 0.6;
-    transform: scale(1.02) rotateZ(1deg);
+  50% {
+    opacity: 0.5;
+    transform: scale(0.8) rotateZ(1deg);
     filter: blur(1px);
   }
   100% {
     opacity: 0;
-    transform: scale(0.4) rotateZ(3deg);
-    filter: blur(2px);
+    transform: scale(0.5) rotateZ(2deg);
+    filter: blur(1.5px);
   }
 }
 
-/* 首字母水波出现动画 - 优化无平移版本 */
-@keyframes firstLetterWaveAppear {
+/* 首字母滑入水波动画 - 兼容标准切换 */
+@keyframes firstLetterSlideIn {
   0% {
     opacity: 0;
-    transform: scale(0.4) rotateZ(3deg);
-    filter: blur(2px);
+    transform: scale(0.5) rotateZ(2deg);
+    filter: blur(1.5px);
   }
-  60% {
-    opacity: 0.6;
-    transform: scale(1.02) rotateZ(1deg);
+  50% {
+    opacity: 0.5;
+    transform: scale(0.8) rotateZ(1deg);
     filter: blur(1px);
   }
   100% {

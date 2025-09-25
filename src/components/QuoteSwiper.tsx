@@ -49,24 +49,40 @@ const quoteItems: QuoteItem[] = [
 const QuoteSwiper: React.FC = () => {
   return (
     <div className="quote-swiper-container">
+      {/* 拖拽测试：鼠标点击并左右拖动切换 - 无平移效果 */}
+      <div style={{ fontSize: "12px", color: "#666", marginBottom: "10px" }}>
+        拖拽测试：鼠标点击并左右拖动切换 - 无平移效果
+      </div>
       <Swiper
         modules={[Autoplay, EffectFade]}
         effect="fade"
         fadeEffect={{
           crossFade: true,
         }}
-        grabCursor={false}
-        allowTouchMove={false}
+        grabCursor={true}
+        allowTouchMove={true}
+        simulateTouch={true}
         spaceBetween={0}
         slidesPerView={1}
-        speed={800}
+        speed={900}
         autoplay={{
-          delay: 5000,
+          delay: 60000,
           disableOnInteraction: false,
           pauseOnMouseEnter: true,
         }}
         loop={true}
         className="quote-swiper"
+        style={{ "--swiper-theme-color": "transparent" } as any}
+        onSlideChange={(swiper) =>
+          console.log("fade slide changed", swiper.activeIndex)
+        }
+        onSwiper={(swiper) => {
+          console.log("swiper with fade initialized", swiper);
+          // 强制设置fade效果
+          if (swiper.params.effect !== "fade") {
+            console.warn("Fade effect not applied, trying to force");
+          }
+        }}
       >
         {quoteItems.map((item, index) => (
           <SwiperSlide key={index}>
