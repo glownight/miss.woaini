@@ -137,9 +137,7 @@ function App() {
             >
               <span className="spark">✦</span>
               <span className="face">^_^</span>
-              <span className="label">
-                {fireworksOn ? "点我关闭烟花" : "点我开启烟花"}
-              </span>
+              <span className="label">{fireworksOn ? "" : ""}</span>
             </button>
           </div>
         </div>
