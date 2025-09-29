@@ -1,5 +1,5 @@
 /* 舒适护眼字体导入 */
-@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600&family=Source+Serif+Pro:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600&family=Source+Serif+Pro:wght@400;500;600&family=Zhi+Mang+Xing&family=Liu+Jian+Mao+Cao&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&display=swap");
 
 /* Swiper 基础样式 - 简化版本 + 强制fade效果 */
 .swiper {
@@ -344,17 +344,18 @@
 .quote-slide .notice-box p {
   margin: 0 0 18px 0;
   line-height: 1.8;
-  font-size: 16px;
+  font-size: 22px;
   color: #7a8680;
-  font-family: "Noto Serif SC", "Source Serif Pro", -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei",
-    sans-serif;
+  /* 霞鹭文楷风格字体设置 */
+  font-family: "ZCOOL XiaoWei", "Zhi Mang Xing", "Liu Jian Mao Cao", "Ma Shan Zheng", "Noto Serif SC", "Source Serif Pro", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
   font-weight: 400;
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.2);
   position: relative;
   z-index: 5;
-  letter-spacing: 0.2px;
-  word-spacing: 0.5px;
+  /* 优化字间距，提升楷书美感 */
+  letter-spacing: 0.3px;
+  word-spacing: 0.7px;
 
   /* 确保文字可以被选中 */
   user-select: text !important;
@@ -683,8 +684,8 @@
   animation-delay: 0s !important;
 }
 
-/* 当内容过多时智能缩小字体 */
-.quote-slide .notice-box:has(p:nth-child(4)) p {
+/* 移除内容过多时智能缩小字体功能，保持字体大小一致 */
+/* .quote-slide .notice-box:has(p:nth-child(4)) p {
   font-size: 15px;
   line-height: 1.65;
   margin: 0 0 14px 0;
@@ -694,7 +695,7 @@
   font-size: 56px;
   line-height: 48px;
   color: #5a6b65;
-}
+} */
 
 /* Swiper 分页器样式 */
 .quote-swiper .swiper-pagination {
@@ -795,8 +796,8 @@
     margin: 0 8px 2px 0;
   }
 
-  /* 移动端内容过多时进一步缩小 */
-  .quote-slide .notice-box:has(p:nth-child(4)) p {
+  /* 移动端移除内容过多时进一步缩小 */
+  /* .quote-slide .notice-box:has(p:nth-child(4)) p {
     font-size: 13px;
     line-height: 1.5;
     margin: 0 0 12px 0;
@@ -806,7 +807,7 @@
     font-size: 42px;
     line-height: 36px;
     color: #5a6b65;
-  }
+  } */
 
   /* 移除移动端悬停效果 */
   /* .quote-slide .notice-box:hover {
