@@ -1,5 +1,13 @@
-/* 舒适护眼字体导入 */
+/* 舒适护眼字体导入 - 优化字符支持 */
 @import url("https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600&family=Source+Serif+Pro:wght@400;500;600&family=Zhi+Mang+Xing&family=Liu+Jian+Mao+Cao&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&display=swap");
+
+/* 添加霞鹭文楷字体支持，确保字符正确显示 */
+@font-face {
+  font-family: "XiaLuWenKai";
+  src: local("霞鹭文楷"), local("XiaLuWenKai"), local("ZCOOL XiaoWei"),
+    url("https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&display=swap");
+  font-display: swap;
+}
 
 /* Swiper 基础样式 - 简化版本 + 强制fade效果 */
 .swiper {
@@ -344,11 +352,13 @@
 .quote-slide .notice-box p {
   margin: 0 0 18px 0;
   line-height: 1.8;
-  font-size: 22px;
+  font-size: 20px;
   color: #7a8680;
-  /* 霞鹭文楷风格字体设置 */
-  font-family: "ZCOOL XiaoWei", "Zhi Mang Xing", "Liu Jian Mao Cao", "Ma Shan Zheng", "Noto Serif SC", "Source Serif Pro", -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+  /* 优化霞鹭文楷字体设置，确保字符正确显示 */
+  font-family: XiaLuWenKai, "ZCOOL XiaoWei", "Zhi Mang Xing", "Liu Jian Mao Cao",
+    "Ma Shan Zheng", "Noto Serif SC", "Source Serif Pro", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei",
+    sans-serif;
   font-weight: 400;
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.2);
   position: relative;
