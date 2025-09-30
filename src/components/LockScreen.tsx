@@ -247,6 +247,10 @@ const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
                   onChange={handlePasswordChange}
                   onKeyPress={handleKeyPress}
                   autoFocus
+                  autoComplete="off"
+                  autoCorrect="off"
+                  autoCapitalize="off"
+                  spellCheck={false}
                 />
                 {passwordError && (
                   <motion.div
