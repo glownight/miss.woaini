@@ -34,21 +34,21 @@ function App() {
 
   // 检查解锁令牌
   useEffect(() => {
-    const unlockToken = sessionStorage.getItem('unlockToken');
+    const unlockToken = sessionStorage.getItem("unlockToken");
     if (unlockToken) {
       try {
         const decoded = atob(unlockToken);
-        if (decoded.startsWith('unlocked_')) {
-          const timestamp = parseInt(decoded.split('_')[1]);
+        if (decoded.startsWith("unlocked_")) {
+          const timestamp = parseInt(decoded.split("_")[1]);
           // 令牌有效期为1小时
           if (Date.now() - timestamp < 3600000) {
             setIsLocked(false);
           } else {
-            sessionStorage.removeItem('unlockToken');
+            sessionStorage.removeItem("unlockToken");
           }
         }
       } catch (error) {
-        sessionStorage.removeItem('unlockToken');
+        sessionStorage.removeItem("unlockToken");
       }
     }
   }, []);
@@ -126,18 +126,14 @@ function App() {
 
   // 如果处于锁屏状态，显示锁屏界面
   if (isLocked) {
-    return (
-      <LockScreen 
-        onUnlock={() => setIsLocked(false)}
-      />
-    );
+    return <LockScreen onUnlock={() => setIsLocked(false)} />;
   }
 
   return (
     <div className="app">
       {/* Fireworks canvas */}
       <Fireworks enabled={fireworksOn} />
-      
+
       {/* 锁屏按钮 */}
       <motion.button
         className="lock-btn"
@@ -148,9 +144,9 @@ function App() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5, delay: 0.5 }}
       >
-        🔒 锁屏
+        🔒
       </motion.button>
-      
+
       {/* Page header maroon area */}
       <header className="page-header">
         <div className="container header-inner">

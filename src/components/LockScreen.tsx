@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import QuoteSwiper from "./QuoteSwiper";
-import Fireworks from "./Fireworks";
 import "./LockScreen.css";
 
 interface LockScreenProps {
@@ -10,7 +8,6 @@ interface LockScreenProps {
 
 const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [fireworksOn, setFireworksOn] = useState(false);
   const [isUnlocking, setIsUnlocking] = useState(false);
   const [showPasswordInput, setShowPasswordInput] = useState(false);
   const [password, setPassword] = useState("");
@@ -117,18 +114,24 @@ const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
   };
 
   const formatDate = (date: Date) => {
-    return date.toLocaleDateString("zh-CN", {
+    const dateString = date.toLocaleDateString("zh-CN", {
       weekday: "long",
       year: "numeric",
       month: "long",
       day: "numeric",
     });
+
+    // 为日期添加适当的间隔，美化显示
+    return dateString.replace(
+      /(\d{4})年(\d{1,2})月(\d{1,2})日(\S+)/,
+      "$1年$2月$3日 $4"
+    );
   };
 
   return (
     <div className={`lock-screen ${isUnlocking ? "unlocking" : ""}`}>
       {/* 背景烟花 */}
-      <Fireworks enabled={fireworksOn} />
+      {/* <Fireworks enabled={fireworksOn} /> */}
 
       {/* 模糊背景层 */}
       <div className="background-overlay"></div>
@@ -163,16 +166,6 @@ const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
           >
             {formatDate(currentTime)}
           </motion.p>
-        </motion.div>
-
-        {/* 名言轮播 */}
-        <motion.div
-          className="quote-section"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 1.2 }}
-        >
-          <QuoteSwiper />
         </motion.div>
 
         {/* 解锁区域 */}
@@ -273,18 +266,6 @@ const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
                 🔓 确认解锁
               </motion.button>
             </motion.div>
-          )}
-
-          {/* 烟花切换按钮 */}
-          {!isLockedOut && (
-            <motion.button
-              className="fireworks-toggle"
-              onClick={() => setFireworksOn(!fireworksOn)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {fireworksOn ? "🎆 关闭烟花" : "🎇 开启烟花"}
-            </motion.button>
           )}
         </motion.div>
       </div>
