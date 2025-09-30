@@ -158,14 +158,11 @@ function App() {
               <Link className={isHome ? "active" : ""} to="/">
                 「荒诞故事」
               </Link>
-              <Link className={!isHome ? "active" : ""} to="">
+              <Link className={location.pathname === "/bookmarks" ? "active" : ""} to="/bookmarks">
                 印记
               </Link>
-              <Link className={!isHome ? "active" : ""} to="">
-                奔走
-              </Link>
-              <Link className={!isHome ? "active" : ""} to="">
-                多言
+              <Link className={location.pathname === "/resume" ? "active" : ""} to="/resume">
+                me
               </Link>
             </div>
           </div>
@@ -270,6 +267,12 @@ function App() {
 
             {/* MD文档页面路由 */}
             <Route path="/song/:filename" element={<MarkdownViewer />} />
+
+            {/* 印记导航页路由 */}
+            <Route path="/bookmarks" element={<MarkdownViewer filename="印记导航" />} />
+
+            {/* 个人简历页路由 */}
+            <Route path="/resume" element={<MarkdownViewer filename="个人简历" />} />
 
             {/* 兼容 /home 与未知路由 */}
             <Route path="/home" element={<Navigate to="/" replace />} />
