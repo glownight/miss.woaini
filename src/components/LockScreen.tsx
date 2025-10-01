@@ -32,13 +32,16 @@ const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
   useEffect(() => {
     if (isLockedOut && lockoutTime > 0) {
       const timer = setTimeout(() => {
-        setLockoutTime((prev) => prev - 1);
+        setLockoutTime((prev) => {
+          const newTime = prev - 1;
+          // 当倒计时结束时，解除锁定状态
+          if (newTime <= 0) {
+            setIsLockedOut(false);
+            setAttemptCount(0);
+          }
+          return newTime;
+        });
       }, 1000);
-
-      if (lockoutTime === 0) {
-        setIsLockedOut(false);
-        setAttemptCount(0);
-      }
 
       return () => clearTimeout(timer);
     }
