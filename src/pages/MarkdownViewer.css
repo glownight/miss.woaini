@@ -45,12 +45,12 @@
   background: var(--github-content-bg);
   border-radius: 8px;
   padding: 16px;
-  opacity: 0;
-  transition: opacity 2s ease;
+  opacity: 1;
+  /* transition: opacity 2s ease; */
 }
 
 .markdown-toc:hover {
-  opacity: 1;
+  /* opacity: 1; */
 }
 
 .toc-header {
@@ -133,10 +133,10 @@
   flex: 1;
 }
 
-.toc-link:hover {
+/* .toc-link:hover {
   color: var(--github-accent);
   background: rgba(83, 155, 245, 0.1);
-}
+} */
 
 /* 不同级别的标题样式 */
 .toc-level-1 .toc-link {

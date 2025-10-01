@@ -31,6 +31,9 @@ function App() {
       comments: string;
     }>
   >([]);
+  const [searchQuery, setSearchQuery] = useState(""); // 搜索关键词
+  const [sortBy, setSortBy] = useState<"title" | "alphabetical" | "alphabetical-reverse">("title"); // 排序方式
+  const [isLoading, setIsLoading] = useState(true); // 加载状态
 
   // 检查解锁令牌
   useEffect(() => {
@@ -55,12 +58,26 @@ function App() {
 
   // 动态加载MD文件列表
   useEffect(() => {
-    const allCategories = getAllCategoriesData();
-    setCategoriesData(allCategories);
+    const loadData = async () => {
+      try {
+        setIsLoading(true);
+        const allCategories = getAllCategoriesData();
+        setCategoriesData(allCategories);
 
-    // 合并所有数据作为默认显示
-    const tracks = getMdFileList();
-    setMusicTracks(tracks);
+        // 合并所有数据作为默认显示
+        const tracks = getMdFileList();
+        setMusicTracks(tracks);
+      } catch (error) {
+        console.error("加载文件数据失败:", error);
+        // 设置空数据以避免页面崩溃
+        setCategoriesData({});
+        setMusicTracks([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
   }, []);
 
   // const shortTracks = [
@@ -112,16 +129,36 @@ function App() {
     return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
   };
 
-  // 根据tab筛选数据
+  // 根据tab、搜索和排序筛选数据
   const getFilteredTracks = () => {
-    if (activeTab === "all") {
-      return musicTracks;
+    let filteredTracks = musicTracks;
+
+    // 根据tab筛选
+    if (activeTab !== "all" && activeTab in categoriesData) {
+      filteredTracks = categoriesData[activeTab] || [];
     }
-    // 根据文件夹进行筛选
-    if (activeTab in categoriesData) {
-      return categoriesData[activeTab] || [];
+
+    // 搜索过滤
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filteredTracks = filteredTracks.filter((track) =>
+        track.title.toLowerCase().includes(query)
+      );
     }
-    return musicTracks;
+
+    // 排序
+    filteredTracks = [...filteredTracks].sort((a, b) => {
+      if (sortBy === "title") {
+        return a.title.localeCompare(b.title);
+      } else if (sortBy === "alphabetical") {
+        return a.title.localeCompare(b.title, "zh-CN");
+      } else if (sortBy === "alphabetical-reverse") {
+        return b.title.localeCompare(a.title, "zh-CN");
+      }
+      return 0;
+    });
+
+    return filteredTracks;
   };
 
   // 如果处于锁屏状态，显示锁屏界面
@@ -324,17 +361,78 @@ function App() {
         <aside className="sidebar-right">
           <div className="card tab-card">
             <div className="tab-header">
-              {Object.entries(folderConfig).map(([key, config]) => (
-                <button
-                  key={key}
-                  className={`tab-btn ${activeTab === key ? "active" : ""}`}
-                  onClick={() => setActiveTab(key)}
-                >
-                  {config.label}
-                </button>
-              ))}
+              {Object.entries(folderConfig).map(([key, config]) => {
+                const categoryData = categoriesData[key] || [];
+                const fileCount = categoryData.length;
+                const hasFiles = fileCount > 0;
+
+                return (
+                  <button
+                    key={key}
+                    className={`tab-btn ${activeTab === key ? "active" : ""} ${
+                      !hasFiles ? "empty" : ""
+                    }`}
+                    onClick={() => setActiveTab(key)}
+                    title={hasFiles ? `${fileCount} 篇文章` : "空文件夹"}
+                  >
+                    <span className="tab-label">{config.label}</span>
+                    {hasFiles && (
+                      <span className="file-count">{fileCount}</span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
+
+          {/* 搜索和排序控件 - 只在选择了具体分类后显示 */}
+          {activeTab !== "all" && (
+            <div className="card search-sort-card">
+              <div className="search-sort-controls">
+                {/* 搜索框 */}
+                <div className="search-input-wrapper">
+                  <input
+                    type="text"
+                    placeholder="搜索文章标题..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="search-input"
+                  />
+                  {searchQuery && (
+                    <button
+                      className="clear-search"
+                      onClick={() => setSearchQuery("")}
+                      aria-label="清除搜索"
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+
+                {/* 排序选项 */}
+                <div className="sort-options">
+                  <label>排序方式：</label>
+                  <select
+                    value={sortBy}
+                    onChange={(e) =>
+                      setSortBy(e.target.value as "title" | "folder")
+                    }
+                    className="sort-select"
+                  >
+                    <option value="alphabetical">按字母顺序</option>
+                    <option value="alphabetical-reverse">按字母倒序</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* 搜索结果统计 */}
+              {searchQuery.trim() && (
+                <div className="search-stats">
+                  找到 {getFilteredTracks().length} 个结果
+                </div>
+              )}
+            </div>
+          )}
 
           {/* 文章列表显示在右侧 - 只在选择了具体分类后显示 */}
           {activeTab !== "all" && (
@@ -348,16 +446,46 @@ function App() {
                 </h2>
               </div> */}
               <div className="music-table">
-                {getFilteredTracks().map((track, i) => (
-                  <div key={`${activeTab}-${i}`} className="track-row">
-                    <Link
-                      to={`/song/${getMarkdownFilename(track.title)}`}
-                      className="track-title"
-                    >
-                      {track.title}
-                    </Link>
+                {isLoading ? (
+                  <div className="loading-state">
+                    <div className="loading-spinner"></div>
+                    <p>正在加载文章...</p>
                   </div>
-                ))}
+                ) : getFilteredTracks().length > 0 ? (
+                  getFilteredTracks().map((track, i) => (
+                    <div key={`${activeTab}-${i}`} className="track-row">
+                      <Link
+                        to={`/song/${getMarkdownFilename(track.title)}`}
+                        className="track-title"
+                      >
+                        {track.title}
+                      </Link>
+                      <div className="track-meta">
+                        <span className="track-folder">
+                          分类:{" "}
+                          {folderConfig[track.folderKey]?.label ||
+                            track.folderKey}
+                        </span>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="no-results">
+                    {searchQuery.trim() ? (
+                      <>
+                        <p>没有找到匹配"{searchQuery}"的文章</p>
+                        <button
+                          className="clear-search-btn"
+                          onClick={() => setSearchQuery("")}
+                        >
+                          清除搜索
+                        </button>
+                      </>
+                    ) : (
+                      <p>该分类下暂无文章</p>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           )}

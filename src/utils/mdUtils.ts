@@ -22,9 +22,13 @@ export const getAllCategoriesData = () => {
 export const getMdFileListByFolder = (_globPath: string, folderKey: string) => {
   const mdFiles = import.meta.glob('../datas/**/*.md', { eager: false });
 
-  // 过滤出指定文件夹的文件
+  // 改进的过滤逻辑：处理中文路径和编码问题
   const folderFiles = Object.keys(mdFiles).filter(path => {
-    return path.includes(`/datas/${folderKey}/`);
+    // 使用更精确的路径匹配，确保只匹配正确的文件夹
+    const folderPattern = `/datas/${folderKey}/`;
+    return path.includes(folderPattern) && 
+           !path.includes(`/datas/${folderKey}/其他/`) && // 避免匹配子文件夹
+           path.split('/').includes(folderKey); // 确保folderKey是路径中的文件夹名
   });
 
   const fileList = folderFiles.map(path => {
