@@ -149,6 +149,34 @@ function App() {
 
       {/* Page header maroon area */}
       <header className="page-header">
+        {/* 装饰元素 - 柔和苹果风格 */}
+        <div className="header-decorations">
+          <div className="decor-shape decor-shape-1"></div>
+          <div className="decor-shape decor-shape-2"></div>
+          <div className="decor-shape decor-shape-3"></div>
+          <div className="decor-line decor-line-1"></div>
+          <div className="decor-line decor-line-2"></div>
+          <div className="decor-line decor-line-3"></div>
+          <div className="decor-dot decor-dot-1"></div>
+          <div className="decor-dot decor-dot-2"></div>
+          <div className="decor-dot decor-dot-3"></div>
+          <div className="decor-dot decor-dot-4"></div>
+          <div className="decor-dot decor-dot-5"></div>
+          <div className="decor-dot decor-dot-6"></div>
+          <div className="decor-dot decor-dot-7"></div>
+          <div className="decor-dot decor-dot-8"></div>
+          <div className="decor-dot decor-dot-9"></div>
+          <div className="decor-center decor-center-1"></div>
+          <div className="decor-center decor-center-2"></div>
+          <div className="decor-center decor-center-3"></div>
+          <div className="decor-center decor-center-4"></div>
+          <div className="decor-center decor-center-5"></div>
+          <div className="decor-center decor-center-6"></div>
+          <div className="decor-center-line decor-center-line-1"></div>
+          <div className="decor-center-line decor-center-line-2"></div>
+          <div className="decor-center-line decor-center-line-3"></div>
+        </div>
+        
         <div className="container header-inner">
           <div className="header-left">
             <h1 className="site-title">

@@ -85,6 +85,316 @@ a:hover {
 .page-header {
   background: var(--primary);
   min-height: 120px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 头部装饰元素 - 苹果风格增强版 */
+.header-decorations {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 苹果风格的渐变背景 */
+.header-decorations::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.15) 100%
+  );
+  opacity: 0.5;
+}
+
+/* 柔和图形装饰 - 避开内容区域 */
+.decor-shape {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.25);
+  animation: float-shape 8s ease-in-out infinite;
+}
+
+.decor-shape-1 {
+  width: 80px;
+  height: 80px;
+  top: -25px;
+  right: 5%;
+  animation-delay: 0s;
+  border-radius: 50%;
+}
+
+.decor-shape-2 {
+  width: 70px;
+  height: 70px;
+  bottom: -20px;
+  left: 5%;
+  animation-delay: 3s;
+  border-radius: 50% 30% 50% 30%;
+}
+
+.decor-shape-3 {
+  width: 50px;
+  height: 50px;
+  top: 15%;
+  left: 5%;
+  animation-delay: 6s;
+  border-radius: 60% 40% 30% 70%;
+}
+
+/* 线条装饰 - 避开内容区域 */
+.decor-line {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+}
+
+.decor-line-1 {
+  top: 20%;
+  left: 3%;
+  width: 60px;
+  height: 2px;
+  transform: rotate(-15deg);
+}
+
+.decor-line-2 {
+  bottom: 25%;
+  right: 3%;
+  width: 50px;
+  height: 2px;
+  transform: rotate(10deg);
+}
+
+.decor-line-3 {
+  top: 70%;
+  left: 80%;
+  width: 30px;
+  height: 2px;
+  transform: rotate(5deg);
+}
+
+/* 圆点装饰 - 避开内容区域 */
+.decor-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  animation: pulse-dot 3s ease-in-out infinite;
+}
+
+.decor-dot-1 {
+  top: 10%;
+  right: 10%;
+  animation-delay: 0s;
+}
+
+.decor-dot-2 {
+  bottom: 30%;
+  left: 8%;
+  animation-delay: 0.5s;
+}
+
+.decor-dot-3 {
+  top: 50%;
+  left: 8%;
+  animation-delay: 1s;
+}
+
+.decor-dot-4 {
+  bottom: 15%;
+  right: 12%;
+  animation-delay: 1.5s;
+}
+
+.decor-dot-5 {
+  top: 25%;
+  left: 75%;
+  animation-delay: 2s;
+}
+
+.decor-dot-6 {
+  bottom: 40%;
+  right: 8%;
+  animation-delay: 2.5s;
+}
+
+.decor-dot-7 {
+  top: 35%;
+  left: 35%;
+  animation-delay: 0.3s;
+}
+
+.decor-dot-8 {
+  top: 45%;
+  left: 45%;
+  animation-delay: 0.8s;
+}
+
+.decor-dot-9 {
+  top: 55%;
+  left: 55%;
+  animation-delay: 1.2s;
+}
+
+/* 中间区域装饰 - 增强版 */
+.decor-center {
+  position: absolute;
+  pointer-events: none;
+}
+
+.decor-center-1 {
+  top: 40%;
+  left: 40%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  animation: subtle-pulse-center 4s ease-in-out infinite;
+}
+
+.decor-center-2 {
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  animation: subtle-pulse-center 5s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.decor-center-3 {
+  top: 60%;
+  left: 60%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  animation: subtle-pulse-center 6s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+.decor-center-4 {
+  top: 35%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  animation: subtle-pulse-center 7s ease-in-out infinite;
+  animation-delay: 0.5s;
+}
+
+.decor-center-5 {
+  top: 55%;
+  left: 40%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  animation: subtle-pulse-center 8s ease-in-out infinite;
+  animation-delay: 1.5s;
+}
+
+.decor-center-6 {
+  top: 45%;
+  left: 55%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  animation: subtle-pulse-center 9s ease-in-out infinite;
+  animation-delay: 2.5s;
+}
+
+/* 中间区域线条装饰 */
+.decor-center-line {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 1px;
+  pointer-events: none;
+}
+
+.decor-center-line-1 {
+  top: 38%;
+  left: 45%;
+  width: 20px;
+  height: 1px;
+  transform: rotate(-10deg);
+  animation: subtle-fade 6s ease-in-out infinite;
+}
+
+.decor-center-line-2 {
+  top: 52%;
+  left: 48%;
+  width: 15px;
+  height: 1px;
+  transform: rotate(5deg);
+  animation: subtle-fade 7s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+.decor-center-line-3 {
+  top: 58%;
+  left: 52%;
+  width: 12px;
+  height: 1px;
+  transform: rotate(-5deg);
+  animation: subtle-fade 8s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+/* 中间区域微动画 */
+@keyframes subtle-pulse-center {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.15;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0.3;
+  }
+}
+
+@keyframes subtle-fade {
+  0%, 100% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+/* 动画定义 */
+@keyframes float-shape {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(-15px) scale(1.1);
+    opacity: 0.7;
+  }
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0.8;
+  }
 }
 .header-inner {
   display: flex;
