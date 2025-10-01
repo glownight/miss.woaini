@@ -69,7 +69,7 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({
           // 三级标题及更深层默认启动折叠
           const defaultCollapsed = new Set<number>();
           extractedToc.forEach((item, index) => {
-            if (item.level >= 2) {
+            if (item.level >= 3) {
               defaultCollapsed.add(index);
             }
           });

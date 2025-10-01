@@ -176,7 +176,7 @@ function App() {
           <div className="decor-center-line decor-center-line-2"></div>
           <div className="decor-center-line decor-center-line-3"></div>
         </div>
-        
+
         <div className="container header-inner">
           <div className="header-left">
             <h1 className="site-title">
@@ -186,17 +186,17 @@ function App() {
               <Link className={isHome ? "active" : ""} to="/">
                 「荒诞故事」
               </Link>
-              <Link
+              {/* <Link
                 className={location.pathname === "/bookmarks" ? "active" : ""}
                 to="/bookmarks"
               >
                 印记
-              </Link>
+              </Link> */}
               <Link
                 className={location.pathname === "/resume" ? "active" : ""}
                 to="/resume"
               >
-                我
+                印记
               </Link>
             </div>
           </div>
