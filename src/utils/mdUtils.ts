@@ -1,14 +1,15 @@
 // 定义文件夹配置
 export const folderConfig = {
+  '最重要': { path: '../datas/最重要/*.md', label: '最重要' },
   '文摘': { path: '../datas/文摘/*.md', label: '文摘' },
   '诗歌': { path: '../datas/诗歌/*.md', label: '诗歌' },
+  '处世': { path: '../datas/处世/*.md', label: '处世' },
   '演讲': { path: '../datas/演讲/*.md', label: '演讲' },
 };
 
 // 获取所有分类的数据
 export const getAllCategoriesData = () => {
   const categoriesData: Record<string, any[]> = {};
-
   Object.entries(folderConfig).forEach(([key, config]) => {
     const data = getMdFileListByFolder(config.path, key);
     categoriesData[key] = data;
