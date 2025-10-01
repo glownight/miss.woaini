@@ -28,6 +28,145 @@
   font-size: 16px;
 }
 
+/* 双栏布局 */
+.markdown-layout {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+/* 左侧目录 */
+.markdown-toc {
+  flex: 0 0 280px;
+  position: sticky;
+  top: 32px;
+  max-height: calc(100vh - 64px);
+  overflow-y: auto;
+  background: var(--github-content-bg);
+  border-radius: 8px;
+  padding: 16px;
+  opacity: 0;
+  transition: opacity 2s ease;
+}
+
+.markdown-toc:hover {
+  opacity: 1;
+}
+
+.toc-header {
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--github-border);
+}
+
+.toc-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--github-text);
+}
+
+.toc-nav {
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
+}
+
+.toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.toc-item {
+  margin: 4px 0;
+  line-height: 1.4;
+}
+
+.toc-item-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toc-collapse-btn {
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--github-text-muted);
+  cursor: pointer;
+  padding: 0;
+  border-radius: 0;
+  font-size: 10px;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.toc-collapse-btn:focus,
+.toc-collapse-btn:focus-visible {
+  outline: none !important;
+}
+
+/* .toc-collapse-btn:hover {
+  color: var(--github-accent);
+  background: rgba(83, 155, 245, 0.1);
+} */
+
+.toc-placeholder {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+.toc-link {
+  display: block;
+  padding: 6px 8px;
+  color: var(--github-text-secondary);
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 12px;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+  flex: 1;
+}
+
+.toc-link:hover {
+  color: var(--github-accent);
+  background: rgba(83, 155, 245, 0.1);
+}
+
+/* 不同级别的标题样式 */
+.toc-level-1 .toc-link {
+  font-weight: 600;
+  color: var(--github-text);
+  font-size: 13px;
+}
+
+.toc-level-2 .toc-link {
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.toc-level-3 .toc-link,
+.toc-level-4 .toc-link,
+.toc-level-5 .toc-link,
+.toc-level-6 .toc-link {
+  font-size: 11px;
+  color: var(--github-text-muted);
+}
+
+/* 右侧内容 */
+.markdown-content {
+  flex: 1;
+  min-width: 0;
+  background: var(--github-content-bg);
+  padding: 32px;
+  border-radius: 6px;
+}
+
 .markdown-header {
   margin-bottom: 24px;
   padding-bottom: 16px;
@@ -53,13 +192,6 @@
   background: var(--github-accent);
   color: #fff;
   border-color: var(--github-accent);
-}
-
-.markdown-content {
-  background: var(--github-content-bg);
-  padding: 32px;
-  border-radius: 6px;
-  /* border: 1px solid var(--github-border); */
 }
 
 /* 标题样式 - GitHub风格 */
@@ -327,8 +459,22 @@
     padding: 16px;
   }
 
+  .markdown-layout {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .markdown-toc {
+    flex: none;
+    position: static;
+    max-height: none;
+    width: 100%;
+    order: 2;
+  }
+
   .markdown-content {
     padding: 16px;
+    order: 1;
   }
 
   .markdown-content .md-h1,
