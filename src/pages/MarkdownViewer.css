@@ -1,19 +1,19 @@
-/* GitHub风格色彩变量 */
+/* GitHub风格色彩变量 - 优化对比度 */
 :root {
-  --github-bg: #0d1117;
-  --github-content-bg: #161b22;
-  --github-border: #30363d;
-  --github-text: #8494a3;
-  --github-text-secondary: #7d8590;
-  --github-text-muted: #656d76;
-  --github-accent: #2e243f;
-  --github-accent-hover: #39225f;
-  --github-success: #238636;
-  --github-warning: #d29922;
-  --github-danger: #da3633;
-  --github-code-bg: #161b22;
-  --github-quote-bg: rgba(124, 58, 237, 0.1);
-  --github-quote-border: #0f0a17;
+  --github-bg: #0a0d12;
+  --github-content-bg: #13161b;
+  --github-border: #2d333b;
+  --github-text: #adbac7;
+  --github-text-secondary: #768390;
+  --github-text-muted: #545d68;
+  --github-accent: #539bf5;
+  --github-accent-hover: #6bc6ff;
+  --github-success: #57ab5a;
+  --github-warning: #c69026;
+  --github-danger: #e5534b;
+  --github-code-bg: #1c2128;
+  --github-quote-bg: rgba(65, 132, 228, 0.15);
+  --github-quote-border: #4184e4;
 }
 
 .markdown-viewer {
@@ -179,8 +179,8 @@
 /* 代码样式 */
 .markdown-content .md-code-inline,
 .markdown-content code:not(pre code) {
-  background: rgba(110, 118, 129, 0.4);
-  color: var(--github-text);
+  background: rgba(110, 118, 129, 0.6);
+  color: #f0f6fc;
   padding: 0.2em 0.4em;
   border-radius: 6px;
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas,
@@ -277,7 +277,7 @@
 
 .markdown-content .md-tr:nth-child(2n),
 .markdown-content tr:nth-child(2n) {
-  background: rgba(110, 118, 129, 0.05);
+  background: rgba(110, 118, 129, 0.1);
 }
 
 /* 任务列表样式 */

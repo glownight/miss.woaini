@@ -136,8 +136,8 @@ a:hover {
 
 /* 如果sidebar存在，调整比例 */
 .sidebar-right {
-  flex: 0.8;
-  min-width: 350px;
+  flex: 0.42;
+  /* min-width: 350px; */
   display: flex;
   flex-direction: column;
   gap: 16px;

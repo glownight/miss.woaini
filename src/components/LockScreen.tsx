@@ -50,7 +50,7 @@ const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
   // 简单的密码混淆（实际项目中应该使用后端验证）
   const validatePassword = (input: string): boolean => {
     // 简单的混淆，实际项目中应该使用后端API验证
-    const obfuscatedPassword = "9" + "9" + "4" + "6";
+    const obfuscatedPassword = "99";
     return input === obfuscatedPassword;
   };
 

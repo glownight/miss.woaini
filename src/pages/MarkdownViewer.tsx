@@ -11,12 +11,14 @@ interface MarkdownViewerProps {
   filename?: string;
 }
 
-const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ filename: propFilename }) => {
+const MarkdownViewer: React.FC<MarkdownViewerProps> = ({
+  filename: propFilename,
+}) => {
   const { filename: urlFilename } = useParams<{ filename: string }>();
   const [content, setContent] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
-  
+
   // 优先使用props传递的filename，如果没有则使用URL参数
   const filename = propFilename || urlFilename;
 
@@ -31,8 +33,8 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ filename: propFilename 
 
         // 使用 import.meta.glob 来动态加载所有 md 文件
         const mdFiles = import.meta.glob("../datas/**/*.md", {
-          query: '?raw',
-          import: 'default',
+          query: "?raw",
+          import: "default",
           eager: false,
         });
 
@@ -87,11 +89,11 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ filename: propFilename 
 
   return (
     <div className="markdown-viewer">
-      <div className="markdown-header">
+      {/* <div className="markdown-header">
         <Link to="/" className="back-link">
           ← 返回首页
         </Link>
-      </div>
+      </div> */}
       <div className="markdown-content">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}

@@ -158,11 +158,17 @@ function App() {
               <Link className={isHome ? "active" : ""} to="/">
                 「荒诞故事」
               </Link>
-              <Link className={location.pathname === "/bookmarks" ? "active" : ""} to="/bookmarks">
+              <Link
+                className={location.pathname === "/bookmarks" ? "active" : ""}
+                to="/bookmarks"
+              >
                 印记
               </Link>
-              <Link className={location.pathname === "/resume" ? "active" : ""} to="/resume">
-                me
+              <Link
+                className={location.pathname === "/resume" ? "active" : ""}
+                to="/resume"
+              >
+                我
               </Link>
             </div>
           </div>
@@ -269,10 +275,16 @@ function App() {
             <Route path="/song/:filename" element={<MarkdownViewer />} />
 
             {/* 印记导航页路由 */}
-            <Route path="/bookmarks" element={<MarkdownViewer filename="印记导航" />} />
+            <Route
+              path="/bookmarks"
+              element={<MarkdownViewer filename="印记导航" />}
+            />
 
             {/* 个人简历页路由 */}
-            <Route path="/resume" element={<MarkdownViewer filename="个人简历" />} />
+            <Route
+              path="/resume"
+              element={<MarkdownViewer filename="个人简历" />}
+            />
 
             {/* 兼容 /home 与未知路由 */}
             <Route path="/home" element={<Navigate to="/" replace />} />
@@ -299,14 +311,14 @@ function App() {
           {/* 文章列表显示在右侧 - 只在选择了具体分类后显示 */}
           {activeTab !== "all" && (
             <div className="card music-card">
-              <div className="section-header">
+              {/* <div className="section-header">
                 <h2>
                   「
                   {folderConfig[activeTab as keyof typeof folderConfig]
                     ?.label || activeTab}
                   」
                 </h2>
-              </div>
+              </div> */}
               <div className="music-table">
                 {getFilteredTracks().map((track, i) => (
                   <div key={`${activeTab}-${i}`} className="track-row">
