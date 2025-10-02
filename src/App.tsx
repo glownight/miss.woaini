@@ -11,6 +11,7 @@ import {
   getAllCategoriesData,
   folderConfig,
 } from "./utils/mdUtils";
+import fixedSortConfig from "./config/sort-config.json";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
@@ -32,7 +33,9 @@ function App() {
     }>
   >([]);
   const [searchQuery, setSearchQuery] = useState(""); // 搜索关键词
-  const [sortBy, setSortBy] = useState<"title" | "alphabetical" | "alphabetical-reverse">("title"); // 排序方式
+  const [sortBy, setSortBy] = useState<
+    "title" | "alphabetical" | "alphabetical-reverse" | "custom"
+  >("title"); // 排序方式，默认使用配置文件排序
   const [isLoading, setIsLoading] = useState(true); // 加载状态
 
   // 检查解锁令牌
@@ -146,17 +149,39 @@ function App() {
       );
     }
 
-    // 排序
-    filteredTracks = [...filteredTracks].sort((a, b) => {
-      if (sortBy === "title") {
-        return a.title.localeCompare(b.title);
-      } else if (sortBy === "alphabetical") {
-        return a.title.localeCompare(b.title, "zh-CN");
-      } else if (sortBy === "alphabetical-reverse") {
-        return b.title.localeCompare(a.title, "zh-CN");
+    // 排序 - 默认使用配置文件中的固定排序
+    if (sortBy === "title") {
+      // 默认排序：使用配置文件中的固定排序
+      const categoryConfig =
+        fixedSortConfig[activeTab as keyof typeof fixedSortConfig];
+      if (categoryConfig && Array.isArray(categoryConfig)) {
+        // 创建标题到索引的映射
+        const orderMap = new Map();
+        categoryConfig.forEach((title, index) => {
+          orderMap.set(title, index);
+        });
+
+        // 按配置顺序排序
+        filteredTracks.sort((a, b) => {
+          const orderA = orderMap.has(a.title)
+            ? orderMap.get(a.title)
+            : Infinity;
+          const orderB = orderMap.has(b.title)
+            ? orderMap.get(b.title)
+            : Infinity;
+          return orderA - orderB;
+        });
       }
-      return 0;
-    });
+    } else {
+      filteredTracks = [...filteredTracks].sort((a, b) => {
+        if (sortBy === "alphabetical") {
+          return a.title.localeCompare(b.title, "zh-CN");
+        } else if (sortBy === "alphabetical-reverse") {
+          return b.title.localeCompare(a.title, "zh-CN");
+        }
+        return 0;
+      });
+    }
 
     return filteredTracks;
   };
@@ -415,10 +440,16 @@ function App() {
                   <select
                     value={sortBy}
                     onChange={(e) =>
-                      setSortBy(e.target.value as "title" | "folder")
+                      setSortBy(
+                        e.target.value as
+                          | "title"
+                          | "alphabetical"
+                          | "alphabetical-reverse"
+                      )
                     }
                     className="sort-select"
                   >
+                    <option value="title">默认排序</option>
                     <option value="alphabetical">按字母顺序</option>
                     <option value="alphabetical-reverse">按字母倒序</option>
                   </select>
@@ -454,15 +485,26 @@ function App() {
                 ) : getFilteredTracks().length > 0 ? (
                   getFilteredTracks().map((track, i) => (
                     <div key={`${activeTab}-${i}`} className="track-row">
+                      {/* 热搜排名序号 */}
+                      <div className="hot-rank">
+                        <span
+                          className={`rank-number ${i < 3 ? "top-rank" : ""}`}
+                        >
+                          {i + 1}
+                        </span>
+                      </div>
+
+                      {/* 文章标题 */}
                       <Link
                         to={`/song/${getMarkdownFilename(track.title)}`}
                         className="track-title"
                       >
                         {track.title}
                       </Link>
+
+                      {/* 分类标签 - 热搜风格 */}
                       <div className="track-meta">
-                        <span className="track-folder">
-                          分类:{" "}
+                        <span className={`hot-tag ${track.folderKey}`}>
                           {folderConfig[track.folderKey]?.label ||
                             track.folderKey}
                         </span>

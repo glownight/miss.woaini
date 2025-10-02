@@ -1,16 +1,16 @@
 /* Reset & base */
 :root {
-  --bg: #0b0f0e;
-  --bg-soft: #0f1413;
-  --panel: #111615;
-  --panel-2: #0e1312;
-  --primary: #372627; /* 豆瓣音乐人页头栗红 */
-  --text: #746d64;
-  --text-weak: #9aa0a4;
-  --line: #1c2220;
-  --accent: #12b886; /* 绿 */
-  --pink: #ff76b8;
-  --yellow: #ffd166;
+  --bg: #0a0a0a;
+  --bg-soft: #0f0f0f;
+  --panel: #111111;
+  --panel-2: #0d0d0d;
+  --primary: #1a1515; /* 更柔和的深色 */
+  --text: #b3b3b3;
+  --text-weak: #666666;
+  --line: #1a1a1a;
+  --accent: #8a8a8a; /* 柔和的灰色 */
+  --pink: #8a6d8b;
+  --yellow: #8a8a6d;
 }
 
 * {
@@ -25,7 +25,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font: 14px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+  font: 11px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, "Noto Sans", "PingFang SC", "Hiragino Sans GB",
     "Microsoft YaHei", sans-serif;
 }
@@ -50,16 +50,17 @@ a:hover {
   border-bottom: 1px solid #0f0f0f;
 }
 .topbar .container {
-  height: 36px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 16px;
 }
 .db-logo {
   font-weight: 700;
   color: #d8d8d8;
-  margin-right: 16px;
+  margin-right: 12px;
+  font-size: 13px;
 }
 .topbar-left {
   display: flex;
@@ -67,14 +68,14 @@ a:hover {
 }
 .topbar-links {
   display: flex;
-  gap: 12px;
-  font-size: 13px;
+  gap: 10px;
+  font-size: 11px;
 }
 .topbar-right {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 13px;
+  gap: 6px;
+  font-size: 11px;
   color: var(--text-weak);
 }
 .topbar .active {
@@ -649,14 +650,6 @@ a:hover {
 .track-title:hover {
   color: var(--accent);
 }
-.track-title::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  display: inline-block;
-}
 .dot {
   width: 6px;
   height: 6px;
@@ -1050,8 +1043,12 @@ a:hover {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .clear-search-btn {
@@ -1067,6 +1064,126 @@ a:hover {
 
 .clear-search-btn:hover {
   background: #0fa37a;
+}
+
+/* 热搜排行榜样式 */
+.track-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
+  position: relative;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.track-row:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateX(2px);
+}
+
+.hot-rank {
+  margin-right: 12px;
+  min-width: 32px;
+  text-align: center;
+}
+
+.rank-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+  font-weight: 500;
+  font-size: 10px;
+  color: var(--text-weak);
+  transition: all 0.3s ease;
+}
+
+.rank-number.top-rank {
+  background: linear-gradient(135deg, #8a6d6d, #6d5a5a);
+  color: #e0e0e0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.rank-number.top-rank:nth-child(1) {
+  background: linear-gradient(135deg, #8a6d6d, #6d5a5a);
+}
+
+.rank-number.top-rank:nth-child(2) {
+  background: linear-gradient(135deg, #6d8a6d, #5a6d5a);
+}
+
+.rank-number.top-rank:nth-child(3) {
+  background: linear-gradient(135deg, #6d6d8a, #5a5a6d);
+}
+
+.track-title {
+  flex: 1;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  line-height: 1.4;
+  margin: 0 12px;
+}
+
+.track-title:hover {
+  color: var(--text-weak);
+}
+
+.hot-tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 16px;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-weak);
+  transition: all 0.3s ease;
+  min-width: 50px;
+  text-align: center;
+}
+
+/* 不同分类的热搜标签颜色 */
+.hot-tag.最重要 {
+  background: linear-gradient(135deg, #8a6d6d, #6d5a5a);
+  color: #e0e0e0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.hot-tag.文摘 {
+  background: linear-gradient(135deg, #6d8a6d, #5a6d5a);
+  color: #e0e0e0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.hot-tag.诗歌 {
+  background: linear-gradient(135deg, #6d6d8a, #5a5a6d);
+  color: #e0e0e0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.hot-tag.处世 {
+  background: linear-gradient(135deg, #8a8a6d, #6d6d5a);
+  color: #e0e0e0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.hot-tag.演讲 {
+  background: linear-gradient(135deg, #6d8a8a, #5a6d6d);
+  color: #e0e0e0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.hot-tag:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 /* 搜索和排序功能样式 */
@@ -1173,12 +1290,91 @@ a:hover {
   font-size: 14px;
 }
 
+/* Custom sorting controls */
+.custom-sort-controls {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.custom-sort-btn {
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--panel-2);
+  color: var(--text);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.custom-sort-btn:hover {
+  background: var(--panel);
+  border-color: var(--accent);
+}
+
+.custom-sort-btn.start-sort {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.custom-sort-btn.save-sort {
+  background: #28a745;
+  color: white;
+  border-color: #28a745;
+}
+
+.custom-sort-btn.cancel-sort {
+  background: #dc3545;
+  color: white;
+  border-color: #dc3545;
+}
+
+.custom-sort-btn.reset-sort {
+  background: #6c757d;
+  color: white;
+  border-color: #6c757d;
+}
+
+/* Drag and drop styles */
+.track-row.draggable {
+  cursor: grab;
+  transition: all 0.2s ease;
+}
+
+.track-row.draggable:active {
+  cursor: grabbing;
+}
+
+.track-row.draggable.dragging {
+  opacity: 0.5;
+  transform: scale(0.98);
+}
+
+.track-row.draggable.drag-over {
+  background: rgba(93, 188, 210, 0.1);
+  border: 1px dashed var(--accent);
+}
+
+/* Custom sorting indicator */
+.track-row.draggable .rank-number {
+  background: rgba(93, 188, 210, 0.2);
+  border: 1px solid var(--accent);
+}
+
+.track-row.draggable:hover {
+  background: rgba(93, 188, 210, 0.05);
+}
+
 /* 响应式优化 */
 @media (max-width: 860px) {
   .search-sort-controls {
     flex-direction: column;
   }
-  
+
   .sort-options {
     justify-content: space-between;
   }
