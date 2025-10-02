@@ -382,13 +382,13 @@ function App() {
             {/* 印记导航页路由 */}
             <Route
               path="/bookmarks"
-              element={<MarkdownViewer filename="印记导航" />}
+              element={<MarkdownViewer filename="markdowns/印记导航" />}
             />
 
             {/* 书签页路由 */}
             <Route
               path="/resume"
-              element={<MarkdownViewer filename="书签" />}
+              element={<MarkdownViewer filename="markdowns/书签" />}
             />
 
             {/* 兼容 /home 与未知路由 */}

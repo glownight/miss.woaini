@@ -1,10 +1,10 @@
 // 定义文件夹配置
 export const folderConfig = {
-  '最重要': { path: '../datas/最重要/*.md', label: '最重要' },
-  '文摘': { path: '../datas/文摘/*.md', label: '文摘' },
-  '诗歌': { path: '../datas/诗歌/*.md', label: '诗歌' },
-  '处世': { path: '../datas/处世/*.md', label: '处世' },
-  '演讲': { path: '../datas/演讲/*.md', label: '演讲' },
+  '最重要': { path: '../datas/markdowns/最重要/*.md', label: '最重要' },
+  '文摘': { path: '../datas/markdowns/文摘/*.md', label: '文摘' },
+  '诗歌': { path: '../datas/markdowns/诗歌/*.md', label: '诗歌' },
+  '处世': { path: '../datas/markdowns/处世/*.md', label: '处世' },
+  '演讲': { path: '../datas/markdowns/演讲/*.md', label: '演讲' },
 };
 
 // 获取所有分类的数据
@@ -25,9 +25,9 @@ export const getMdFileListByFolder = (_globPath: string, folderKey: string) => {
   // 改进的过滤逻辑：处理中文路径和编码问题
   const folderFiles = Object.keys(mdFiles).filter(path => {
     // 使用更精确的路径匹配，确保只匹配正确的文件夹
-    const folderPattern = `/datas/${folderKey}/`;
+    const folderPattern = `/datas/markdowns/${folderKey}/`;
     return path.includes(folderPattern) && 
-           !path.includes(`/datas/${folderKey}/其他/`) && // 避免匹配子文件夹
+           !path.includes(`/datas/markdowns/${folderKey}/其他/`) && // 避免匹配子文件夹
            path.split('/').includes(folderKey); // 确保folderKey是路径中的文件夹名
   });
 
