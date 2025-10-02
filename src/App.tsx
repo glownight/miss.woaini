@@ -37,6 +37,8 @@ function App() {
     "title" | "alphabetical" | "alphabetical-reverse" | "custom"
   >("title"); // 排序方式，默认使用配置文件排序
   const [isLoading, setIsLoading] = useState(true); // 加载状态
+  const [currentPage, setCurrentPage] = useState(1); // 当前页码
+  const [itemsPerPage] = useState(15); // 每页显示的文章数量
 
   // 检查解锁令牌
   useEffect(() => {
@@ -185,6 +187,19 @@ function App() {
 
     return filteredTracks;
   };
+
+  // 获取当前页的文章数据
+  const getCurrentPageTracks = () => {
+    const filteredTracks = getFilteredTracks();
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredTracks.slice(startIndex, endIndex);
+  };
+
+  // 分页相关计算
+  const filteredTracks = getFilteredTracks();
+  const totalPages = Math.ceil(filteredTracks.length / itemsPerPage);
+  const currentPageTracks = getCurrentPageTracks();
 
   // 如果处于锁屏状态，显示锁屏界面
   if (isLocked) {
@@ -397,7 +412,10 @@ function App() {
                     className={`tab-btn ${activeTab === key ? "active" : ""} ${
                       !hasFiles ? "empty" : ""
                     }`}
-                    onClick={() => setActiveTab(key)}
+                    onClick={() => {
+                      setActiveTab(key);
+                      setCurrentPage(1); // 切换分类时重置到第一页
+                    }}
                     title={hasFiles ? `${fileCount} 篇文章` : "空文件夹"}
                   >
                     <span className="tab-label">{config.label}</span>
@@ -420,13 +438,19 @@ function App() {
                     type="text"
                     placeholder="搜索文章标题..."
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setCurrentPage(1); // 搜索时重置到第一页
+                    }}
                     className="search-input"
                   />
                   {searchQuery && (
                     <button
                       className="clear-search"
-                      onClick={() => setSearchQuery("")}
+                      onClick={() => {
+                        setSearchQuery("");
+                        setCurrentPage(1); // 清除搜索时重置到第一页
+                      }}
                       aria-label="清除搜索"
                     >
                       ×
@@ -459,7 +483,7 @@ function App() {
               {/* 搜索结果统计 */}
               {searchQuery.trim() && (
                 <div className="search-stats">
-                  找到 {getFilteredTracks().length} 个结果
+                  找到 {filteredTracks.length} 个结果
                 </div>
               )}
             </div>
@@ -482,35 +506,76 @@ function App() {
                     <div className="loading-spinner"></div>
                     <p>正在加载文章...</p>
                   </div>
-                ) : getFilteredTracks().length > 0 ? (
-                  getFilteredTracks().map((track, i) => (
-                    <div key={`${activeTab}-${i}`} className="track-row">
-                      {/* 热搜排名序号 */}
-                      <div className="hot-rank">
-                        <span
-                          className={`rank-number ${i < 3 ? "top-rank" : ""}`}
+                ) : filteredTracks.length > 0 ? (
+                  <>
+                    {currentPageTracks.map((track, i) => {
+                      const globalIndex = (currentPage - 1) * itemsPerPage + i;
+                      return (
+                        <div
+                          key={`${activeTab}-${globalIndex}`}
+                          className="track-row"
                         >
-                          {i + 1}
-                        </span>
-                      </div>
+                          {/* 热搜排名序号 */}
+                          <div className="hot-rank">
+                            <span
+                              className={`rank-number ${
+                                globalIndex < 3 ? "top-rank" : ""
+                              }`}
+                            >
+                              {globalIndex + 1}
+                            </span>
+                          </div>
 
-                      {/* 文章标题 */}
-                      <Link
-                        to={`/song/${getMarkdownFilename(track.title)}`}
-                        className="track-title"
-                      >
-                        {track.title}
-                      </Link>
+                          {/* 文章标题 */}
+                          <Link
+                            to={`/song/${getMarkdownFilename(track.title)}`}
+                            className="track-title"
+                          >
+                            {track.title}
+                          </Link>
 
-                      {/* 分类标签 - 热搜风格 */}
-                      <div className="track-meta">
-                        <span className={`hot-tag ${track.folderKey}`}>
-                          {folderConfig[track.folderKey]?.label ||
-                            track.folderKey}
+                          {/* 分类标签 - 热搜风格 */}
+                          <div className="track-meta">
+                            <span className={`hot-tag ${track.folderKey}`}>
+                              {folderConfig[track.folderKey]?.label ||
+                                track.folderKey}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                    {/* 分页组件 */}
+                    {totalPages > 1 && (
+                      <div className="pagination">
+                        <button
+                          className="pagination-btn"
+                          onClick={() =>
+                            setCurrentPage((prev) => Math.max(prev - 1, 1))
+                          }
+                          disabled={currentPage === 1}
+                        >
+                          上一页
+                        </button>
+
+                        <span className="pagination-info">
+                          第 {currentPage} 页，共 {totalPages} 页
                         </span>
+
+                        <button
+                          className="pagination-btn"
+                          onClick={() =>
+                            setCurrentPage((prev) =>
+                              Math.min(prev + 1, totalPages)
+                            )
+                          }
+                          disabled={currentPage === totalPages}
+                        >
+                          下一页
+                        </button>
                       </div>
-                    </div>
-                  ))
+                    )}
+                  </>
                 ) : (
                   <div className="no-results">
                     {searchQuery.trim() ? (
