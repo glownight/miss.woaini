@@ -458,7 +458,7 @@ a:hover {
   flex-direction: column;
   gap: 16px;
   opacity: 0;
-  transition: opacity 6s ease;
+  transition: opacity 5s ease;
 }
 
 .sidebar-right:hover {
