@@ -537,7 +537,7 @@ function App() {
                           {/* 分类标签 - 热搜风格 */}
                           <div className="track-meta">
                             <span className={`hot-tag ${track.folderKey}`}>
-                              {folderConfig[track.folderKey]?.label ||
+                              {track.folderKey && folderConfig[track.folderKey as keyof typeof folderConfig]?.label ||
                                 track.folderKey}
                             </span>
                           </div>
