@@ -222,7 +222,7 @@ const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
               >
                 🔓
               </motion.span>
-              <span>向上滑动解锁</span>
+              <span>解锁</span>
             </motion.button>
           ) : (
             <motion.div

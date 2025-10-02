@@ -275,6 +275,12 @@ function App() {
               >
                 印记
               </Link>
+              <Link
+                className={location.pathname === "/books" ? "active" : ""}
+                to="/books"
+              >
+                书
+              </Link>
             </div>
           </div>
           <div className="header-right">
@@ -537,7 +543,10 @@ function App() {
                           {/* 分类标签 - 热搜风格 */}
                           <div className="track-meta">
                             <span className={`hot-tag ${track.folderKey}`}>
-                              {track.folderKey && folderConfig[track.folderKey as keyof typeof folderConfig]?.label ||
+                              {(track.folderKey &&
+                                folderConfig[
+                                  track.folderKey as keyof typeof folderConfig
+                                ]?.label) ||
                                 track.folderKey}
                             </span>
                           </div>
