@@ -385,10 +385,10 @@ function App() {
               element={<MarkdownViewer filename="印记导航" />}
             />
 
-            {/* 个人简历页路由 */}
+            {/* 书签页路由 */}
             <Route
               path="/resume"
-              element={<MarkdownViewer filename="个人简历" />}
+              element={<MarkdownViewer filename="书签" />}
             />
 
             {/* 兼容 /home 与未知路由 */}
