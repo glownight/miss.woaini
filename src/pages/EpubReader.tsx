@@ -27,6 +27,19 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
   // 保存rendition引用以便动态更新样式
   const [rendition, setRendition] = useState<any>(null);
 
+  // 翻页功能
+  const handlePreviousPage = () => {
+    if (rendition) {
+      rendition.prev();
+    }
+  };
+
+  const handleNextPage = () => {
+    if (rendition) {
+      rendition.next();
+    }
+  };
+
   // 字体映射表
   const fontMap: { [key: string]: string } = {
     "system-ui":
@@ -784,6 +797,20 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
 
       {/* EPUB阅读区域 */}
       <div className="epub-reading-area" style={{ fontSize: `${fontSize}px` }}>
+        {/* 左侧翻页区域 - 隐形 */}
+        <button
+          className="epub-page-click-area epub-page-click-left"
+          onClick={handlePreviousPage}
+          aria-label="上一页"
+        />
+
+        {/* 右侧翻页区域 - 隐形 */}
+        <button
+          className="epub-page-click-area epub-page-click-right"
+          onClick={handleNextPage}
+          aria-label="下一页"
+        />
+
         <div className="epub-content">
           <ReactReader
             url={bookUrl}

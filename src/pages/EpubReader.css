@@ -204,6 +204,59 @@
   width: 100%;
 }
 
+/* 隐藏react-reader默认的翻页箭头 */
+.epub-reading-area button,
+.epub-content button,
+.epub-content button[aria-label="previous page"],
+.epub-content button[aria-label="next page"],
+.epub-content div[class*="arrow"],
+.epub-content button[class*="arrow"],
+.epub-content button[class*="Arrow"],
+div[class*="readerArea"] > button,
+div[class*="Reader"] > button {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+/* 但保留我们自己的翻页区域 */
+.epub-page-click-area {
+  display: block !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+/* 左右翻页点击区域 - 隐形 */
+.epub-page-click-area {
+  position: fixed;
+  top: 50px;
+  bottom: 0;
+  width: 200px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 30;
+  transition: background-color 0.2s ease;
+}
+
+.epub-page-click-area:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.epub-page-click-left {
+  left: 0;
+}
+
+.epub-page-click-right {
+  right: 0;
+}
+
+/* 全屏模式下的翻页区域 */
+.epub-reader-novel.fullscreen-mode .epub-page-click-area {
+  top: 0;
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
   .epub-reading-area {
@@ -216,5 +269,9 @@
 
   .epub-reader-novel.fullscreen-mode .epub-reading-area {
     padding: 20px 30px;
+  }
+
+  .epub-page-click-area {
+    width: 100px;
   }
 }
