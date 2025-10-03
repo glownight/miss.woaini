@@ -446,6 +446,8 @@ a:hover {
 .main-left {
   flex: 1;
   min-width: 0;
+  max-height: 50vh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -901,7 +903,8 @@ a:hover {
 
   .main-left {
     flex: none;
-    width: 100%;
+    /* max-height: 50vh; */
+    /* overflow: hidden; */
   }
 
   .notice-card .notice-box {
@@ -1416,4 +1419,23 @@ a:hover {
   .sort-options {
     justify-content: space-between;
   }
+}
+
+/* EPUB测试页面样式 */
+.epub-test-page {
+  padding: 20px;
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+.epub-test-page h2 {
+  color: var(--text);
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.epub-test-page p {
+  color: var(--text-weak);
+  margin-bottom: 30px;
+  font-size: 16px;
 }

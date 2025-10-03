@@ -1,0 +1,220 @@
+/* EPUB阅读器 - 网文风格 */
+
+.epub-reader-novel {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei",
+    sans-serif;
+  background: #0d0d0d;
+  color: #b8b8b8;
+  position: relative;
+  overflow: hidden;
+}
+
+.epub-reader-novel.light {
+  background: #ffffff;
+  color: #333333;
+}
+
+.epub-reader-novel.dark {
+  background: #0d0d0d;
+  color: #b8b8b8;
+}
+
+.epub-reader-novel.sepia {
+  background: #f4f1e8;
+  color: #5c4b37;
+}
+
+/* 复用BookReader的样式类名，无需额外定义 */
+
+/* EPUB特有的阅读区域 */
+.epub-reading-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+  overflow: auto;
+  background: #0d0d0d;
+  min-height: 0;
+}
+
+.epub-reader-novel.light .epub-reading-area {
+  background: #ffffff;
+}
+
+.epub-reader-novel.sepia .epub-reading-area {
+  background: #f4f1e8;
+}
+
+.epub-content {
+  width: 100%;
+  max-width: 1400px;
+  height: 100%;
+  min-height: 400px;
+  background: #0d0d0d;
+}
+
+.epub-reader-novel.light .epub-content {
+  background: #ffffff;
+}
+
+.epub-reader-novel.sepia .epub-content {
+  background: #f4f1e8;
+}
+
+/* ReactReader 样式覆盖 */
+.epub-content > div {
+  height: 100% !important;
+  background: #0d0d0d !important;
+}
+
+.epub-reader-novel.light .epub-content > div {
+  background: #ffffff !important;
+}
+
+.epub-reader-novel.sepia .epub-content > div {
+  background: #f4f1e8 !important;
+}
+
+/* ReactReader iframe 样式 */
+.epub-content iframe {
+  background: #0d0d0d !important;
+}
+
+.epub-reader-novel.light .epub-content iframe {
+  background: #ffffff !important;
+}
+
+.epub-reader-novel.sepia .epub-content iframe {
+  background: #f4f1e8 !important;
+}
+
+/* 强制所有ReactReader子元素使用深色背景 */
+.epub-content * {
+  background-color: transparent !important;
+}
+
+.epub-content > div > div {
+  background: #0d0d0d !important;
+}
+
+.epub-reader-novel.light .epub-content > div > div {
+  background: #ffffff !important;
+}
+
+.epub-reader-novel.sepia .epub-content > div > div {
+  background: #f4f1e8 !important;
+}
+
+/* 加载和错误状态 */
+.loading-container,
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  color: inherit;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(74, 144, 226, 0.2);
+  border-top: 4px solid #4a90e2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-container p,
+.error-container p {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.error-container button {
+  margin-top: 20px;
+  padding: 10px 24px;
+  background: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.error-container button:hover {
+  background: #3a7bc8;
+}
+
+/* 全屏模式样式 */
+.epub-reader-novel.fullscreen-mode {
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.epub-reader-novel.fullscreen-mode .right-toolbar {
+  position: absolute;
+  right: 40px;
+  gap: 12px;
+  opacity: 0.3;
+  transition: opacity 0.3s ease;
+}
+
+.epub-reader-novel.fullscreen-mode .right-toolbar:hover {
+  opacity: 1;
+}
+
+.epub-reader-novel.fullscreen-mode .toolbar-btn {
+  width: 40px;
+  height: 40px;
+}
+
+.epub-reader-novel.fullscreen-mode .settings-panel-novel {
+  position: absolute;
+  right: 95px;
+}
+
+.epub-reader-novel.fullscreen-mode .epub-reading-area {
+  padding: 60px 100px;
+  flex: 1;
+  min-height: 0;
+}
+
+.epub-reader-novel.fullscreen-mode .epub-content {
+  max-width: 100%;
+  height: 100%;
+  width: 100%;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .epub-reading-area {
+    padding: 10px;
+  }
+
+  .epub-content {
+    height: calc(100vh - 70px);
+  }
+
+  .epub-reader-novel.fullscreen-mode .epub-reading-area {
+    padding: 20px 30px;
+  }
+}

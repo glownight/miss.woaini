@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPUB文件直接加载测试</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        h1 {
+            color: #333;
+        }
+        .info {
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #e8f4f8;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .log {
+            background-color: #333;
+            color: #fff;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .file-link {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .file-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>EPUB文件直接加载测试</h1>
+        
+        <div class="info">
+            <p><strong>测试文件路径:</strong> <a href="/books/随笔/瓦尔登湖/瓦尔登湖.epub" class="file-link" target="_blank">/books/随笔/瓦尔登湖/瓦尔登湖.epub</a></p>
+        </div>
+        
+        <button id="testButton">开始测试加载EPUB文件</button>
+        
+        <div id="results"></div>
+        
+        <div class="log" id="log">// 日志将显示在这里
+// 点击上方按钮开始测试
+</div>
+    </div>
+    
+    <script>
+        const testButton = document.getElementById('testButton');
+        const results = document.getElementById('results');
+        const log = document.getElementById('log');
+        const epubUrl = '/books/随笔/瓦尔登湖/瓦尔登湖.epub';
+        
+        function appendLog(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            log.textContent += `[${timestamp}] ${message}\n`;
+            log.scrollTop = log.scrollHeight;
+        }
+        
+        function clearResults() {
+            results.innerHTML = '';
+        }
+        
+        function addResult(type, message) {
+            const div = document.createElement('div');
+            div.className = type;
+            div.textContent = message;
+            results.appendChild(div);
+        }
+        
+        async function testEpubFile() {
+            clearResults();
+            appendLog('开始测试EPUB文件加载...');
+            appendLog(`测试文件路径: ${epubUrl}`);
+            
+            try {
+                // 测试HEAD请求
+                appendLog('发送HEAD请求检查文件是否存在...');
+                const headResponse = await fetch(epubUrl, {
+                    method: 'HEAD',
+                    headers: {
+                        'Accept': 'application/epub+zip, application/octet-stream'
+                    }
+                });
+                
+                appendLog(`HEAD请求状态码: ${headResponse.status}`);
+                
+                if (!headResponse.ok) {
+                    throw new Error(`文件访问失败，状态码: ${headResponse.status}`);
+                }
+                
+                // 获取文件信息
+                const contentType = headResponse.headers.get('content-type');
+                const contentLength = headResponse.headers.get('content-length');
+                
+                appendLog(`内容类型: ${contentType}`);
+                appendLog(`文件大小: ${contentLength} 字节 (${(parseInt(contentLength) / 1024 / 1024).toFixed(2)} MB)`);
+                
+                // 显示响应头信息
+                appendLog('\n响应头信息:');
+                headResponse.headers.forEach((value, key) => {
+                    appendLog(`${key}: ${value}`);
+                });
+                
+                // 测试部分下载
+                appendLog('\n尝试下载部分文件以验证完整性...');
+                const partialResponse = await fetch(epubUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Range': 'bytes=0-1023', // 只下载前1KB
+                        'Accept': 'application/epub+zip'
+                    }
+                });
+                
+                appendLog(`部分下载状态码: ${partialResponse.status}`);
+                
+                if (partialResponse.ok || partialResponse.status === 206) {
+                    // 验证文件头是否为ZIP文件(EPUB是ZIP格式的特殊类型)
+                    const blob = await partialResponse.blob();
+                    const arrayBuffer = await blob.arrayBuffer();
+                    const uint8 = new Uint8Array(arrayBuffer.slice(0, 4));
+                    const header = Array.from(uint8).map(b => b.toString(16).padStart(2, '0')).join('');
+                    
+                    appendLog(`文件头字节(十六进制): ${header}`);
+                    appendLog(`成功下载部分文件，大小: ${blob.size} 字节`);
+                    
+                    // 检查是否为ZIP文件(标准ZIP文件头为504b0304)
+                    if (header.toLowerCase() === '504b0304') {
+                        appendLog('✓ 文件看起来是有效的ZIP格式(EPUB文件基于ZIP格式)');
+                        addResult('success', '✓ 测试成功! EPUB文件可以正常访问，文件格式有效。');
+                    } else {
+                        appendLog('⚠️ 文件头不符合ZIP格式，可能不是有效的EPUB文件');
+                        addResult('error', '⚠️ 警告: 文件头不符合ZIP格式，可能不是有效的EPUB文件。');
+                    }
+                } else {
+                    throw new Error(`部分下载失败，状态码: ${partialResponse.status}`);
+                }
+                
+            } catch (error) {
+                appendLog(`错误: ${error.message}`);
+                addResult('error', `✗ 测试失败: ${error.message}`);
+            }
+            
+            appendLog('\n测试完成');
+        }
+        
+        testButton.addEventListener('click', testEpubFile);
+        
+        // 页面加载时自动执行测试
+        window.addEventListener('load', () => {
+            appendLog('页面已加载，点击按钮开始测试');
+        });
+    </script>
+</body>
+</html>

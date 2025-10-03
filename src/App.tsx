@@ -5,12 +5,17 @@ import Fireworks from "./components/Fireworks";
 import QuoteSwiper from "./components/QuoteSwiper";
 import MarkdownViewer from "./pages/MarkdownViewer";
 import LockScreen from "./components/LockScreen";
+import BookReader from "./pages/BookReader";
+import EpubReader from "./pages/EpubReader";
+import EpubTest from "./pages/EpubTest";
+import MinimalEpubReader from "./pages/MinimalEpubReader";
 import {
   getMdFileList,
   titleToFileName,
   getAllCategoriesData,
   folderConfig,
 } from "./utils/mdUtils";
+import { getBookList, type Book } from "./utils/bookUtils";
 import fixedSortConfig from "./config/sort-config.json";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
@@ -39,6 +44,13 @@ function App() {
   const [isLoading, setIsLoading] = useState(true); // 加载状态
   const [currentPage, setCurrentPage] = useState(1); // 当前页码
   const [itemsPerPage] = useState(15); // 每页显示的文章数量
+
+  // 电子书阅读相关状态
+  const [books, setBooks] = useState<Book[]>([]); // 书籍列表
+  const [currentBook, setCurrentBook] = useState<Book | null>(null); // 当前阅读的书籍
+  const [bookCurrentPage, setBookCurrentPage] = useState(1); // 书籍当前页码
+  const [fontSize, setFontSize] = useState(16); // 字体大小
+  const [theme, setTheme] = useState("light"); // 主题
 
   // 检查解锁令牌
   useEffect(() => {
@@ -85,10 +97,22 @@ function App() {
     loadData();
   }, []);
 
-  // const shortTracks = [
-  //   { title: "Ain't I Lost Control", plays: "48570", comments: "0" },
-  //   { title: "仰世而来（Demo）", plays: "32145", comments: "0" },
-  // ];
+  // 加载书籍数据
+  useEffect(() => {
+    const loadBooks = () => {
+      try {
+        const bookList = getBookList();
+        console.log("App.tsx: 加载到的书籍数据:", bookList);
+        console.log("App.tsx: 书籍数量:", bookList.length);
+        setBooks(bookList);
+      } catch (error) {
+        console.error("加载书籍数据失败:", error);
+        setBooks([]);
+      }
+    };
+
+    loadBooks();
+  }, []);
 
   const projects = [
     {
@@ -263,23 +287,17 @@ function App() {
               <Link className={isHome ? "active" : ""} to="/">
                 「荒诞故事」
               </Link>
-              {/* <Link
-                className={location.pathname === "/bookmarks" ? "active" : ""}
-                to="/bookmarks"
-              >
-                印记
-              </Link> */}
-              <Link
-                className={location.pathname === "/resume" ? "active" : ""}
-                to="/resume"
-              >
-                印记
-              </Link>
               <Link
                 className={location.pathname === "/books" ? "active" : ""}
                 to="/books"
               >
                 书
+              </Link>
+              <Link
+                className={location.pathname === "/resume" ? "active" : ""}
+                to="/resume"
+              >
+                印记
               </Link>
             </div>
           </div>
@@ -395,6 +413,94 @@ function App() {
             <Route
               path="/resume"
               element={<MarkdownViewer filename="markdowns/书签" />}
+            />
+
+            {/* 电子书阅读页路由 */}
+            <Route
+              path="/books"
+              element={
+                <BookReader
+                  books={books}
+                  currentBook={currentBook}
+                  setCurrentBook={setCurrentBook}
+                  currentPage={bookCurrentPage}
+                  setCurrentPage={setBookCurrentPage}
+                  fontSize={fontSize}
+                  setFontSize={setFontSize}
+                  theme={theme}
+                  setTheme={setTheme}
+                />
+              }
+            />
+
+            {/* 极简EPUB阅读器测试路由 */}
+            <Route
+              path="/minimal-epub-reader"
+              element={
+                <div className="epub-test-page">
+                  <h2>极简EPUB阅读器测试</h2>
+                  <MinimalEpubReader />
+                </div>
+              }
+            />
+
+            {/* EPUB文件直接加载测试路由 */}
+            <Route
+              path="/epub-file-test"
+              element={
+                <div className="epub-test-page">
+                  <h2>EPUB文件直接加载测试</h2>
+                  <EpubTest />
+                </div>
+              }
+            />
+
+            {/* EPUB阅读器测试路由 - 使用更可靠的相对路径 */}
+            <Route
+              path="/epub-test"
+              element={
+                <div className="epub-test-page">
+                  <h2>EPUB阅读器测试页面</h2>
+                  <p>直接测试瓦尔登湖EPUB文件的加载情况：</p>
+                  <EpubReader
+                    // 使用绝对路径指向public目录下的文件
+                    epubUrl="/books/随笔/瓦尔登湖/瓦尔登湖.epub"
+                    title="瓦尔登湖"
+                    author="亨利·戴维·梭罗"
+                    onBack={() => window.history.back()}
+                    // 添加调试参数以获取更多信息
+                    debug={true}
+                  />
+                  <div
+                    style={{
+                      margin: "20px",
+                      padding: "15px",
+                      backgroundColor: "#f5f5f5",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    <h4>调试信息</h4>
+                    <p>
+                      <strong>尝试加载的路径:</strong>{" "}
+                      /books/随笔/瓦尔登湖/瓦尔登湖.epub
+                    </p>
+                    <p>
+                      <strong>实际文件位置:</strong>{" "}
+                      public/books/随笔/瓦尔登湖/瓦尔登湖.epub
+                    </p>
+                    <p>
+                      <strong>相对URL访问测试:</strong>{" "}
+                      <a
+                        href="/books/随笔/瓦尔登湖/瓦尔登湖.epub"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        点击测试文件访问
+                      </a>
+                    </p>
+                  </div>
+                </div>
+              }
             />
 
             {/* 兼容 /home 与未知路由 */}
