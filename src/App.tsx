@@ -47,10 +47,6 @@ function App() {
 
   // 电子书阅读相关状态
   const [books, setBooks] = useState<Book[]>([]); // 书籍列表
-  const [currentBook, setCurrentBook] = useState<Book | null>(null); // 当前阅读的书籍
-  const [bookCurrentPage, setBookCurrentPage] = useState(1); // 书籍当前页码
-  const [fontSize, setFontSize] = useState(16); // 字体大小
-  const [theme, setTheme] = useState("light"); // 主题
 
   // 检查解锁令牌
   useEffect(() => {
@@ -416,22 +412,7 @@ function App() {
             />
 
             {/* 电子书阅读页路由 */}
-            <Route
-              path="/books"
-              element={
-                <BookReader
-                  books={books}
-                  currentBook={currentBook}
-                  setCurrentBook={setCurrentBook}
-                  currentPage={bookCurrentPage}
-                  setCurrentPage={setBookCurrentPage}
-                  fontSize={fontSize}
-                  setFontSize={setFontSize}
-                  theme={theme}
-                  setTheme={setTheme}
-                />
-              }
-            />
+            <Route path="/books" element={<BookReader books={books} />} />
 
             {/* 极简EPUB阅读器测试路由 */}
             <Route
@@ -464,12 +445,9 @@ function App() {
                   <p>直接测试瓦尔登湖EPUB文件的加载情况：</p>
                   <EpubReader
                     // 使用绝对路径指向public目录下的文件
-                    epubUrl="/books/随笔/瓦尔登湖/瓦尔登湖.epub"
-                    title="瓦尔登湖"
-                    author="亨利·戴维·梭罗"
+                    bookUrl="/books/随笔/瓦尔登湖/瓦尔登湖.epub"
+                    bookTitle="瓦尔登湖"
                     onBack={() => window.history.back()}
-                    // 添加调试参数以获取更多信息
-                    debug={true}
                   />
                   <div
                     style={{

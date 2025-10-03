@@ -16,16 +16,68 @@ const EpubReader: React.FC<EpubReaderProps> = ({
 }) => {
   const [location, setLocation] = useState<string | number>(0);
   const [theme, setTheme] = useState<"light" | "dark" | "sepia">("dark");
-  const [fontSize, setFontSize] = useState(16);
+  const [fontSize, setFontSize] = useState(24);
   const [showSettings, setShowSettings] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   // 新增阅读设置状态
   const [lineHeight, setLineHeight] = useState(1.9);
   const [letterSpacing, setLetterSpacing] = useState(0);
+  const [fontFamily, setFontFamily] = useState(
+    "'XiaLu-WenKai', 'KaiTi', cursive"
+  );
+  const [showFontPanel, setShowFontPanel] = useState(false);
 
   // 保存rendition引用以便动态更新样式
   const [rendition, setRendition] = useState<any>(null);
+
+  // 字体映射表
+  const fontMap: { [key: string]: string } = {
+    "system-ui":
+      "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif",
+    serif: "'Songti SC', 'SimSun', 'STSong', serif",
+    "sans-serif":
+      "'PingFang SC', 'Microsoft YaHei', 'Hiragino Sans GB', sans-serif",
+    FZSongSan: "'FZSongSan', 'SimSun', serif",
+    FZYouSong: "'FZYouSong', 'SimSun', serif",
+    FZLanTingHei: "'FZLanTingHei', 'Microsoft YaHei', sans-serif",
+    FZLanTingYuan: "'FZLanTingYuan', 'Microsoft YaHei', sans-serif",
+    FZShengShiKai: "'FZShengShiKai', 'KaiTi', 'STKaiti', cursive",
+    FZJuZhenFang: "'FZJuZhenFang', 'FangSong', 'STFangsong', serif",
+    FZZhengDieKai: "'FZZhengDieKai', 'KaiTi', cursive",
+    CangErJinKai04: "'CangEr-JinKai-04', 'KaiTi', cursive",
+    CangErJinKai05: "'CangEr-JinKai-05', 'KaiTi', cursive",
+    CangErXuanSan04: "'CangEr-XuanSan-04', 'SimSun', serif",
+    CangErXuanSan05: "'CangEr-XuanSan-05', 'SimSun', serif",
+    CangErYunHei04: "'CangEr-YunHei-04', 'Microsoft YaHei', sans-serif",
+    CangErYunHei05: "'CangEr-YunHei-05', 'Microsoft YaHei', sans-serif",
+    CangErMingKai04: "'CangEr-MingKai-04', 'KaiTi', cursive",
+    CangErMingKai05: "'CangEr-MingKai-05', 'KaiTi', cursive",
+    CangErZhuangYuanKai: "'CangEr-ZhuangYuanKai', 'KaiTi', cursive",
+    CangErLanKai: "'CangEr-LanKai', 'KaiTi', cursive",
+    CangErHuaXin: "'CangEr-HuaXin', 'SimSun', serif",
+    CangErYuKai: "'CangEr-YuKai', 'KaiTi', cursive",
+    JingHuaLaoSong: "'JingHua-LaoSong', 'SimSun', serif",
+    HanChanYuSong: "'HanChan-YuSong', 'SimSun', serif",
+    HanYiKongShanKai: "'HanYi-KongShanKai', 'KaiTi', cursive",
+    HuiWenZhengKai: "'HuiWen-ZhengKai', 'KaiTi', cursive",
+    HanChanZhengKai: "'HanChan-ZhengKai', 'KaiTi', cursive",
+    XiaLuWenKai: "'XiaLu-WenKai', 'KaiTi', cursive",
+    AIKai: "'AI-Kai', 'KaiTi', cursive",
+  };
+
+  // 应用字体
+  const applyFont = (fontKey: string) => {
+    const actualFont = fontMap[fontKey] || fontKey;
+    setFontFamily(actualFont);
+    // setShowFontPanel(false);
+  };
+
+  // 检查字体是否激活
+  const isFontActive = (fontKey: string) => {
+    const targetFont = fontMap[fontKey];
+    return fontFamily === targetFont;
+  };
 
   // 初始化时设置主题
   useEffect(() => {
@@ -89,6 +141,7 @@ const EpubReader: React.FC<EpubReaderProps> = ({
       rendition.themes.fontSize(`${fontSize}px`);
       rendition.themes.override("line-height", `${lineHeight}`);
       rendition.themes.override("letter-spacing", `${letterSpacing}px`);
+      rendition.themes.override("font-family", fontFamily);
 
       // 应用主题样式
       if (theme === "dark") {
@@ -102,7 +155,7 @@ const EpubReader: React.FC<EpubReaderProps> = ({
         rendition.themes.override("background", "#f4f1e8");
       }
     }
-  }, [fontSize, lineHeight, letterSpacing, theme, rendition]);
+  }, [fontSize, lineHeight, letterSpacing, fontFamily, theme, rendition]);
 
   return (
     <div
@@ -142,7 +195,7 @@ const EpubReader: React.FC<EpubReaderProps> = ({
               <button
                 className="toolbar-btn"
                 title="字体设置"
-                onClick={toggleSettings}
+                onClick={() => setShowFontPanel(!showFontPanel)}
               >
                 <span className="font-text">字</span>
               </button>
@@ -351,6 +404,316 @@ const EpubReader: React.FC<EpubReaderProps> = ({
         </aside>
       )}
 
+      {/* 字体选择面板 */}
+      <AnimatePresence>
+        {showFontPanel && (
+          <motion.div
+            className="font-panel"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+          >
+            <div className="font-panel-header">
+              <span>字体</span>
+              <button
+                onClick={() => setShowFontPanel(false)}
+                className="close-btn"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="font-categories">
+              <button className="active">全部(29)</button>
+              <button>仓耳(12)</button>
+              <button>方正(7)</button>
+              <button>其他(9)</button>
+            </div>
+            <div className="font-grid">
+              <button
+                className={
+                  isFontActive("system-ui") ? "font-item active" : "font-item"
+                }
+                onClick={() => applyFont("system-ui")}
+              >
+                系统字体
+              </button>
+              <button
+                className={
+                  isFontActive("serif") ? "font-item active" : "font-item"
+                }
+                onClick={() => applyFont("serif")}
+                style={{ fontFamily: "'SimSun', serif" }}
+              >
+                思源宋体
+              </button>
+              <button
+                className={
+                  isFontActive("sans-serif") ? "font-item active" : "font-item"
+                }
+                onClick={() => applyFont("sans-serif")}
+                style={{ fontFamily: "'Microsoft YaHei', sans-serif" }}
+              >
+                思源黑体
+              </button>
+              <button
+                className={
+                  isFontActive("FZSongSan") ? "font-item active" : "font-item"
+                }
+                onClick={() => applyFont("FZSongSan")}
+              >
+                方正宋三
+              </button>
+              <button
+                className={
+                  fontFamily === "FZYouSong" ? "font-item active" : "font-item"
+                }
+                onClick={() => applyFont("FZYouSong")}
+              >
+                方正悠宋
+              </button>
+              <button
+                className={
+                  fontFamily === "FZLanTingHei"
+                    ? "font-item active"
+                    : "font-item"
+                }
+                onClick={() => applyFont("FZLanTingHei")}
+              >
+                方正兰亭黑
+              </button>
+              <button
+                className={
+                  fontFamily === "FZLanTingYuan"
+                    ? "font-item active"
+                    : "font-item"
+                }
+                onClick={() => applyFont("FZLanTingYuan")}
+              >
+                方正兰亭圆
+              </button>
+              <button
+                className={
+                  fontFamily === "FZShengShiKai"
+                    ? "font-item active"
+                    : "font-item"
+                }
+                onClick={() => applyFont("FZShengShiKai")}
+              >
+                方正盛世楷书
+              </button>
+              <button
+                className={
+                  fontFamily === "FZJuZhenFang"
+                    ? "font-item active"
+                    : "font-item"
+                }
+                onClick={() => applyFont("FZJuZhenFang")}
+              >
+                方正聚珍新仿
+              </button>
+              <button
+                className={
+                  fontFamily === "FZZhengDieKai"
+                    ? "font-item active"
+                    : "font-item"
+                }
+                onClick={() => applyFont("FZZhengDieKai")}
+              >
+                方正政蝶正楷
+              </button>
+              <button
+                className={
+                  fontFamily === "CangErJinKai04"
+                    ? "font-item active"
+                    : "font-item"
+                }
+                onClick={() => applyFont("CangErJinKai04")}
+              >
+                仓耳今楷 04
+              </button>
+              <button
+                className={
+                  fontFamily === "CangErJinKai05"
+                    ? "font-item active"
+                    : "font-item"
+                }
+                onClick={() => applyFont("CangErJinKai05")}
+              >
+                仓耳今楷 05
+              </button>
+              <button
+                className={
+                  fontFamily === "CangErXuanSan04"
+                    ? "font-item active"
+                    : "font-item"
+                }
+                onClick={() => applyFont("CangErXuanSan04")}
+              >
+                仓耳玄三 04
+              </button>
+              <button
+                className={
+                  fontFamily === "CangErXuanSan05"
+                    ? "font-item active"
+                    : "font-item"
+                }
+                onClick={() => applyFont("CangErXuanSan05")}
+              >
+                仓耳玄三 05
+              </button>
+              <button
+                className={
+                  fontFamily === "CangErYunHei04"
+                    ? "font-item active"
+                    : "font-item"
+                }
+                onClick={() => applyFont("CangErYunHei04")}
+              >
+                仓耳云黑 04
+              </button>
+              <button
+                className={
+                  fontFamily === "CangErYunHei05"
+                    ? "font-item active"
+                    : "font-item"
+                }
+                onClick={() => applyFont("CangErYunHei05")}
+              >
+                仓耳云黑 05
+              </button>
+              <button
+                className={
+                  fontFamily === "CangErMingKai04"
+                    ? "font-item active"
+                    : "font-item"
+                }
+                onClick={() => applyFont("CangErMingKai04")}
+              >
+                仓耳明楷 04
+              </button>
+              <button
+                className={
+                  fontFamily === "CangErMingKai05"
+                    ? "font-item active"
+                    : "font-item"
+                }
+                onClick={() => applyFont("CangErMingKai05")}
+              >
+                仓耳明楷 05
+              </button>
+              <button
+                className={
+                  fontFamily === "CangErZhuangYuanKai"
+                    ? "font-item active"
+                    : "font-item"
+                }
+                onClick={() => applyFont("CangErZhuangYuanKai")}
+              >
+                仓耳状元楷
+              </button>
+              <button
+                className={
+                  fontFamily === "CangErLanKai"
+                    ? "font-item active"
+                    : "font-item"
+                }
+                onClick={() => applyFont("CangErLanKai")}
+              >
+                仓耳兰楷
+              </button>
+              <button
+                className={
+                  fontFamily === "CangErHuaXin"
+                    ? "font-item active"
+                    : "font-item"
+                }
+                onClick={() => applyFont("CangErHuaXin")}
+              >
+                仓耳华新
+              </button>
+              <button
+                className={
+                  fontFamily === "CangErYuKai"
+                    ? "font-item active"
+                    : "font-item"
+                }
+                onClick={() => applyFont("CangErYuKai")}
+              >
+                仓耳玉楷
+              </button>
+              <button
+                className={
+                  fontFamily === "JingHuaLaoSong"
+                    ? "font-item active"
+                    : "font-item"
+                }
+                onClick={() => applyFont("JingHuaLaoSong")}
+              >
+                京华老宋体
+              </button>
+              <button
+                className={
+                  fontFamily === "HanChanYuSong"
+                    ? "font-item active"
+                    : "font-item"
+                }
+                onClick={() => applyFont("HanChanYuSong")}
+              >
+                寒蝉语宋体
+              </button>
+              <button
+                className={
+                  fontFamily === "HanYiKongShanKai"
+                    ? "font-item active"
+                    : "font-item"
+                }
+                onClick={() => applyFont("HanYiKongShanKai")}
+              >
+                汉仪空山楷
+              </button>
+              <button
+                className={
+                  fontFamily === "HuiWenZhengKai"
+                    ? "font-item active"
+                    : "font-item"
+                }
+                onClick={() => applyFont("HuiWenZhengKai")}
+              >
+                汇文正楷
+              </button>
+              <button
+                className={
+                  fontFamily === "HanChanZhengKai"
+                    ? "font-item active"
+                    : "font-item"
+                }
+                onClick={() => applyFont("HanChanZhengKai")}
+              >
+                寒蝉正楷体
+              </button>
+              <button
+                className={
+                  fontFamily === "XiaLuWenKai"
+                    ? "font-item active"
+                    : "font-item"
+                }
+                onClick={() => applyFont("XiaLuWenKai")}
+              >
+                霞鹭文楷
+              </button>
+              <button
+                className={
+                  fontFamily === "AIKai" ? "font-item active" : "font-item"
+                }
+                onClick={() => applyFont("AIKai")}
+              >
+                AI楷
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* 设置面板 */}
       <AnimatePresence>
         {showSettings && (
@@ -446,6 +809,9 @@ const EpubReader: React.FC<EpubReaderProps> = ({
 
               // 应用字间距
               rend.themes.override("letter-spacing", `${letterSpacing}px`);
+
+              // 应用字体
+              rend.themes.override("font-family", fontFamily);
 
               // 应用主题样式
               if (theme === "dark") {
