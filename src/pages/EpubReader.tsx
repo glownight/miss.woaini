@@ -9,11 +9,7 @@ interface EpubReaderProps {
   onBack: () => void;
 }
 
-const EpubReader: React.FC<EpubReaderProps> = ({
-  bookUrl,
-  bookTitle,
-  onBack,
-}) => {
+const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
   const [location, setLocation] = useState<string | number>(0);
   const [theme, setTheme] = useState<"light" | "dark" | "sepia">("dark");
   const [fontSize, setFontSize] = useState(24);
