@@ -117,6 +117,13 @@ a:hover {
   );
   opacity: 0.5;
 }
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  /* color: var(--text-weak); */
+}
 
 /* 柔和图形装饰 - 避开内容区域 */
 .decor-shape {
@@ -431,6 +438,26 @@ a:hover {
   object-fit: cover;
   border-radius: 4px;
   border: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+/* 日期时间显示 */
+.header-datetime {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-self: center;
+  gap: 6px;
+  margin-left: 26px;
+  font-size: 20px;
+  font-weight: 500;
+  color: rgb(83 123 148 / 90%);
+  letter-spacing: 0.5px;
+  /* padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); */
 }
 
 /* 优化布局 */
@@ -923,6 +950,26 @@ a:hover {
   .header-avatar img {
     width: 72px;
     height: 72px;
+  }
+
+  /* 移动端日期时间样式 */
+  .header-datetime {
+    padding: 6px 8px;
+    margin-left: 8px;
+  }
+
+  .datetime-date {
+    font-size: 11px;
+  }
+
+  .datetime-time {
+    font-size: 14px;
+    gap: 6px;
+  }
+
+  .datetime-weekday {
+    font-size: 10px;
+    padding: 1px 4px;
   }
   .table-header,
   .track-row {
@@ -1452,4 +1499,11 @@ body.reader-lights-off .lock-btn {
 /* 保持页面布局，避免闪烁 */
 body.reader-lights-off .page-header {
   visibility: hidden;
+}
+
+/* 熄灯模式下隐藏日期时间 */
+body.reader-lights-off .header-datetime {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.3s ease;
 }

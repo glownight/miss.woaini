@@ -48,6 +48,9 @@ function App() {
   // 电子书阅读相关状态
   const [books, setBooks] = useState<Book[]>([]); // 书籍列表
 
+  // 日期时间状态
+  const [currentTime, setCurrentTime] = useState(new Date());
+
   // 检查解锁令牌
   useEffect(() => {
     const unlockToken = sessionStorage.getItem("unlockToken");
@@ -109,6 +112,33 @@ function App() {
 
     loadBooks();
   }, []);
+
+  // 更新时间
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  // 格式化日期时间
+  const formatDateTime = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+    const weekDays = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+    const weekDay = weekDays[date.getDay()];
+
+    return {
+      date: `${year}年${month}月${day}日`,
+      time: `${hours}:${minutes}:${seconds}`,
+      weekDay,
+    };
+  };
 
   const projects = [
     {
@@ -298,19 +328,23 @@ function App() {
             </div>
           </div>
           <div className="header-right">
-            <div className="header-avatar">{/* 头像位 */}</div>
-            <button
-              type="button"
-              className={`kawaii-toggle ${fireworksOn ? "on" : "off"}`}
-              onClick={() => setFireworksOn((v) => !v)}
-              aria-pressed={fireworksOn}
-              aria-label={fireworksOn ? "关闭烟花" : "开启烟花"}
-            >
-              <span className="spark">✦</span>
-              <span className="face">^_^</span>
-              <span className="label">{fireworksOn ? "" : ""}</span>
-            </button>
+            <div className="header-datetime">
+              <span>{formatDateTime(currentTime).time}</span>
+              <span>{formatDateTime(currentTime).date}</span>
+              <span>{formatDateTime(currentTime).weekDay}</span>
+            </div>
           </div>
+          <button
+            type="button"
+            className={`kawaii-toggle ${fireworksOn ? "on" : "off"}`}
+            onClick={() => setFireworksOn((v) => !v)}
+            aria-pressed={fireworksOn}
+            aria-label={fireworksOn ? "关闭烟花" : "开启烟花"}
+          >
+            <span className="spark">✦</span>
+            <span className="face">^_^</span>
+            <span className="label">{fireworksOn ? "" : ""}</span>
+          </button>
         </div>
       </header>
 
