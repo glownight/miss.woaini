@@ -33,16 +33,12 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({
       try {
         setLoading(true);
 
-        console.log("加载文件:", filename);
-
         // 使用 import.meta.glob 来动态加载所有 md 文件
         const mdFiles = import.meta.glob("../datas/**/*.md", {
           query: "?raw",
           import: "default",
           eager: false,
         });
-
-        console.log("可用文件:", Object.keys(mdFiles));
 
         // 查找匹配的文件
         let targetPath = null;
@@ -55,15 +51,12 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({
         }
 
         if (targetPath) {
-          console.log("找到文件:", targetPath);
           const mdModule = await mdFiles[targetPath]();
           const mdContent = mdModule as string;
           setContent(mdContent);
 
           // 提取目录
           const extractedToc = extractToc(mdContent);
-          console.log("提取到的目录:", extractedToc);
-          console.log("目录数量:", extractedToc.length);
           setToc(extractedToc);
 
           // 三级标题及更深层默认启动折叠
@@ -79,7 +72,6 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({
         }
       } catch (err) {
         setError(`无法加载文档: ${filename}.md`);
-        console.error("Error loading markdown:", err);
       } finally {
         setLoading(false);
       }
@@ -109,11 +101,9 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({
           .replace(/-+$/, "");
 
         toc.push({ level, text, id });
-        console.log(`提取到标题: 级别${level}, 文本"${text}", ID"${id}"`);
       }
     }
 
-    console.log(`总共提取到 ${toc.length} 个标题`);
     return toc;
   };
 

@@ -84,7 +84,6 @@ function App() {
         const tracks = getMdFileList();
         setMusicTracks(tracks);
       } catch (error) {
-        console.error("加载文件数据失败:", error);
         // 设置空数据以避免页面崩溃
         setCategoriesData({});
         setMusicTracks([]);
@@ -101,11 +100,8 @@ function App() {
     const loadBooks = () => {
       try {
         const bookList = getBookList();
-        console.log("App.tsx: 加载到的书籍数据:", bookList);
-        console.log("App.tsx: 书籍数量:", bookList.length);
         setBooks(bookList);
       } catch (error) {
-        console.error("加载书籍数据失败:", error);
         setBooks([]);
       }
     };

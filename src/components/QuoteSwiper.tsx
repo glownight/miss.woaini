@@ -77,16 +77,6 @@ const QuoteSwiper: React.FC = () => {
         loop={true}
         className="quote-swiper"
         style={{ "--swiper-theme-color": "transparent" } as any}
-        onSlideChange={(swiper) =>
-          console.log("fade slide changed", swiper.activeIndex)
-        }
-        onSwiper={(swiper) => {
-          console.log("swiper with fade initialized", swiper);
-          // 强制设置fade效果
-          if (swiper.params.effect !== "fade") {
-            console.warn("Fade effect not applied, trying to force");
-          }
-        }}
       >
         {quoteItems.map((item, index) => (
           <SwiperSlide key={index}>

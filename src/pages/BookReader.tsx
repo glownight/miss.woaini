@@ -16,7 +16,6 @@ const BookReader: React.FC<BookReaderProps> = ({ books }) => {
   useEffect(() => {
     const loadBooks = () => {
       const bookList = getBookList();
-      console.log("BookReader: 加载的书籍数据:", bookList);
       setAvailableBooks(bookList);
     };
 
@@ -27,21 +26,14 @@ const BookReader: React.FC<BookReaderProps> = ({ books }) => {
   const booksToDisplay = books.length > 0 ? books : availableBooks;
 
   const handleBookSelect = (book: Book) => {
-    console.log("BookReader: 选择的书籍:", book);
-
     // 只支持EPUB格式
     if (book.format === "epub" && book.epubUrl) {
-      console.log("BookReader: 打开EPUB阅读器");
-      console.log("BookReader: epubUrl:", book.epubUrl);
-
       // 验证URL格式
       try {
         const url = new URL(book.epubUrl, window.location.origin);
-        console.log("BookReader: URL:", url.href);
         setSelectedEpubBook(book);
         setShowEpubReader(true);
       } catch (error) {
-        console.error("BookReader: URL验证失败:", error);
         setSelectedEpubBook({
           ...book,
           epubUrl: book.epubUrl.startsWith("/")
@@ -51,7 +43,6 @@ const BookReader: React.FC<BookReaderProps> = ({ books }) => {
         setShowEpubReader(true);
       }
     } else {
-      console.warn("BookReader: 不支持的格式");
       alert("当前只支持EPUB格式的电子书");
     }
   };

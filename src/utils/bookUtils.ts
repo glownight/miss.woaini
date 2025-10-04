@@ -17,7 +17,6 @@ const getBookList = (): Book[] => {
 
   // 如果没有扫描到书籍，使用备用数据
   if (books.length === 0) {
-    console.log('bookUtils: 使用备用书籍数据');
     return [
       {
         id: 'walden-epub',

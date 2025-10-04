@@ -37,26 +37,26 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
   const colorSchemes = [
     {
       id: 1,
-      name: "浅黄色",
+      name: "1",
       icon: "📖",
       bg: "#1a1612",
-      text: "#716858",
+      text: "#7a7e7f",
       desc: "温和舒适，适合长时间阅读",
     },
     {
       id: 2,
-      name: "浅蓝色",
+      name: "2",
       icon: "☕",
       bg: "#1a1612",
-      text: "#3f5367",
+      text: "#9295a0",
       desc: "浓郁温暖，咖啡馆氛围",
     },
     {
       id: 3,
-      name: "浅灰色",
+      name: "3",
       icon: "🪵",
       bg: "#1a1612",
-      text: "#4c505d",
+      text: "#4c505d#9e8a8a",
       desc: "自然质朴，仿佛在木屋阅读",
     },
     {
@@ -93,26 +93,16 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
 
   // 翻页功能
   const handlePreviousPage = () => {
-    console.log("🔙 handlePreviousPage 被调用");
-    console.log("📖 rendition 存在?", !!rendition);
     if (rendition) {
-      console.log("✅ 执行 rendition.prev()");
       clearHighlights(); // 翻页时清除高亮
       rendition.prev();
-    } else {
-      console.warn("❌ rendition 不存在，无法翻页");
     }
   };
 
   const handleNextPage = () => {
-    console.log("🔜 handleNextPage 被调用");
-    console.log("📖 rendition 存在?", !!rendition);
     if (rendition) {
-      console.log("✅ 执行 rendition.next()");
       clearHighlights(); // 翻页时清除高亮
       rendition.next();
-    } else {
-      console.warn("❌ rendition 不存在，无法翻页");
     }
   };
 
@@ -241,14 +231,9 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
               }
             `;
             iframeDoc.head.appendChild(style);
-
-            console.log("✅ 强制应用配色方案:", {
-              text: scheme.text,
-              bg: scheme.bg,
-            });
           }
         } catch (error) {
-          console.log("更新 iframe 样式失败:", error);
+          // 更新 iframe 样式失败
         }
       };
 
@@ -271,8 +256,6 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
       // 使用新值或当前值
       const bg = bgColor !== undefined ? bgColor : customBgColor;
       const text = textColor !== undefined ? textColor : customTextColor;
-
-      console.log("🎨 更新自定义配色:", { bg, text });
 
       // 更新阅读区域背景色
       const readingArea = document.querySelector(
@@ -343,11 +326,9 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
                 }
               `;
               iframeDoc.head.appendChild(style);
-
-              console.log("✅ 强制应用自定义颜色:", { text, bg });
             }
           } catch (error) {
-            console.log("更新 iframe 样式失败:", error);
+            // 更新 iframe 样式失败
           }
         };
 
@@ -376,7 +357,6 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
 
     const flatToc = flattenToc(tocData);
     setToc(flatToc);
-    console.log("扁平化目录:", flatToc);
   };
 
   // 根据当前位置计算章节和页码
@@ -450,17 +430,9 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
 
         setCurrentChapterIndex(chapterIndex + 1); // 从1开始计数
         setCurrentChapter(chapterTitle);
-
-        console.log(
-          "当前位置:",
-          cleanedCurrentHref,
-          "匹配章节:",
-          chapterTitle,
-          `(${chapterIndex + 1}/${toc.length})`
-        );
       }
     } catch (error) {
-      console.error("更新章节信息失败:", error);
+      // 更新章节信息失败
     }
   };
 
@@ -471,7 +443,7 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
       try {
         setSearchHistory(JSON.parse(savedHistory));
       } catch (error) {
-        console.error("加载搜索历史失败:", error);
+        // 加载搜索历史失败
       }
     }
   }, [bookTitle]);
@@ -585,13 +557,11 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
                 item.unload();
                 resolve(matches);
               } catch (error) {
-                console.error("解析章节内容失败:", error);
                 item.unload();
                 resolve([]);
               }
             })
-            .catch((error: Error) => {
-              console.error("加载章节失败:", error);
+            .catch(() => {
               resolve([]);
             });
         });
@@ -603,13 +573,11 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
       const allResults = await Promise.all(searchPromises);
       const flatResults = allResults.flat();
 
-      console.log(`搜索 "${query}" 找到 ${flatResults.length} 个结果`);
-
       setSearchResults(flatResults);
       // 保存搜索历史（无论是否找到结果）
       saveSearchHistory(query);
     } catch (error) {
-      console.error("搜索失败:", error);
+      // 搜索失败
     } finally {
       setIsSearching(false);
     }
@@ -622,7 +590,7 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
         try {
           rendition.annotations.remove(highlight.cfiRange, "highlight");
         } catch (error) {
-          console.log("移除高亮失败:", error);
+          // 移除高亮失败
         }
       });
       setCurrentHighlights([]);
@@ -632,15 +600,10 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
   // 跳转到搜索结果（精确定位到文本位置）
   const jumpToSearchResult = async (result: any) => {
     if (!rendition) {
-      console.warn("Rendition 未就绪");
       return;
     }
 
     try {
-      console.log("正在跳转到:", result.chapterTitle, result);
-      console.log("搜索关键词:", result.matchText);
-      console.log("目标href:", result.href);
-
       // 清除之前的高亮
       clearHighlights();
 
@@ -669,11 +632,6 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
         }
 
         if (targetSpineItem) {
-          console.log(
-            "找到目标章节，开始搜索精确位置...",
-            targetSpineItem.href
-          );
-
           // 确保章节已加载
           if (!targetSpineItem.document) {
             await targetSpineItem.load(
@@ -683,13 +641,11 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
 
           // 使用 find 方法搜索文本
           const searchResults = await targetSpineItem.find(result.matchText);
-          console.log("搜索结果:", searchResults);
 
           if (searchResults && searchResults.length > 0) {
             // 直接跳转到精确位置（一步到位）
             const firstResult = searchResults[0];
             await rendition.display(firstResult.cfi);
-            console.log("精确定位成功:", firstResult.cfi);
 
             // 添加高亮
             setTimeout(() => {
@@ -710,11 +666,10 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
                   );
                   newHighlights.push(searchResult);
                 } catch (error) {
-                  console.log("添加高亮失败:", error);
+                  // 添加高亮失败
                 }
               });
               setCurrentHighlights(newHighlights);
-              console.log(`已高亮 ${newHighlights.length} 个匹配项`);
             }, 200);
 
             // 更新当前章节信息
@@ -729,32 +684,28 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
 
             return; // 成功后直接返回
           } else {
-            console.log("未找到匹配文本，使用降级方案");
+            // 未找到匹配文本，使用降级方案
             // 卸载文档
             if (targetSpineItem.unload) {
               targetSpineItem.unload();
             }
           }
-        } else {
-          console.log("无法找到目标章节，使用降级方案");
         }
       }
 
       // 降级方案：直接跳转到章节
-      console.log("使用降级方案：跳转到章节");
       await rendition.display(result.href || result.baseCfi);
       setTimeout(() => {
         updateCurrentChapter();
       }, 100);
     } catch (error) {
-      console.error("跳转失败:", error);
       try {
         await rendition.display(result.href || result.baseCfi);
         setTimeout(() => {
           updateCurrentChapter();
         }, 100);
       } catch (e) {
-        console.error("降级跳转也失败:", e);
+        // 降级跳转也失败
       }
     }
   };
@@ -793,8 +744,8 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
   // 全屏切换
   const toggleFullscreen = () => {
     if (!isFullscreen) {
-      document.documentElement.requestFullscreen().catch((err) => {
-        console.error("无法进入全屏模式:", err);
+      document.documentElement.requestFullscreen().catch(() => {
+        // 无法进入全屏模式
       });
     } else {
       if (document.exitFullscreen) {
@@ -827,7 +778,6 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
       showSettings;
 
     if (hasOpenPanel) {
-      console.log("📖 阅读区域被点击，关闭所有面板");
       e.stopPropagation();
       setShowToc(false);
       setShowSearchPanel(false);
@@ -957,11 +907,9 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
               }
             `;
             iframeDoc.head.appendChild(style);
-
-            console.log("✅ useEffect 强制应用配色:", { textColor, bgColor });
           }
         } catch (error) {
-          console.log("更新 iframe 样式失败:", error);
+          // 更新 iframe 样式失败
         }
       };
 
@@ -981,67 +929,6 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
     currentColorScheme,
     colorSchemes,
   ]);
-
-  // 调试：检查翻页按钮状态
-  useEffect(() => {
-    setTimeout(() => {
-      const leftBtn = document.querySelector(
-        ".epub-page-click-left"
-      ) as HTMLElement;
-      const rightBtn = document.querySelector(
-        ".epub-page-click-right"
-      ) as HTMLElement;
-      const readingArea = document.querySelector(
-        ".epub-reading-area"
-      ) as HTMLElement;
-
-      console.log("🔍 检查翻页按钮状态:");
-      console.log("  阅读区域:", readingArea);
-      console.log("  左侧按钮:", leftBtn);
-      console.log("  右侧按钮:", rightBtn);
-
-      if (readingArea) {
-        const rect = readingArea.getBoundingClientRect();
-        console.log("  阅读区域位置:");
-        console.log("    left:", rect.left, "top:", rect.top);
-        console.log("    width:", rect.width, "height:", rect.height);
-      }
-
-      if (leftBtn) {
-        const styles = window.getComputedStyle(leftBtn);
-        const rect = leftBtn.getBoundingClientRect();
-        console.log("  左侧按钮样式:");
-        console.log("    position:", styles.position);
-        console.log("    display:", styles.display);
-        console.log("    visibility:", styles.visibility);
-        console.log("    opacity:", styles.opacity);
-        console.log("    pointer-events:", styles.pointerEvents);
-        console.log("    z-index:", styles.zIndex);
-        console.log("    width:", styles.width);
-        console.log("    height:", styles.height);
-        console.log("  左侧按钮位置:");
-        console.log("    left:", rect.left, "top:", rect.top);
-        console.log("    width:", rect.width, "height:", rect.height);
-      }
-
-      if (rightBtn) {
-        const styles = window.getComputedStyle(rightBtn);
-        const rect = rightBtn.getBoundingClientRect();
-        console.log("  右侧按钮样式:");
-        console.log("    position:", styles.position);
-        console.log("    display:", styles.display);
-        console.log("    visibility:", styles.visibility);
-        console.log("    opacity:", styles.opacity);
-        console.log("    pointer-events:", styles.pointerEvents);
-        console.log("    z-index:", styles.zIndex);
-        console.log("    width:", styles.width);
-        console.log("    height:", styles.height);
-        console.log("  右侧按钮位置:");
-        console.log("    left:", rect.left, "top:", rect.top);
-        console.log("    width:", rect.width, "height:", rect.height);
-      }
-    }, 1000);
-  }, []);
 
   return (
     <div
@@ -1872,7 +1759,6 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
         <button
           className="epub-page-click-area epub-page-click-left"
           onClick={(e) => {
-            console.log("👆 左侧翻页按钮被点击");
             e.preventDefault();
             e.stopPropagation();
             handlePreviousPage();
@@ -1885,7 +1771,6 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
         <button
           className="epub-page-click-area epub-page-click-right"
           onClick={(e) => {
-            console.log("👆 右侧翻页按钮被点击");
             e.preventDefault();
             e.stopPropagation();
             handleNextPage();
@@ -1908,20 +1793,8 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
               spread: "none",
             }}
             getRendition={(rend) => {
-              console.log("📚 getRendition 被调用");
-              console.log("📚 rendition 对象:", rend);
-              console.log(
-                "📚 rendition.prev 方法存在?",
-                typeof rend.prev === "function"
-              );
-              console.log(
-                "📚 rendition.next 方法存在?",
-                typeof rend.next === "function"
-              );
-
               // 保存rendition引用
               setRendition(rend);
-              console.log("✅ rendition 已保存到 state");
 
               // 应用字体大小
               rend.themes.fontSize(`${fontSize}px`);
@@ -2044,11 +1917,9 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
                       }
                     `;
                     iframeDoc.head.appendChild(style);
-
-                    console.log("✅ 初始渲染应用配色:", { textColor, bgColor });
                   }
                 } catch (error) {
-                  console.log("无法注入样式:", error);
+                  // 无法注入样式
                 }
               });
             }}
@@ -2094,11 +1965,11 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
                               updateCurrentChapter();
                             }, 100);
                           })
-                          .catch((error: Error) => {
-                            console.error("跳转章节失败:", error);
+                          .catch(() => {
+                            // 跳转章节失败
                           });
                       } catch (error) {
-                        console.error("跳转章节失败:", error);
+                        // 跳转章节失败
                       }
                     }
                   }}

@@ -13,10 +13,6 @@ const scanBooksDirectory = (): Book[] => {
   const poetryBooks = scanCategory('诗歌');
   books.push(...poetryBooks);
 
-  console.log('bookScanner: 扫描到的书籍数量:', books.length);
-  books.forEach(book => {
-    console.log('bookScanner: 书籍信息:', book.title, book.author, book.format, book.epubUrl);
-  });
 
   return books;
 };
