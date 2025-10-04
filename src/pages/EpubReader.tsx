@@ -1363,7 +1363,8 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
             }}
             epubOptions={{
               flow: "paginated",
-              manager: "continuous",
+              manager: "default",
+              spread: "none",
             }}
             getRendition={(rend) => {
               // 保存rendition引用
@@ -1383,8 +1384,8 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
 
               // 应用主题样式（护眼配色）
               if (theme === "dark") {
-                // 深色护眼模式：柔和灰褐色文字 + 纯黑背景
-                rend.themes.override("color", "#8b8575"); // 柔和灰褐色文字
+                // 深色护眼模式：灰褐色文字 + 纯黑背景
+                rend.themes.override("color", "#51606b"); // 灰褐色文字
                 rend.themes.override("background", "#0a0a0a"); // 纯黑背景
               } else if (theme === "light") {
                 rend.themes.override("color", "#333333");
@@ -1394,12 +1395,62 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
                 rend.themes.override("background", "#f4f1e8");
               }
 
+              // 移除所有内边距，最大化显示区域
+              rend.themes.override("padding", "0");
+              rend.themes.override("margin", "0");
+
               // 监听位置变化以更新页码
               rend.on("relocated", (location: any) => {
                 if (location && location.start && location.start.displayed) {
                   const displayed = location.start.displayed;
                   setCurrentPage(displayed.page || 1);
                   setTotalPages(displayed.total || 0);
+                }
+              });
+
+              // 监听页面渲染，强制覆盖 Dark Reader 样式
+              rend.on("rendered", () => {
+                try {
+                  const iframe = document.querySelector(
+                    ".epub-content iframe"
+                  ) as HTMLIFrameElement;
+                  if (iframe && iframe.contentDocument) {
+                    const iframeDoc = iframe.contentDocument;
+
+                    // 移除已存在的覆盖样式
+                    const existingStyle = iframeDoc.getElementById(
+                      "force-color-override"
+                    );
+                    if (existingStyle) {
+                      existingStyle.remove();
+                    }
+
+                    // 注入强制覆盖样式
+                    const style = iframeDoc.createElement("style");
+                    style.id = "force-color-override";
+                    style.textContent = `
+                      :root {
+                        --darkreader-text-51606b: #51606b !important;
+                        --darkreader-background-0a0a0a: #0a0a0a !important;
+                        --darkreader-background-0d0d0d: #0a0a0a !important;
+                        --darkreader-inline-color: #51606b !important;
+                        --darkreader-inline-bgcolor: #0a0a0a !important;
+                      }
+                      * {
+                        color: #51606b !important;
+                        background-color: #0a0a0a !important;
+                      }
+                      [data-darkreader-inline-color] {
+                        color: #51606b !important;
+                      }
+                      [data-darkreader-inline-bgcolor] {
+                        background-color: #0a0a0a !important;
+                      }
+                    `;
+                    iframeDoc.head.appendChild(style);
+                  }
+                } catch (error) {
+                  console.log("无法注入样式:", error);
                 }
               });
             }}

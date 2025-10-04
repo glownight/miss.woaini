@@ -1,5 +1,29 @@
 /* EPUB阅读器 - 网文风格 */
 
+/* 覆盖 Dark Reader 扩展的样式 */
+:root {
+  --darkreader-inline-color: #51606b !important;
+  --darkreader-inline-bgcolor: #0a0a0a !important;
+  /* 覆盖 Dark Reader 的自动转换变量 */
+  --darkreader-text-51606b: #51606b !important;
+  --darkreader-background-0a0a0a: #0a0a0a !important;
+  --darkreader-background-0d0d0d: #0a0a0a !important;
+}
+
+[data-darkreader-inline-color] {
+  color: #51606b !important;
+}
+
+[data-darkreader-inline-bgcolor] {
+  background-color: #0a0a0a !important;
+}
+
+.epub-content [data-darkreader-inline-color],
+.epub-content iframe [data-darkreader-inline-color],
+.epub-content * [data-darkreader-inline-color] {
+  color: #51606b !important;
+}
+
 .epub-reader-novel {
   height: 100vh;
   display: flex;
@@ -7,7 +31,7 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei",
     sans-serif;
   background: #0a0a0a;
-  color: #8b8575;
+  color: #51606b;
   position: relative;
   overflow: hidden;
 }
@@ -19,7 +43,20 @@
 
 .epub-reader-novel.dark {
   background: #0a0a0a;
-  color: #8b8575;
+  color: #51606b;
+}
+
+/* 顶部导航栏颜色 */
+.epub-reader-novel.dark .reader-top-nav,
+.epub-reader-novel.dark .book-title-nav,
+.epub-reader-novel.dark .nav-left > span,
+.epub-reader-novel.dark .nav-left,
+.epub-reader-novel.dark header,
+.epub-reader-novel.dark header *,
+.epub-reader-novel.dark .toolbar-btn,
+.epub-reader-novel.dark .nav-toolbar-buttons,
+.epub-reader-novel.dark .nav-right {
+  color: #51606b !important;
 }
 
 .epub-reader-novel.sepia {
@@ -35,8 +72,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  padding-bottom: 100px; /* 为底部进度条留出空间 */
+  padding: 0;
   position: relative;
   overflow: auto;
   background: #0a0a0a;
@@ -53,7 +89,7 @@
 
 .epub-content {
   width: 100%;
-  max-width: 1400px;
+  max-width: 100%;
   height: 100%;
   min-height: 400px;
   background: #0a0a0a;
@@ -70,7 +106,10 @@
 /* ReactReader 样式覆盖 */
 .epub-content > div {
   height: 100% !important;
+  width: 100% !important;
   background: #0a0a0a !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 .epub-reader-novel.light .epub-content > div {
@@ -84,6 +123,15 @@
 /* ReactReader iframe 样式 */
 .epub-content iframe {
   background: #0a0a0a !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* ReactReader iframe body 样式 */
+.epub-content iframe body {
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 .epub-reader-novel.light .epub-content iframe {
@@ -101,6 +149,10 @@
 
 .epub-content > div > div {
   background: #0a0a0a !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
 }
 
 .epub-reader-novel.light .epub-content > div > div {
@@ -194,7 +246,7 @@
 }
 
 .epub-reader-novel.fullscreen-mode .epub-reading-area {
-  padding: 60px 100px;
+  /* padding: 30px 50px; */
   flex: 1;
   min-height: 0;
 }
@@ -304,7 +356,7 @@ div[class*="Reader"] > button {
   margin: 0;
   font-size: 18px;
   font-weight: 600;
-  color: #8b8575;
+  color: #51606b;
 }
 
 .epub-reader-novel.light .toc-panel-header h3 {
@@ -318,7 +370,7 @@ div[class*="Reader"] > button {
 .toc-close-btn {
   background: none;
   border: none;
-  color: #8b8575;
+  color: #51606b;
   font-size: 20px;
   cursor: pointer;
   padding: 5px;
@@ -367,7 +419,7 @@ div[class*="Reader"] > button {
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
-  color: #8b8575;
+  color: #51606b;
 }
 
 .toc-item:hover {
@@ -436,30 +488,12 @@ div[class*="Reader"] > button {
   }
 
   .epub-reader-novel.fullscreen-mode .epub-reading-area {
-    padding: 20px 30px;
+    /* padding: 15px 20px; */
   }
 
   .epub-page-click-area {
     width: 100px;
   }
-}
-
-/* 底部章节进度显示 */
-.reader-bottom-progress {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(13, 13, 13, 0.98);
-  backdrop-filter: blur(15px);
-  border-top: 2px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
-  z-index: 100;
-  transition: all 0.3s ease;
 }
 
 .epub-reader-novel.light .reader-bottom-progress {
@@ -476,9 +510,9 @@ div[class*="Reader"] > button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   max-width: 900px;
-  padding: 0 30px;
+  padding: 0 5px;
 }
 
 .chapter-title {
@@ -585,7 +619,7 @@ div[class*="Reader"] > button {
   margin: 0;
   font-size: 18px;
   font-weight: 600;
-  color: #8b8575;
+  color: #51606b;
 }
 
 .epub-reader-novel.light .search-panel-header h3 {
@@ -636,7 +670,7 @@ div[class*="Reader"] > button {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  color: #8b8575;
+  color: #51606b;
   font-size: 14px;
   outline: none;
   transition: all 0.2s;
@@ -669,7 +703,7 @@ div[class*="Reader"] > button {
   background: rgba(255, 255, 255, 0.1);
   border: none;
   border-radius: 8px;
-  color: #8b8575;
+  color: #51606b;
   font-size: 14px;
   cursor: pointer;
   transition: all 0.2s;
@@ -746,7 +780,7 @@ div[class*="Reader"] > button {
   background: rgba(255, 255, 255, 0.05);
   border: none;
   border-radius: 8px;
-  color: #8b8575;
+  color: #51606b;
   font-size: 14px;
   text-align: left;
   cursor: pointer;
@@ -823,7 +857,7 @@ div[class*="Reader"] > button {
   background: rgba(255, 255, 255, 0.05);
   border: none;
   border-radius: 8px;
-  color: #8b8575;
+  color: #51606b;
   font-size: 14px;
   line-height: 1.6;
   text-align: left;
