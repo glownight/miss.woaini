@@ -1381,10 +1381,11 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
               // 应用字体
               rend.themes.override("font-family", fontFamily);
 
-              // 应用主题样式
+              // 应用主题样式（护眼配色）
               if (theme === "dark") {
-                rend.themes.override("color", "#b8b8b8");
-                rend.themes.override("background", "#0d0d0d");
+                // 深色护眼模式：柔和灰褐色文字 + 纯黑背景
+                rend.themes.override("color", "#8b8575"); // 柔和灰褐色文字
+                rend.themes.override("background", "#0a0a0a"); // 纯黑背景
               } else if (theme === "light") {
                 rend.themes.override("color", "#333333");
                 rend.themes.override("background", "#ffffff");
