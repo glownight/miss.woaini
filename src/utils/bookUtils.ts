@@ -1,5 +1,5 @@
 // 书籍工具函数
-import { scanBooksDirectory } from './bookScanner';
+import { scanBooksDirectory, getAvailableCategories } from './bookScanner';
 
 interface Book {
   id: string;
@@ -54,9 +54,8 @@ const searchBooks = (query: string): Book[] => {
 
 // 获取所有分类
 const getAllCategories = (): string[] => {
-  const allBooks = getBookList();
-  const categories = Array.from(new Set(allBooks.map(book => book.category)));
-  return ['all', ...categories];
+  const availableCategories = getAvailableCategories();
+  return ['all', ...availableCategories];
 };
 
 // 根据ID获取书籍
