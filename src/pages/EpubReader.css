@@ -79,6 +79,18 @@
   min-height: 0;
 }
 
+/* 面板打开时的遮罩层 - 点击关闭面板 */
+.reading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  cursor: pointer;
+  background: transparent;
+}
+
 .epub-reader-novel.light .epub-reading-area {
   background: #ffffff;
 }
@@ -93,6 +105,8 @@
   height: 100%;
   min-height: 400px;
   background: #0a0a0a;
+  position: relative;
+  z-index: 1;
 }
 
 .epub-reader-novel.light .epub-content {
@@ -257,44 +271,60 @@
   width: 100%;
 }
 
-/* 隐藏react-reader默认的翻页箭头 */
-.epub-reading-area button,
-.epub-content button,
-.epub-content button[aria-label="previous page"],
-.epub-content button[aria-label="next page"],
+/* 隐藏react-reader默认的翻页箭头 - 但不影响我们的翻页区域 */
+.epub-reading-area button:not(.epub-page-click-area),
+.epub-content button:not(.epub-page-click-area),
+.epub-content button[aria-label="previous page"]:not(.epub-page-click-area),
+.epub-content button[aria-label="next page"]:not(.epub-page-click-area),
 .epub-content div[class*="arrow"],
-.epub-content button[class*="arrow"],
-.epub-content button[class*="Arrow"],
-div[class*="readerArea"] > button,
-div[class*="Reader"] > button {
+.epub-content button[class*="arrow"]:not(.epub-page-click-area),
+.epub-content button[class*="Arrow"]:not(.epub-page-click-area),
+div[class*="readerArea"] > button:not(.epub-page-click-area),
+div[class*="Reader"] > button:not(.epub-page-click-area) {
   display: none !important;
   opacity: 0 !important;
   pointer-events: none !important;
   visibility: hidden !important;
 }
 
-/* 但保留我们自己的翻页区域 */
+/* 左右翻页点击区域 - 隐形但可点击，相对于阅读区域定位 */
 .epub-page-click-area {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 150px;
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  z-index: 10;
+  transition: background-color 0.2s ease;
   display: block !important;
   visibility: visible !important;
   pointer-events: auto !important;
-}
-
-/* 左右翻页点击区域 - 隐形 */
-.epub-page-click-area {
-  position: fixed;
-  top: 50px;
-  bottom: 0;
-  width: 200px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  z-index: 30;
-  transition: background-color 0.2s ease;
+  opacity: 1 !important;
+  /* 调试用：取消注释下面这行可以看到翻页区域 */
+  /* background: rgba(255, 0, 0, 0.1) !important; */
 }
 
 .epub-page-click-area:hover {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.epub-page-click-area:active {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.epub-page-click-area:focus {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.epub-page-click-area:focus-visible {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .epub-page-click-left {
@@ -307,7 +337,16 @@ div[class*="Reader"] > button {
 
 /* 全屏模式下的翻页区域 */
 .epub-reader-novel.fullscreen-mode .epub-page-click-area {
-  top: 0;
+  width: 200px;
+}
+
+/* 熄灯模式下确保翻页区域可见 */
+.epub-reader-novel.lights-off-mode .epub-page-click-area {
+  display: block !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  opacity: 1 !important;
+  z-index: 10 !important;
 }
 
 /* 目录面板样式 */
@@ -487,12 +526,21 @@ div[class*="Reader"] > button {
     height: calc(100vh - 70px);
   }
 
-  .epub-reader-novel.fullscreen-mode .epub-reading-area {
-    /* padding: 15px 20px; */
+  .epub-page-click-area {
+    width: 80px;
+    display: block !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    opacity: 1 !important;
+    z-index: 10 !important;
   }
 
-  .epub-page-click-area {
-    width: 100px;
+  .epub-page-click-area:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .epub-page-click-area:active {
+    background: rgba(255, 255, 255, 0.15);
   }
 }
 

@@ -16,6 +16,114 @@
 * {
   box-sizing: border-box;
 }
+
+/* ==================== 全局移除 outline 和 focus 边框 ==================== */
+/* 最高优先级：移除所有元素的 outline 和 focus 边框 */
+*,
+*::before,
+*::after,
+*:focus,
+*:active,
+*:focus-visible,
+*:focus-within {
+  outline: none !important;
+  outline-width: 0 !important;
+  outline-style: none !important;
+  outline-color: transparent !important;
+}
+
+/* 移除所有可交互元素的默认边框和 outline */
+button,
+a,
+input,
+select,
+textarea,
+[role="button"],
+[tabindex],
+[contenteditable],
+[type="button"],
+[type="submit"],
+[type="reset"],
+.btn,
+.button {
+  outline: none !important;
+  outline-width: 0 !important;
+  outline-style: none !important;
+  outline-color: transparent !important;
+}
+
+/* 所有状态下都移除 outline 和不必要的 box-shadow */
+button:focus,
+button:active,
+button:focus-visible,
+button:focus-within,
+a:focus,
+a:active,
+a:focus-visible,
+a:focus-within,
+input:focus,
+input:active,
+input:focus-visible,
+select:focus,
+select:active,
+select:focus-visible,
+textarea:focus,
+textarea:active,
+textarea:focus-visible,
+[role="button"]:focus,
+[role="button"]:active,
+[role="button"]:focus-visible,
+[tabindex]:focus,
+[tabindex]:active,
+[tabindex]:focus-visible,
+[contenteditable]:focus,
+[contenteditable]:active,
+[type="button"]:focus,
+[type="button"]:active,
+[type="submit"]:focus,
+[type="submit"]:active,
+[type="reset"]:focus,
+[type="reset"]:active,
+.btn:focus,
+.btn:active,
+.button:focus,
+.button:active {
+  outline: none !important;
+  outline-width: 0 !important;
+  outline-style: none !important;
+  outline-color: transparent !important;
+  -moz-outline: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* 移除按钮的默认边框 */
+button {
+  border: none;
+}
+
+/* 移除链接的虚线边框 */
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 保留输入框和选择框的边框（需要的地方可以单独设置） */
+input,
+select,
+textarea {
+  border: 1px solid transparent;
+}
+
+/* 移除所有 webkit 浏览器的焦点环 */
+*::-moz-focus-inner {
+  border: 0 !important;
+  outline: none !important;
+}
+
+*::-webkit-focus-inner {
+  border: 0 !important;
+  outline: none !important;
+}
+
 html,
 body,
 #root {
@@ -497,6 +605,7 @@ a:hover {
 /* Tab卡片 */
 .tab-card {
   /* 继承基础卡片样式 */
+  position: relative;
 }
 
 .tab-header {
@@ -768,6 +877,7 @@ a:hover {
 /* 个人卡 */
 .profile-card {
   /* padding-bottom: 12px; */
+  position: relative;
 }
 .profile-header {
   padding: 12px 14px;

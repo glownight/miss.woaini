@@ -48,16 +48,26 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
 
   // 翻页功能
   const handlePreviousPage = () => {
+    console.log("🔙 handlePreviousPage 被调用");
+    console.log("📖 rendition 存在?", !!rendition);
     if (rendition) {
+      console.log("✅ 执行 rendition.prev()");
       clearHighlights(); // 翻页时清除高亮
       rendition.prev();
+    } else {
+      console.warn("❌ rendition 不存在，无法翻页");
     }
   };
 
   const handleNextPage = () => {
+    console.log("🔜 handleNextPage 被调用");
+    console.log("📖 rendition 存在?", !!rendition);
     if (rendition) {
+      console.log("✅ 执行 rendition.next()");
       clearHighlights(); // 翻页时清除高亮
       rendition.next();
+    } else {
+      console.warn("❌ rendition 不存在，无法翻页");
     }
   };
 
@@ -274,8 +284,8 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
 
                 if (!content) {
                   resolve([]);
-      return;
-    }
+                  return;
+                }
 
                 // 清理空白字符
                 const cleanContent = content.replace(/\s+/g, " ").trim();
@@ -467,9 +477,9 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
             }, 200);
 
             // 更新当前章节信息
-          setTimeout(() => {
+            setTimeout(() => {
               updateCurrentChapter();
-          }, 100);
+            }, 100);
 
             // 卸载文档以释放内存
             if (targetSpineItem.unload) {
@@ -477,7 +487,7 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
             }
 
             return; // 成功后直接返回
-        } else {
+          } else {
             console.log("未找到匹配文本，使用降级方案");
             // 卸载文档
             if (targetSpineItem.unload) {
@@ -565,6 +575,22 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
     }
   };
 
+  // 点击阅读区域关闭所有面板
+  const handleReadingAreaClick = (e: React.MouseEvent) => {
+    // 检查是否有打开的面板
+    const hasOpenPanel =
+      showToc || showSearchPanel || showFontPanel || showSettings;
+
+    if (hasOpenPanel) {
+      console.log("📖 阅读区域被点击，关闭所有面板");
+      e.stopPropagation();
+      setShowToc(false);
+      setShowSearchPanel(false);
+      setShowFontPanel(false);
+      setShowSettings(false);
+    }
+  };
+
   // 组件卸载时清除body class
   useEffect(() => {
     return () => {
@@ -617,6 +643,67 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
     }
   }, [fontSize, lineHeight, letterSpacing, fontFamily, theme, rendition]);
 
+  // 调试：检查翻页按钮状态
+  useEffect(() => {
+    setTimeout(() => {
+      const leftBtn = document.querySelector(
+        ".epub-page-click-left"
+      ) as HTMLElement;
+      const rightBtn = document.querySelector(
+        ".epub-page-click-right"
+      ) as HTMLElement;
+      const readingArea = document.querySelector(
+        ".epub-reading-area"
+      ) as HTMLElement;
+
+      console.log("🔍 检查翻页按钮状态:");
+      console.log("  阅读区域:", readingArea);
+      console.log("  左侧按钮:", leftBtn);
+      console.log("  右侧按钮:", rightBtn);
+
+      if (readingArea) {
+        const rect = readingArea.getBoundingClientRect();
+        console.log("  阅读区域位置:");
+        console.log("    left:", rect.left, "top:", rect.top);
+        console.log("    width:", rect.width, "height:", rect.height);
+      }
+
+      if (leftBtn) {
+        const styles = window.getComputedStyle(leftBtn);
+        const rect = leftBtn.getBoundingClientRect();
+        console.log("  左侧按钮样式:");
+        console.log("    position:", styles.position);
+        console.log("    display:", styles.display);
+        console.log("    visibility:", styles.visibility);
+        console.log("    opacity:", styles.opacity);
+        console.log("    pointer-events:", styles.pointerEvents);
+        console.log("    z-index:", styles.zIndex);
+        console.log("    width:", styles.width);
+        console.log("    height:", styles.height);
+        console.log("  左侧按钮位置:");
+        console.log("    left:", rect.left, "top:", rect.top);
+        console.log("    width:", rect.width, "height:", rect.height);
+      }
+
+      if (rightBtn) {
+        const styles = window.getComputedStyle(rightBtn);
+        const rect = rightBtn.getBoundingClientRect();
+        console.log("  右侧按钮样式:");
+        console.log("    position:", styles.position);
+        console.log("    display:", styles.display);
+        console.log("    visibility:", styles.visibility);
+        console.log("    opacity:", styles.opacity);
+        console.log("    pointer-events:", styles.pointerEvents);
+        console.log("    z-index:", styles.zIndex);
+        console.log("    width:", styles.width);
+        console.log("    height:", styles.height);
+        console.log("  右侧按钮位置:");
+        console.log("    left:", rect.left, "top:", rect.top);
+        console.log("    width:", rect.width, "height:", rect.height);
+      }
+    }, 1000);
+  }, []);
+
   return (
     <div
       className={`epub-reader-novel ${theme} ${
@@ -624,8 +711,8 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
       } ${isLightsOff ? "lights-off-mode" : ""}`}
     >
       {!isFullscreen && (
-      <header className="reader-top-nav">
-        <div className="nav-left">
+        <header className="reader-top-nav">
+          <div className="nav-left">
             <span className="book-title-nav">《{bookTitle}》</span>
             <span className="divider">|</span>
             <span className="">{currentChapter}</span>
@@ -684,10 +771,10 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
                     strokeWidth="2"
                     fill="none"
                   />
-            <path
+                  <path
                     d="m21 21-4.35-4.35"
-              stroke="currentColor"
-              strokeWidth="2"
+                    stroke="currentColor"
+                    strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
@@ -701,16 +788,16 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
                 onClick={toggleLightsOff}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-            <path
+                  <path
                     d="M9 18h6M10 21h4M12 3v1M12 5a5 5 0 0 1 5 5c0 1.5-1 2.5-1.5 3.5S15 15 15 16h-1.5-1-1H10c0-1 0-1.5-.5-2.5S8 11.5 8 10a5 5 0 0 1 4-5z"
-              stroke="currentColor"
-              strokeWidth="2"
+                    stroke="currentColor"
+                    strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     fill={isLightsOff ? "currentColor" : "none"}
                     opacity={isLightsOff ? "1" : "0.7"}
-            />
-          </svg>
+                  />
+                </svg>
               </button>
 
               {/* 字体大小 */}
@@ -753,29 +840,17 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
                 }
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <line
-                    x1="3"
-                    y1="6"
-                    x2="21"
-                    y2="6"
+                  <path
+                    d="M3 8h18M3 12h18M3 16h18"
                     stroke="currentColor"
                     strokeWidth="2"
+                    strokeLinecap="round"
                   />
-                  <line
-                    x1="3"
-                    y1="12"
-                    x2="21"
-                    y2="12"
+                  <path
+                    d="M6 4v16M18 4v16"
                     stroke="currentColor"
-                    strokeWidth="2"
-                  />
-                  <line
-                    x1="3"
-                    y1="18"
-                    x2="21"
-                    y2="18"
-                    stroke="currentColor"
-                    strokeWidth="2"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
                   />
                 </svg>
               </button>
@@ -816,7 +891,7 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
                     r="8"
                     stroke="currentColor"
                     strokeWidth="2"
-            fill="none"
+                    fill="none"
                   />
                   <path
                     d="M12 4v16M4 12h16"
@@ -836,12 +911,12 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                     <path
                       d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"
-              stroke="currentColor"
-              strokeWidth="2"
+                      stroke="currentColor"
+                      strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-            />
-          </svg>
+                    />
+                  </svg>
                 ) : (
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                     <path
@@ -851,10 +926,10 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     />
-            </svg>
+                  </svg>
                 )}
               </button>
-          </div>
+            </div>
 
             <span className="divider lights-off-hide">|</span>
             <button
@@ -863,96 +938,96 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
             >
               我的书桌
             </button>
-        </div>
-      </header>
+          </div>
+        </header>
       )}
 
       {/* 全屏模式下的右侧垂直工具栏 */}
       {isFullscreen && (
-      <aside className="right-toolbar">
+        <aside className="right-toolbar">
           <button
             className="toolbar-btn"
             title="目录"
             onClick={() => setShowToc(!showToc)}
           >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <line
-              x1="3"
-              y1="6"
-              x2="21"
-              y2="6"
-              stroke="currentColor"
-              strokeWidth="2"
-            />
-            <line
-              x1="3"
-              y1="12"
-              x2="21"
-              y2="12"
-              stroke="currentColor"
-              strokeWidth="2"
-            />
-            <line
-              x1="3"
-              y1="18"
-              x2="21"
-              y2="18"
-              stroke="currentColor"
-              strokeWidth="2"
-            />
-          </svg>
-        </button>
-        <button className="toolbar-btn" title="AI">
-          <span className="ai-text">AI</span>
-        </button>
-        <button className="toolbar-btn" title="编辑">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"
-              stroke="currentColor"
-              strokeWidth="2"
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <line
+                x1="3"
+                y1="6"
+                x2="21"
+                y2="6"
+                stroke="currentColor"
+                strokeWidth="2"
+              />
+              <line
+                x1="3"
+                y1="12"
+                x2="21"
+                y2="12"
+                stroke="currentColor"
+                strokeWidth="2"
+              />
+              <line
+                x1="3"
+                y1="18"
+                x2="21"
+                y2="18"
+                stroke="currentColor"
+                strokeWidth="2"
+              />
+            </svg>
+          </button>
+          <button className="toolbar-btn" title="AI">
+            <span className="ai-text">AI</span>
+          </button>
+          <button className="toolbar-btn" title="编辑">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"
+                stroke="currentColor"
+                strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-            />
-          </svg>
-        </button>
+              />
+            </svg>
+          </button>
           <button className="toolbar-btn" title="复制">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
               <rect
                 x="9"
                 y="9"
                 width="13"
                 height="13"
                 rx="2"
-              stroke="currentColor"
-              strokeWidth="2"
-            />
-            <path
+                stroke="currentColor"
+                strokeWidth="2"
+              />
+              <path
                 d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
-              stroke="currentColor"
-              strokeWidth="2"
-            />
-          </svg>
-        </button>
+                stroke="currentColor"
+                strokeWidth="2"
+              />
+            </svg>
+          </button>
           <button className="toolbar-btn" title="设置" onClick={toggleSettings}>
             <span className="font-text">Aa</span>
           </button>
-        <button
-          className="toolbar-btn"
+          <button
+            className="toolbar-btn"
             title="退出全屏"
             onClick={toggleFullscreen}
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path
                 d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"
-              stroke="currentColor"
-              strokeWidth="2"
+                stroke="currentColor"
+                strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-      </aside>
+              />
+            </svg>
+          </button>
+        </aside>
       )}
 
       {/* 字体选择面板 */}
@@ -1339,24 +1414,41 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
 
       {/* EPUB阅读区域 */}
       <div className="epub-reading-area" style={{ fontSize: `${fontSize}px` }}>
+        {/* 面板打开时的遮罩层 - 点击关闭所有面板 */}
+        {(showToc || showSearchPanel || showFontPanel || showSettings) && (
+          <div className="reading-overlay" onClick={handleReadingAreaClick} />
+        )}
+
         {/* 左侧翻页区域 - 隐形 */}
         <button
           className="epub-page-click-area epub-page-click-left"
-          onClick={handlePreviousPage}
+          onClick={(e) => {
+            console.log("👆 左侧翻页按钮被点击");
+            e.preventDefault();
+            e.stopPropagation();
+            handlePreviousPage();
+          }}
           aria-label="上一页"
+          type="button"
         />
 
         {/* 右侧翻页区域 - 隐形 */}
-            <button
+        <button
           className="epub-page-click-area epub-page-click-right"
-          onClick={handleNextPage}
+          onClick={(e) => {
+            console.log("👆 右侧翻页按钮被点击");
+            e.preventDefault();
+            e.stopPropagation();
+            handleNextPage();
+          }}
           aria-label="下一页"
+          type="button"
         />
 
-          <div className="epub-content">
-            <ReactReader
+        <div className="epub-content">
+          <ReactReader
             url={bookUrl}
-              location={location}
+            location={location}
             locationChanged={(epubcfi: string) => {
               setLocation(epubcfi);
               updateCurrentChapter();
@@ -1367,8 +1459,20 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
               spread: "none",
             }}
             getRendition={(rend) => {
+              console.log("📚 getRendition 被调用");
+              console.log("📚 rendition 对象:", rend);
+              console.log(
+                "📚 rendition.prev 方法存在?",
+                typeof rend.prev === "function"
+              );
+              console.log(
+                "📚 rendition.next 方法存在?",
+                typeof rend.next === "function"
+              );
+
               // 保存rendition引用
               setRendition(rend);
+              console.log("✅ rendition 已保存到 state");
 
               // 应用字体大小
               rend.themes.fontSize(`${fontSize}px`);
@@ -1546,9 +1650,9 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
                 onKeyPress={(e) => {
                   if (e.key === "Enter") {
                     handleSearch(searchQuery);
-                }
-              }}
-            />
+                  }
+                }}
+              />
               <button
                 className="search-btn"
                 onClick={() => handleSearch(searchQuery)}
@@ -1607,8 +1711,8 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
                       </button>
                     ))}
                   </div>
-          </div>
-        )}
+                </div>
+              )}
 
             {/* 搜索结果 */}
             {searchResults.length > 0 && (
