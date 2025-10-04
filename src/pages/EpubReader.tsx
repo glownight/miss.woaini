@@ -597,6 +597,11 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
         <header className="reader-top-nav">
           <div className="nav-left">
             <span className="book-title-nav">{bookTitle}</span>
+            <span className="divider">|</span>
+            <span className="">{currentChapter}</span>
+            <span className="">
+              {currentChapterIndex} / {totalChapters}
+            </span>
           </div>
           <div className="nav-right">
             {/* 工具栏按钮组 */}
@@ -1377,18 +1382,6 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
         </div>
       </div>
 
-      {/* 底部章节进度显示 */}
-      {!isFullscreen && totalChapters > 0 && (
-        <div className="reader-bottom-progress">
-          <div className="chapter-info">
-            <span className="chapter-title">{currentChapter}</span>
-            <span className="chapter-progress">
-              {currentChapterIndex} / {totalChapters}
-            </span>
-          </div>
-        </div>
-      )}
-
       {/* 目录面板 */}
       <AnimatePresence>
         {showToc && toc.length > 0 && (
@@ -1421,7 +1414,6 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
                         rendition
                           .display(item.href)
                           .then(() => {
-                            setShowToc(false);
                             // 跳转后更新当前章节
                             setTimeout(() => {
                               updateCurrentChapter();
