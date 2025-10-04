@@ -31,8 +31,11 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
   const [toc, setToc] = useState<any[]>([]);
   const [currentChapter, setCurrentChapter] = useState<string>("");
   const [currentChapterIndex, setCurrentChapterIndex] = useState<number>(0);
-  const [totalChapters, setTotalChapters] = useState<number>(0);
   const [showToc, setShowToc] = useState<boolean>(false); // 控制目录面板显示
+  
+  // 电子书真实页码相关状态
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
 
   // 搜索相关状态
   const [showSearchPanel, setShowSearchPanel] = useState<boolean>(false);
@@ -121,19 +124,25 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
 
     const flatToc = flattenToc(tocData);
     setToc(flatToc);
-    setTotalChapters(flatToc.length);
     console.log("扁平化目录:", flatToc);
   };
 
-  // 根据当前位置计算章节
+  // 根据当前位置计算章节和页码
   const updateCurrentChapter = () => {
     if (!rendition || toc.length === 0) return;
 
     try {
-      // 获取当前位置对应的章节
+      // 获取当前位置对应的章节和页码
       const currentLocation = rendition.currentLocation();
       if (currentLocation && currentLocation.start) {
         const currentHref = currentLocation.start.href;
+
+        // 更新页码信息
+        if (currentLocation.start && currentLocation.start.displayed) {
+          const displayed = currentLocation.start.displayed;
+          setCurrentPage(displayed.page || 1);
+          setTotalPages(displayed.total || 0);
+        }
 
         // 清理 href，移除查询参数和锚点
         const cleanHref = (href: string) => {
@@ -600,7 +609,7 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
             <span className="divider">|</span>
             <span className="">{currentChapter}</span>
             <span className="">
-              {currentChapterIndex} / {totalChapters}
+              {currentPage} / {totalPages}
             </span>
           </div>
           <div className="nav-right">
@@ -1378,6 +1387,15 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
                 rend.themes.override("color", "#5c4b37");
                 rend.themes.override("background", "#f4f1e8");
               }
+
+              // 监听位置变化以更新页码
+              rend.on("relocated", (location: any) => {
+                if (location && location.start && location.start.displayed) {
+                  const displayed = location.start.displayed;
+                  setCurrentPage(displayed.page || 1);
+                  setTotalPages(displayed.total || 0);
+                }
+              });
             }}
             tocChanged={handleTocChange}
           />
