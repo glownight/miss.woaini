@@ -7,7 +7,7 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei",
     sans-serif;
   background: #0d0d0d;
-  color: #787165;
+  color: #b8b8b8;
   position: relative;
   overflow: hidden;
 }
@@ -19,7 +19,7 @@
 
 .epub-reader-novel.dark {
   background: #0d0d0d;
-  color: #787165;
+  color: #b8b8b8;
 }
 
 .epub-reader-novel.sepia {
@@ -36,6 +36,7 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
+  padding-bottom: 100px; /* 为底部进度条留出空间 */
   position: relative;
   overflow: auto;
   background: #0d0d0d;
@@ -257,8 +258,175 @@ div[class*="Reader"] > button {
   top: 0;
 }
 
+/* 目录面板样式 */
+.toc-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 320px;
+  background: rgba(13, 13, 13, 0.98);
+  backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.epub-reader-novel.light .toc-panel {
+  background: rgba(255, 255, 255, 0.98);
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.epub-reader-novel.sepia .toc-panel {
+  background: rgba(244, 241, 232, 0.98);
+  border-right: 1px solid rgba(92, 75, 55, 0.1);
+}
+
+.toc-panel-header {
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.epub-reader-novel.light .toc-panel-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.epub-reader-novel.sepia .toc-panel-header {
+  border-bottom: 1px solid rgba(92, 75, 55, 0.1);
+}
+
+.toc-panel-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #b8b8b8;
+}
+
+.epub-reader-novel.light .toc-panel-header h3 {
+  color: #333333;
+}
+
+.epub-reader-novel.sepia .toc-panel-header h3 {
+  color: #5c4b37;
+}
+
+.toc-close-btn {
+  background: none;
+  border: none;
+  color: #b8b8b8;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.toc-close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.epub-reader-novel.light .toc-close-btn {
+  color: #666666;
+}
+
+.epub-reader-novel.light .toc-close-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #000000;
+}
+
+.epub-reader-novel.sepia .toc-close-btn {
+  color: #8a7a65;
+}
+
+.epub-reader-novel.sepia .toc-close-btn:hover {
+  background: rgba(92, 75, 55, 0.1);
+  color: #5c4b37;
+}
+
+.toc-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.toc-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  color: #b8b8b8;
+}
+
+.toc-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.toc-item.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.epub-reader-novel.light .toc-item {
+  color: #666666;
+}
+
+.epub-reader-novel.light .toc-item:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.epub-reader-novel.light .toc-item.active {
+  background: rgba(0, 0, 0, 0.1);
+  color: #000000;
+}
+
+.epub-reader-novel.sepia .toc-item {
+  color: #8a7a65;
+}
+
+.epub-reader-novel.sepia .toc-item:hover {
+  background: rgba(92, 75, 55, 0.05);
+}
+
+.epub-reader-novel.sepia .toc-item.active {
+  background: rgba(92, 75, 55, 0.1);
+  color: #5c4b37;
+}
+
+.toc-item-index {
+  min-width: 30px;
+  font-size: 14px;
+  opacity: 0.7;
+  margin-right: 12px;
+}
+
+.toc-item-title {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
+  .toc-panel {
+    width: 280px;
+  }
+
   .epub-reading-area {
     padding: 10px;
   }
@@ -274,4 +442,481 @@ div[class*="Reader"] > button {
   .epub-page-click-area {
     width: 100px;
   }
+}
+
+/* 底部章节进度显示 */
+.reader-bottom-progress {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(13, 13, 13, 0.98);
+  backdrop-filter: blur(15px);
+  border-top: 2px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  transition: all 0.3s ease;
+}
+
+.epub-reader-novel.light .reader-bottom-progress {
+  background: rgba(255, 255, 255, 0.95);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.epub-reader-novel.sepia .reader-bottom-progress {
+  background: rgba(244, 241, 232, 0.95);
+  border-top: 1px solid rgba(92, 75, 55, 0.1);
+}
+
+.chapter-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  max-width: 900px;
+  padding: 0 30px;
+}
+
+.chapter-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #d0d0d0;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 700px;
+  letter-spacing: 0.5px;
+}
+
+.epub-reader-novel.light .chapter-title {
+  color: #333333;
+}
+
+.epub-reader-novel.sepia .chapter-title {
+  color: #5c4b37;
+}
+
+.chapter-progress {
+  font-size: 16px;
+  color: #999;
+  font-weight: 500;
+  font-family: "Courier New", monospace;
+  letter-spacing: 1px;
+}
+
+.epub-reader-novel.light .chapter-progress {
+  color: #666;
+}
+
+.epub-reader-novel.sepia .chapter-progress {
+  color: #8b7355;
+}
+
+/* 搜索高亮样式 */
+.epub-content ::highlight(search-highlight) {
+  background-color: rgba(255, 200, 0, 0.4);
+  color: inherit;
+}
+
+/* 通过 epub.js annotations 添加的高亮 */
+.epub-content svg.epubjs-hl {
+  fill: rgba(255, 200, 0, 0.4) !important;
+  fill-opacity: 0.4 !important;
+  mix-blend-mode: multiply !important;
+  pointer-events: none;
+}
+
+.epub-reader-novel.light .epub-content svg.epubjs-hl {
+  fill: rgba(255, 180, 0, 0.5) !important;
+}
+
+.epub-reader-novel.sepia .epub-content svg.epubjs-hl {
+  fill: rgba(255, 160, 0, 0.4) !important;
+}
+
+/* 搜索面板 */
+.search-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 360px;
+  background: rgba(13, 13, 13, 0.98);
+  backdrop-filter: blur(10px);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.epub-reader-novel.light .search-panel {
+  background: rgba(255, 255, 255, 0.98);
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.epub-reader-novel.sepia .search-panel {
+  background: rgba(244, 241, 232, 0.98);
+  border-right: 1px solid rgba(92, 75, 55, 0.1);
+}
+
+.search-panel-header {
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.epub-reader-novel.light .search-panel-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.epub-reader-novel.sepia .search-panel-header {
+  border-bottom: 1px solid rgba(92, 75, 55, 0.1);
+}
+
+.search-panel-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #b8b8b8;
+}
+
+.epub-reader-novel.light .search-panel-header h3 {
+  color: #333333;
+}
+
+.epub-reader-novel.sepia .search-panel-header h3 {
+  color: #5c4b37;
+}
+
+.search-close-btn {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px 10px;
+  transition: color 0.2s;
+}
+
+.search-close-btn:hover {
+  color: #fff;
+}
+
+.epub-reader-novel.light .search-close-btn:hover {
+  color: #000;
+}
+
+/* 搜索输入框 */
+.search-input-container {
+  padding: 20px;
+  display: flex;
+  gap: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.epub-reader-novel.light .search-input-container {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.epub-reader-novel.sepia .search-input-container {
+  border-bottom: 1px solid rgba(92, 75, 55, 0.1);
+}
+
+.search-input {
+  flex: 1;
+  padding: 10px 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #b8b8b8;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.epub-reader-novel.light .search-input {
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+
+.epub-reader-novel.sepia .search-input {
+  background: rgba(92, 75, 55, 0.05);
+  border: 1px solid rgba(92, 75, 55, 0.1);
+  color: #5c4b37;
+}
+
+.search-input:focus {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.epub-reader-novel.light .search-input:focus {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.search-btn {
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 8px;
+  color: #b8b8b8;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.search-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.search-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.epub-reader-novel.light .search-btn {
+  background: rgba(0, 0, 0, 0.08);
+  color: #333;
+}
+
+.epub-reader-novel.light .search-btn:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.12);
+}
+
+/* 搜索历史 */
+.search-history {
+  padding: 20px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.search-history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.search-history-header span {
+  font-size: 14px;
+  color: #888;
+  font-weight: 500;
+}
+
+.clear-history-btn {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 5px 10px;
+  transition: color 0.2s;
+}
+
+.clear-history-btn:hover {
+  color: #fff;
+}
+
+.epub-reader-novel.light .clear-history-btn:hover {
+  color: #333;
+}
+
+.search-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.search-history-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border: none;
+  border-radius: 8px;
+  color: #b8b8b8;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.search-history-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.epub-reader-novel.light .search-history-item {
+  background: rgba(0, 0, 0, 0.03);
+  color: #333;
+}
+
+.epub-reader-novel.light .search-history-item:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.epub-reader-novel.sepia .search-history-item {
+  background: rgba(92, 75, 55, 0.05);
+  color: #5c4b37;
+}
+
+.epub-reader-novel.sepia .search-history-item:hover {
+  background: rgba(92, 75, 55, 0.08);
+}
+
+.search-history-item svg {
+  flex-shrink: 0;
+}
+
+.search-history-item span {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 搜索结果 */
+.search-results {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.search-results-header {
+  padding: 15px 20px;
+  font-size: 13px;
+  color: #888;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.epub-reader-novel.light .search-results-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.epub-reader-novel.sepia .search-results-header {
+  border-bottom: 1px solid rgba(92, 75, 55, 0.1);
+}
+
+.search-results-list {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.search-result-item {
+  display: block;
+  padding: 15px;
+  margin-bottom: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: none;
+  border-radius: 8px;
+  color: #b8b8b8;
+  font-size: 14px;
+  line-height: 1.6;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  position: relative;
+}
+
+.search-result-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateX(3px);
+}
+
+.search-result-item:active {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateX(5px);
+}
+
+.epub-reader-novel.light .search-result-item {
+  background: rgba(0, 0, 0, 0.03);
+  color: #333;
+}
+
+.epub-reader-novel.light .search-result-item:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.epub-reader-novel.sepia .search-result-item {
+  background: rgba(92, 75, 55, 0.05);
+  color: #5c4b37;
+}
+
+.epub-reader-novel.sepia .search-result-item:hover {
+  background: rgba(92, 75, 55, 0.08);
+}
+
+.search-result-chapter {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 8px;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.epub-reader-novel.light .search-result-chapter {
+  color: #666;
+}
+
+.epub-reader-novel.sepia .search-result-chapter {
+  color: #8b7355;
+}
+
+.search-result-excerpt {
+  word-break: break-word;
+  line-height: 1.6;
+}
+
+.search-result-excerpt mark {
+  background: rgba(255, 200, 0, 0.3);
+  color: #ffd700;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+.epub-reader-novel.light .search-result-excerpt mark {
+  background: rgba(255, 200, 0, 0.4);
+  color: #d97706;
+}
+
+.epub-reader-novel.sepia .search-result-excerpt mark {
+  background: rgba(255, 200, 0, 0.3);
+  color: #92400e;
+}
+
+/* 无结果提示 */
+.search-no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #888;
+  text-align: center;
+  gap: 20px;
+}
+
+.search-no-results svg {
+  opacity: 0.5;
+}
+
+.search-no-results p {
+  margin: 0;
+  font-size: 14px;
 }

@@ -27,15 +27,32 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
   // 保存rendition引用以便动态更新样式
   const [rendition, setRendition] = useState<any>(null);
 
+  // 目录和章节进度相关状态
+  const [toc, setToc] = useState<any[]>([]);
+  const [currentChapter, setCurrentChapter] = useState<string>("");
+  const [currentChapterIndex, setCurrentChapterIndex] = useState<number>(0);
+  const [totalChapters, setTotalChapters] = useState<number>(0);
+  const [showToc, setShowToc] = useState<boolean>(false); // 控制目录面板显示
+
+  // 搜索相关状态
+  const [showSearchPanel, setShowSearchPanel] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchHistory, setSearchHistory] = useState<string[]>([]);
+  const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [currentHighlights, setCurrentHighlights] = useState<any[]>([]); // 保存当前高亮
+
   // 翻页功能
   const handlePreviousPage = () => {
     if (rendition) {
+      clearHighlights(); // 翻页时清除高亮
       rendition.prev();
     }
   };
 
   const handleNextPage = () => {
     if (rendition) {
+      clearHighlights(); // 翻页时清除高亮
       rendition.next();
     }
   };
@@ -86,6 +103,399 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
   const isFontActive = (fontKey: string) => {
     const targetFont = fontMap[fontKey];
     return fontFamily === targetFont;
+  };
+
+  // 处理目录变化
+  const handleTocChange = (tocData: any[]) => {
+    // 扁平化目录，处理嵌套的子章节
+    const flattenToc = (items: any[]): any[] => {
+      let result: any[] = [];
+      items.forEach((item) => {
+        result.push(item);
+        if (item.subitems && item.subitems.length > 0) {
+          result = result.concat(flattenToc(item.subitems));
+        }
+      });
+      return result;
+    };
+
+    const flatToc = flattenToc(tocData);
+    setToc(flatToc);
+    setTotalChapters(flatToc.length);
+    console.log("扁平化目录:", flatToc);
+  };
+
+  // 根据当前位置计算章节
+  const updateCurrentChapter = () => {
+    if (!rendition || toc.length === 0) return;
+
+    try {
+      // 获取当前位置对应的章节
+      const currentLocation = rendition.currentLocation();
+      if (currentLocation && currentLocation.start) {
+        const currentHref = currentLocation.start.href;
+
+        // 清理 href，移除查询参数和锚点
+        const cleanHref = (href: string) => {
+          if (!href) return "";
+          return href.split("?")[0].split("#")[0];
+        };
+
+        const cleanedCurrentHref = cleanHref(currentHref);
+
+        // 在目录中查找当前章节（从后往前找，找到最后一个匹配的）
+        let chapterIndex = -1;
+        let chapterTitle = "";
+
+        for (let i = toc.length - 1; i >= 0; i--) {
+          const tocHref = cleanHref(toc[i].href);
+
+          // 尝试多种匹配方式
+          if (
+            cleanedCurrentHref === tocHref || // 完全匹配
+            cleanedCurrentHref.endsWith(tocHref) || // 当前href包含toc的href
+            tocHref.endsWith(cleanedCurrentHref) || // toc的href包含当前href
+            cleanedCurrentHref.includes(tocHref) // 部分匹配
+          ) {
+            chapterIndex = i;
+            chapterTitle = toc[i].label;
+            break;
+          }
+        }
+
+        // 如果还是没找到，尝试更宽松的匹配
+        if (chapterIndex === -1) {
+          const currentFileName = cleanedCurrentHref.split("/").pop() || "";
+
+          for (let i = toc.length - 1; i >= 0; i--) {
+            const tocFileName = cleanHref(toc[i].href).split("/").pop() || "";
+            if (
+              currentFileName &&
+              tocFileName &&
+              currentFileName === tocFileName
+            ) {
+              chapterIndex = i;
+              chapterTitle = toc[i].label;
+              break;
+            }
+          }
+        }
+
+        // 如果还是没找到，使用第一章
+        if (chapterIndex === -1 && toc.length > 0) {
+          chapterIndex = 0;
+          chapterTitle = toc[0].label;
+        }
+
+        setCurrentChapterIndex(chapterIndex + 1); // 从1开始计数
+        setCurrentChapter(chapterTitle);
+
+        console.log(
+          "当前位置:",
+          cleanedCurrentHref,
+          "匹配章节:",
+          chapterTitle,
+          `(${chapterIndex + 1}/${toc.length})`
+        );
+      }
+    } catch (error) {
+      console.error("更新章节信息失败:", error);
+    }
+  };
+
+  // 加载搜索历史
+  useEffect(() => {
+    const savedHistory = localStorage.getItem(`searchHistory_${bookTitle}`);
+    if (savedHistory) {
+      try {
+        setSearchHistory(JSON.parse(savedHistory));
+      } catch (error) {
+        console.error("加载搜索历史失败:", error);
+      }
+    }
+  }, [bookTitle]);
+
+  // 保存搜索历史
+  const saveSearchHistory = (query: string) => {
+    if (!query.trim()) return;
+
+    const newHistory = [
+      query,
+      ...searchHistory.filter((h) => h !== query),
+    ].slice(0, 10);
+    setSearchHistory(newHistory);
+    localStorage.setItem(
+      `searchHistory_${bookTitle}`,
+      JSON.stringify(newHistory)
+    );
+  };
+
+  // 清除搜索历史
+  const clearSearchHistory = () => {
+    setSearchHistory([]);
+    localStorage.removeItem(`searchHistory_${bookTitle}`);
+  };
+
+  // 执行搜索
+  const handleSearch = async (query: string) => {
+    if (!query.trim() || !rendition) return;
+
+    // 清除旧的高亮
+    clearHighlights();
+
+    setIsSearching(true);
+    setSearchResults([]);
+
+    try {
+      const book = rendition.book;
+      const searchPromises: Promise<any[]>[] = [];
+
+      // 遍历所有spine items并创建搜索Promise
+      book.spine.each((item: any) => {
+        const promise = new Promise<any[]>((resolve) => {
+          item
+            .load(book.load.bind(book))
+            .then((doc: any) => {
+              try {
+                // 获取文本内容
+                const content = doc.body
+                  ? doc.body.textContent
+                  : doc.textContent || "";
+
+                if (!content) {
+                  resolve([]);
+                  return;
+                }
+
+                // 清理空白字符
+                const cleanContent = content.replace(/\s+/g, " ").trim();
+
+                // 在内容中查找匹配项
+                const regex = new RegExp(
+                  query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+                  "gi"
+                );
+                const matches: any[] = [];
+                let match;
+
+                while ((match = regex.exec(cleanContent)) !== null) {
+                  const start = Math.max(0, match.index - 40);
+                  const end = Math.min(
+                    cleanContent.length,
+                    match.index + query.length + 40
+                  );
+                  let excerpt = cleanContent.substring(start, end);
+
+                  // 添加省略号
+                  if (start > 0) excerpt = "..." + excerpt;
+                  if (end < cleanContent.length) excerpt = excerpt + "...";
+
+                  // 查找对应的章节标题
+                  let chapterTitle = "";
+                  for (let i = toc.length - 1; i >= 0; i--) {
+                    if (item.href && item.href.includes(toc[i].href)) {
+                      chapterTitle = toc[i].label || "";
+                      break;
+                    }
+                  }
+
+                  // 尝试生成更精确的 CFI（指向具体文本位置）
+                  // 使用 spineItem 和相对位置
+                  const exactCfi = `${item.cfiBase}!/4/2[${
+                    item.idref
+                  }]!/${Math.floor(match.index / 100)}`;
+
+                  matches.push({
+                    cfi: exactCfi,
+                    baseCfi: item.cfiBase,
+                    excerpt: excerpt.trim(),
+                    href: item.href,
+                    index: match.index,
+                    chapterTitle: chapterTitle || "未知章节",
+                    content: cleanContent, // 保存完整内容用于精确定位
+                    matchText: match[0], // 保存匹配的文本
+                  });
+
+                  // 限制每个章节最多返回5个结果
+                  if (matches.length >= 5) break;
+                }
+
+                // 卸载文档以释放内存
+                item.unload();
+                resolve(matches);
+              } catch (error) {
+                console.error("解析章节内容失败:", error);
+                item.unload();
+                resolve([]);
+              }
+            })
+            .catch((error: Error) => {
+              console.error("加载章节失败:", error);
+              resolve([]);
+            });
+        });
+
+        searchPromises.push(promise);
+      });
+
+      // 等待所有搜索完成
+      const allResults = await Promise.all(searchPromises);
+      const flatResults = allResults.flat();
+
+      console.log(`搜索 "${query}" 找到 ${flatResults.length} 个结果`);
+
+      setSearchResults(flatResults);
+      // 保存搜索历史（无论是否找到结果）
+      saveSearchHistory(query);
+    } catch (error) {
+      console.error("搜索失败:", error);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // 清除所有高亮
+  const clearHighlights = () => {
+    if (rendition) {
+      currentHighlights.forEach((highlight) => {
+        try {
+          rendition.annotations.remove(highlight.cfiRange, "highlight");
+        } catch (error) {
+          console.log("移除高亮失败:", error);
+        }
+      });
+      setCurrentHighlights([]);
+    }
+  };
+
+  // 跳转到搜索结果（精确定位到文本位置）
+  const jumpToSearchResult = async (result: any) => {
+    if (!rendition) {
+      console.warn("Rendition 未就绪");
+      return;
+    }
+
+    try {
+      console.log("正在跳转到:", result.chapterTitle, result);
+      console.log("搜索关键词:", result.matchText);
+      console.log("目标href:", result.href);
+
+      // 清除之前的高亮
+      clearHighlights();
+
+      // 一步跳转：先在后台找到精确位置，然后直接跳转
+      if (result.matchText && rendition.book) {
+        // 使用 spine.get 方法直接获取目标章节
+        let targetSpineItem = rendition.book.spine.get(result.href);
+
+        if (!targetSpineItem) {
+          // 如果直接获取失败，尝试遍历查找
+          for (let i = 0; i < rendition.book.spine.spineItems.length; i++) {
+            const item = rendition.book.spine.spineItems[i];
+            // 改进匹配逻辑：处理相对路径和完整路径
+            const itemHref = item.href.split("#")[0];
+            const resultHref = result.href.split("#")[0];
+
+            if (
+              itemHref === resultHref ||
+              itemHref.endsWith(resultHref) ||
+              resultHref.endsWith(itemHref)
+            ) {
+              targetSpineItem = item;
+              break;
+            }
+          }
+        }
+
+        if (targetSpineItem) {
+          console.log(
+            "找到目标章节，开始搜索精确位置...",
+            targetSpineItem.href
+          );
+
+          // 确保章节已加载
+          if (!targetSpineItem.document) {
+            await targetSpineItem.load(
+              rendition.book.load.bind(rendition.book)
+            );
+          }
+
+          // 使用 find 方法搜索文本
+          const searchResults = await targetSpineItem.find(result.matchText);
+          console.log("搜索结果:", searchResults);
+
+          if (searchResults && searchResults.length > 0) {
+            // 直接跳转到精确位置（一步到位）
+            const firstResult = searchResults[0];
+            await rendition.display(firstResult.cfi);
+            console.log("精确定位成功:", firstResult.cfi);
+
+            // 添加高亮
+            setTimeout(() => {
+              const newHighlights: any[] = [];
+              searchResults.forEach((searchResult: any) => {
+                try {
+                  rendition.annotations.add(
+                    "highlight",
+                    searchResult.cfi,
+                    {},
+                    undefined,
+                    "search-highlight",
+                    {
+                      fill: "yellow",
+                      "fill-opacity": "0.4",
+                      "mix-blend-mode": "multiply",
+                    }
+                  );
+                  newHighlights.push(searchResult);
+                } catch (error) {
+                  console.log("添加高亮失败:", error);
+                }
+              });
+              setCurrentHighlights(newHighlights);
+              console.log(`已高亮 ${newHighlights.length} 个匹配项`);
+            }, 200);
+
+            // 更新当前章节信息
+            setTimeout(() => {
+              updateCurrentChapter();
+            }, 100);
+
+            // 卸载文档以释放内存
+            if (targetSpineItem.unload) {
+              targetSpineItem.unload();
+            }
+
+            return; // 成功后直接返回
+          } else {
+            console.log("未找到匹配文本，使用降级方案");
+            // 卸载文档
+            if (targetSpineItem.unload) {
+              targetSpineItem.unload();
+            }
+          }
+        } else {
+          console.log("无法找到目标章节，使用降级方案");
+        }
+      }
+
+      // 降级方案：直接跳转到章节
+      console.log("使用降级方案：跳转到章节");
+      await rendition.display(result.href || result.baseCfi);
+      setTimeout(() => {
+        updateCurrentChapter();
+      }, 100);
+    } catch (error) {
+      console.error("跳转失败:", error);
+      try {
+        await rendition.display(result.href || result.baseCfi);
+        setTimeout(() => {
+          updateCurrentChapter();
+        }, 100);
+      } catch (e) {
+        console.error("降级跳转也失败:", e);
+      }
+    }
   };
 
   // 初始化时设置主题
@@ -144,6 +554,17 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
     };
   }, []);
 
+  // 当目录加载完成后，更新当前章节
+  useEffect(() => {
+    if (rendition && toc.length > 0) {
+      // 延迟执行，确保 rendition 完全就绪
+      const timer = setTimeout(() => {
+        updateCurrentChapter();
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [rendition, toc]);
+
   // 当样式设置变化时，重新应用到rendition
   useEffect(() => {
     if (rendition) {
@@ -154,7 +575,7 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
 
       // 应用主题样式
       if (theme === "dark") {
-        rendition.themes.override("color", "#787165");
+        rendition.themes.override("color", "#b8b8b8");
         rendition.themes.override("background", "#0d0d0d");
       } else if (theme === "light") {
         rendition.themes.override("color", "#333333");
@@ -180,11 +601,44 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
           <div className="nav-right">
             {/* 工具栏按钮组 */}
             <div className="nav-toolbar-buttons">
+              {/* 目录 */}
+              <button
+                className="toolbar-btn"
+                title="目录"
+                onClick={() => setShowToc(!showToc)}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <line
+                    x1="3"
+                    y1="6"
+                    x2="21"
+                    y2="6"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  />
+                  <line
+                    x1="3"
+                    y1="12"
+                    x2="21"
+                    y2="12"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  />
+                  <line
+                    x1="3"
+                    y1="18"
+                    x2="21"
+                    y2="18"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  />
+                </svg>
+              </button>
               {/* 搜索 */}
               <button
                 className="toolbar-btn"
                 title="搜索"
-                onClick={() => setShowSearchPanel(true)}
+                onClick={() => setShowSearchPanel(!showSearchPanel)}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                   <circle
@@ -204,6 +658,7 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
                   />
                 </svg>
               </button>
+
               {/* 一键熄灯 */}
               <button
                 className="toolbar-btn"
@@ -394,7 +849,11 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
       {/* 全屏模式下的右侧垂直工具栏 */}
       {isFullscreen && (
         <aside className="right-toolbar">
-          <button className="toolbar-btn" title="目录">
+          <button
+            className="toolbar-btn"
+            title="目录"
+            onClick={() => setShowToc(!showToc)}
+          >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
               <line
                 x1="3"
@@ -877,7 +1336,10 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
           <ReactReader
             url={bookUrl}
             location={location}
-            locationChanged={(epubcfi: string) => setLocation(epubcfi)}
+            locationChanged={(epubcfi: string) => {
+              setLocation(epubcfi);
+              updateCurrentChapter();
+            }}
             epubOptions={{
               flow: "paginated",
               manager: "continuous",
@@ -900,7 +1362,7 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
 
               // 应用主题样式
               if (theme === "dark") {
-                rend.themes.override("color", "#787165");
+                rend.themes.override("color", "#b8b8b8");
                 rend.themes.override("background", "#0d0d0d");
               } else if (theme === "light") {
                 rend.themes.override("color", "#333333");
@@ -910,10 +1372,257 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
                 rend.themes.override("background", "#f4f1e8");
               }
             }}
-            tocChanged={(toc) => console.log(toc)}
+            tocChanged={handleTocChange}
           />
         </div>
       </div>
+
+      {/* 底部章节进度显示 */}
+      {!isFullscreen && totalChapters > 0 && (
+        <div className="reader-bottom-progress">
+          <div className="chapter-info">
+            <span className="chapter-title">{currentChapter}</span>
+            <span className="chapter-progress">
+              {currentChapterIndex} / {totalChapters}
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* 目录面板 */}
+      <AnimatePresence>
+        {showToc && toc.length > 0 && (
+          <motion.div
+            className="toc-panel"
+            initial={{ opacity: 0, x: -300 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -300 }}
+          >
+            <div className="toc-panel-header">
+              <h3>目录</h3>
+              <button
+                onClick={() => setShowToc(false)}
+                className="toc-close-btn"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="toc-list">
+              {toc.map((item, index) => (
+                <button
+                  key={index}
+                  className={`toc-item ${
+                    index === currentChapterIndex - 1 ? "active" : ""
+                  }`}
+                  onClick={() => {
+                    if (item.href && rendition) {
+                      try {
+                        // 直接使用 href 跳转
+                        rendition
+                          .display(item.href)
+                          .then(() => {
+                            setShowToc(false);
+                            // 跳转后更新当前章节
+                            setTimeout(() => {
+                              updateCurrentChapter();
+                            }, 100);
+                          })
+                          .catch((error: Error) => {
+                            console.error("跳转章节失败:", error);
+                          });
+                      } catch (error) {
+                        console.error("跳转章节失败:", error);
+                      }
+                    }
+                  }}
+                >
+                  <span className="toc-item-index">{index + 1}</span>
+                  <span className="toc-item-title">
+                    {item.label || item.title || `章节 ${index + 1}`}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* 搜索面板 */}
+      <AnimatePresence>
+        {showSearchPanel && (
+          <motion.div
+            className="search-panel"
+            initial={{ opacity: 0, x: -300 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -300 }}
+          >
+            <div className="search-panel-header">
+              <h3>搜索</h3>
+              <button
+                onClick={() => setShowSearchPanel(false)}
+                className="search-close-btn"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* 搜索输入框 */}
+            <div className="search-input-container">
+              <input
+                type="text"
+                className="search-input"
+                placeholder="输入关键词搜索..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    handleSearch(searchQuery);
+                  }
+                }}
+              />
+              <button
+                className="search-btn"
+                onClick={() => handleSearch(searchQuery)}
+                disabled={isSearching || !searchQuery.trim()}
+              >
+                {isSearching ? "搜索中..." : "搜索"}
+              </button>
+            </div>
+
+            {/* 搜索历史 */}
+            {searchHistory.length > 0 &&
+              searchResults.length === 0 &&
+              !isSearching &&
+              !searchQuery && (
+                <div className="search-history">
+                  <div className="search-history-header">
+                    <span>搜索历史</span>
+                    <button
+                      className="clear-history-btn"
+                      onClick={clearSearchHistory}
+                    >
+                      清除
+                    </button>
+                  </div>
+                  <div className="search-history-list">
+                    {searchHistory.map((item, index) => (
+                      <button
+                        key={index}
+                        className="search-history-item"
+                        onClick={() => {
+                          setSearchQuery(item);
+                          handleSearch(item);
+                        }}
+                      >
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                        >
+                          <circle
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M12 6v6l4 2"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                        <span>{item}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+            {/* 搜索结果 */}
+            {searchResults.length > 0 && (
+              <div className="search-results">
+                <div className="search-results-header">
+                  找到 {searchResults.length} 个结果
+                </div>
+                <div className="search-results-list">
+                  {searchResults.map((result, index) => (
+                    <button
+                      key={index}
+                      className="search-result-item"
+                      onClick={() => jumpToSearchResult(result)}
+                    >
+                      {result.chapterTitle && (
+                        <div className="search-result-chapter">
+                          📖 {result.chapterTitle}
+                        </div>
+                      )}
+                      <div
+                        className="search-result-excerpt"
+                        dangerouslySetInnerHTML={{
+                          __html: result.excerpt.replace(
+                            new RegExp(searchQuery, "gi"),
+                            (match: string) => `<mark>${match}</mark>`
+                          ),
+                        }}
+                      />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 加载中提示 */}
+            {isSearching && (
+              <div className="search-no-results">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                  <circle
+                    cx="11"
+                    cy="11"
+                    r="8"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  />
+                  <path
+                    d="m21 21-4.35-4.35"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  />
+                </svg>
+                <p>正在搜索 "{searchQuery}"...</p>
+              </div>
+            )}
+
+            {/* 无结果提示 */}
+            {!isSearching && searchQuery && searchResults.length === 0 && (
+              <div className="search-no-results">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                  <circle
+                    cx="11"
+                    cy="11"
+                    r="8"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  />
+                  <path
+                    d="m21 21-4.35-4.35"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  />
+                </svg>
+                <p>未找到 "{searchQuery}" 的相关内容</p>
+                <p
+                  style={{ fontSize: "12px", opacity: 0.7, marginTop: "10px" }}
+                >
+                  提示：搜索功能会在所有章节中查找关键词
+                </p>
+              </div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
