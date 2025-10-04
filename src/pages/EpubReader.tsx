@@ -596,7 +596,7 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
       {!isFullscreen && (
         <header className="reader-top-nav">
           <div className="nav-left">
-            <span className="book-title-nav">{bookTitle}</span>
+            <span className="book-title-nav">《{bookTitle}》</span>
             <span className="divider">|</span>
             <span className="">{currentChapter}</span>
             <span className="">
@@ -846,7 +846,9 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
             </div>
 
             <span className="divider">|</span>
-            <button>我的书桌</button>
+            <button onClick={() => (window.location.href = "/books")}>
+              我的书桌
+            </button>
           </div>
         </header>
       )}
