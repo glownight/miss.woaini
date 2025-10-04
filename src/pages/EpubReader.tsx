@@ -15,6 +15,7 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
   const [fontSize, setFontSize] = useState(24);
   const [showSettings, setShowSettings] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isLightsOff, setIsLightsOff] = useState(false);
 
   // 新增阅读设置状态
   const [lineHeight, setLineHeight] = useState(1.9);
@@ -32,7 +33,7 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
   const [currentChapter, setCurrentChapter] = useState<string>("");
   const [currentChapterIndex, setCurrentChapterIndex] = useState<number>(0);
   const [showToc, setShowToc] = useState<boolean>(false); // 控制目录面板显示
-  
+
   // 电子书真实页码相关状态
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
@@ -551,6 +552,26 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
     }
   };
 
+  // 一键熄灯切换
+  const toggleLightsOff = () => {
+    const newLightsOffState = !isLightsOff;
+    setIsLightsOff(newLightsOffState);
+
+    // 在body上添加/移除class，以便全局控制App的header和锁屏按钮
+    if (newLightsOffState) {
+      document.body.classList.add("reader-lights-off");
+    } else {
+      document.body.classList.remove("reader-lights-off");
+    }
+  };
+
+  // 组件卸载时清除body class
+  useEffect(() => {
+    return () => {
+      document.body.classList.remove("reader-lights-off");
+    };
+  }, []);
+
   // 监听全屏状态变化
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -600,7 +621,7 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
     <div
       className={`epub-reader-novel ${theme} ${
         isFullscreen ? "fullscreen-mode" : ""
-      }`}
+      } ${isLightsOff ? "lights-off-mode" : ""}`}
     >
       {!isFullscreen && (
         <header className="reader-top-nav">
@@ -675,40 +696,21 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
 
               {/* 一键熄灯 */}
               <button
-                className="toolbar-btn"
-                title={theme === "dark" ? "切换到明亮模式" : "切换到暗黑模式"}
-                onClick={() => changeTheme(theme === "dark" ? "light" : "dark")}
+                className="toolbar-btn lights-off-keeper"
+                title={isLightsOff ? "开灯" : "一键熄灯"}
+                onClick={toggleLightsOff}
               >
-                {theme === "dark" ? (
-                  // 月亮图标（暗黑模式时显示）
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      fill="none"
-                    />
-                  </svg>
-                ) : (
-                  // 太阳图标（明亮模式时显示）
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="4"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      fill="none"
-                    />
-                    <path
-                      d="M12 2v1m0 18v1M4.93 4.93l.707.707m12.728 12.728l.707.707M2 12h1m18 0h1M4.93 19.07l.707-.707m12.728-12.728l.707-.707"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                )}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M9 18h6M10 21h4M12 3v1M12 5a5 5 0 0 1 5 5c0 1.5-1 2.5-1.5 3.5S15 15 15 16h-1.5-1-1H10c0-1 0-1.5-.5-2.5S8 11.5 8 10a5 5 0 0 1 4-5z"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    fill={isLightsOff ? "currentColor" : "none"}
+                    opacity={isLightsOff ? "1" : "0.7"}
+                  />
+                </svg>
               </button>
 
               {/* 字体大小 */}
@@ -854,8 +856,11 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
               </button>
             </div>
 
-            <span className="divider">|</span>
-            <button onClick={() => (window.location.href = "/books")}>
+            <span className="divider lights-off-hide">|</span>
+            <button
+              className="lights-off-hide"
+              onClick={() => (window.location.href = "/books")}
+            >
               我的书桌
             </button>
           </div>

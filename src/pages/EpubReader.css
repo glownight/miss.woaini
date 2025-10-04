@@ -920,3 +920,48 @@ div[class*="Reader"] > button {
   margin: 0;
   font-size: 14px;
 }
+
+/* ==================== 一键熄灯模式 ==================== */
+/* 熄灯模式：只调整透明度，不删除DOM */
+
+/* 保留可见的元素：书名和进度条 */
+.epub-reader-novel.lights-off-mode .book-title-nav,
+.epub-reader-novel.lights-off-mode .nav-left > span:not(.lights-off-hide) {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* 隐藏其他工具栏按钮（除了一键熄灯按钮） */
+.epub-reader-novel.lights-off-mode
+  .nav-toolbar-buttons
+  > button:not(.lights-off-keeper) {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* 一键熄灯按钮保持可见 */
+.epub-reader-novel.lights-off-mode .lights-off-keeper {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* 隐藏分隔符和"我的书桌"按钮 */
+.epub-reader-novel.lights-off-mode .lights-off-hide {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* 隐藏所有面板 */
+.epub-reader-novel.lights-off-mode .settings-panel-novel,
+.epub-reader-novel.lights-off-mode .font-panel,
+.epub-reader-novel.lights-off-mode .toc-panel,
+.epub-reader-novel.lights-off-mode .search-panel {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* 阅读区域保持可见 */
+.epub-reader-novel.lights-off-mode .epub-reading-area,
+.epub-reader-novel.lights-off-mode .epub-content {
+  opacity: 1 !important;
+}

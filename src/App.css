@@ -1439,3 +1439,17 @@ a:hover {
   margin-bottom: 30px;
   font-size: 16px;
 }
+
+/* ==================== 全局熄灯模式样式 ==================== */
+/* 当阅读器处于熄灯模式时，隐藏App的导航栏和锁屏按钮 */
+body.reader-lights-off .page-header,
+body.reader-lights-off .lock-btn {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.3s ease;
+}
+
+/* 保持页面布局，避免闪烁 */
+body.reader-lights-off .page-header {
+  visibility: hidden;
+}
