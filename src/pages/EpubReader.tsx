@@ -875,21 +875,101 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
       rendition.themes.override("letter-spacing", `${letterSpacing}px`);
       rendition.themes.override("font-family", fontFamily);
 
+      // 确定颜色方案
+      let textColor = "#c8b8a0";
+      let bgColor = "#1a1612";
+
       // 应用主题样式
       if (theme === "dark") {
         // 使用当前选择的配色方案
         const scheme = colorSchemes.find((s) => s.id === currentColorScheme);
         if (scheme) {
+          textColor = scheme.text;
+          bgColor = scheme.bg;
           rendition.themes.override("color", scheme.text);
           rendition.themes.override("background", scheme.bg);
         }
       } else if (theme === "light") {
-        rendition.themes.override("color", "#333333");
-        rendition.themes.override("background", "#ffffff");
+        textColor = "#333333";
+        bgColor = "#ffffff";
+        rendition.themes.override("color", textColor);
+        rendition.themes.override("background", bgColor);
       } else if (theme === "sepia") {
-        rendition.themes.override("color", "#5c4b37");
-        rendition.themes.override("background", "#f4f1e8");
+        textColor = "#5c4b37";
+        bgColor = "#f4f1e8";
+        rendition.themes.override("color", textColor);
+        rendition.themes.override("background", bgColor);
       }
+
+      // 强制更新 iframe 内的样式 - 多次尝试以覆盖 Dark Reader
+      const forceApplyStyles = () => {
+        try {
+          const iframe = document.querySelector(
+            ".epub-content iframe"
+          ) as HTMLIFrameElement;
+          if (iframe && iframe.contentDocument) {
+            const iframeDoc = iframe.contentDocument;
+
+            // 移除旧样式
+            const existingStyle = iframeDoc.getElementById(
+              "force-color-override"
+            );
+            if (existingStyle) {
+              existingStyle.remove();
+            }
+
+            // 创建新的强制样式
+            const style = iframeDoc.createElement("style");
+            style.id = "force-color-override";
+            style.textContent = `
+              /* 最高优先级覆盖 */
+              html, html body, html body * {
+                color: ${textColor} !important;
+                background-color: ${bgColor} !important;
+              }
+              
+              /* 覆盖所有 Dark Reader 变量 */
+              :root {
+                --darkreader-text-current: ${textColor} !important;
+                --darkreader-background-current: ${bgColor} !important;
+                --darkreader-inline-color: ${textColor} !important;
+                --darkreader-inline-bgcolor: ${bgColor} !important;
+                --darkreader-neutral-text: ${textColor} !important;
+                --darkreader-neutral-background: ${bgColor} !important;
+              }
+              
+              /* 覆盖 Dark Reader 的内联样式属性 */
+              [data-darkreader-inline-color] {
+                color: ${textColor} !important;
+              }
+              [data-darkreader-inline-bgcolor] {
+                background-color: ${bgColor} !important;
+              }
+              [data-darkreader-inline-bgimage] {
+                background-color: ${bgColor} !important;
+              }
+              
+              /* 覆盖所有可能的文本元素 */
+              p, span, div, h1, h2, h3, h4, h5, h6, a, li, td, th, 
+              blockquote, pre, code, em, strong, i, b {
+                color: ${textColor} !important;
+                background-color: transparent !important;
+              }
+            `;
+            iframeDoc.head.appendChild(style);
+
+            console.log("✅ useEffect 强制应用配色:", { textColor, bgColor });
+          }
+        } catch (error) {
+          console.log("更新 iframe 样式失败:", error);
+        }
+      };
+
+      // 立即应用
+      setTimeout(forceApplyStyles, 50);
+      // 再次应用以确保覆盖 Dark Reader
+      setTimeout(forceApplyStyles, 200);
+      setTimeout(forceApplyStyles, 500);
     }
   }, [
     fontSize,
@@ -1855,11 +1935,20 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
               // 应用字体
               rend.themes.override("font-family", fontFamily);
 
-              // 应用主题样式（护眼配色）
+              // 应用主题样式（使用当前配色方案）
               if (theme === "dark") {
-                // 温暖深色模式：米黄色文字 + 深棕色背景
-                rend.themes.override("color", "#c8b8a0"); // 温暖的米黄色
-                rend.themes.override("background", "#1a1612"); // 温暖的深棕色
+                // 使用当前选择的配色方案
+                const scheme = colorSchemes.find(
+                  (s) => s.id === currentColorScheme
+                );
+                if (scheme) {
+                  rend.themes.override("color", scheme.text);
+                  rend.themes.override("background", scheme.bg);
+                } else {
+                  // 默认温暖深色模式
+                  rend.themes.override("color", "#c8b8a0");
+                  rend.themes.override("background", "#1a1612");
+                }
               } else if (theme === "light") {
                 rend.themes.override("color", "#333333");
                 rend.themes.override("background", "#ffffff");
@@ -1898,12 +1987,23 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
                       existingStyle.remove();
                     }
 
-                    // 获取当前配色方案
-                    const scheme = colorSchemes.find(
-                      (s) => s.id === currentColorScheme
-                    );
-                    const textColor = scheme?.text || "#c8b8a0";
-                    const bgColor = scheme?.bg || "#1a1612";
+                    // 获取当前配色方案 - 根据主题确定颜色
+                    let textColor = "#c8b8a0";
+                    let bgColor = "#1a1612";
+
+                    if (theme === "dark") {
+                      const scheme = colorSchemes.find(
+                        (s) => s.id === currentColorScheme
+                      );
+                      textColor = scheme?.text || "#c8b8a0";
+                      bgColor = scheme?.bg || "#1a1612";
+                    } else if (theme === "light") {
+                      textColor = "#333333";
+                      bgColor = "#ffffff";
+                    } else if (theme === "sepia") {
+                      textColor = "#5c4b37";
+                      bgColor = "#f4f1e8";
+                    }
 
                     // 注入强制覆盖样式 - 增强版本
                     const style = iframeDoc.createElement("style");
