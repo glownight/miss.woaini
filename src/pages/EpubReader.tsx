@@ -631,8 +631,8 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
 
       // 应用主题样式
       if (theme === "dark") {
-        rendition.themes.override("color", "#b8b8b8");
-        rendition.themes.override("background", "#0d0d0d");
+        rendition.themes.override("color", "#c8b8a0"); // 温暖的米黄色
+        rendition.themes.override("background", "#1a1612"); // 温暖的深棕色
       } else if (theme === "light") {
         rendition.themes.override("color", "#333333");
         rendition.themes.override("background", "#ffffff");
@@ -827,6 +827,10 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
                 onClick={() => setShowFontPanel(!showFontPanel)}
               >
                 <span className="font-text">字</span>
+              </button>
+              {/* 阅读题字体主题 */}
+              <button className="toolbar-btn" title="阅读题字体主题 ">
+                <span className="font-text">样</span>
               </button>
 
               {/* 行间距 */}
@@ -1488,9 +1492,9 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
 
               // 应用主题样式（护眼配色）
               if (theme === "dark") {
-                // 深色护眼模式：灰褐色文字 + 纯黑背景
-                rend.themes.override("color", "#51606b"); // 灰褐色文字
-                rend.themes.override("background", "#0a0a0a"); // 纯黑背景
+                // 温暖深色模式：米黄色文字 + 深棕色背景
+                rend.themes.override("color", "#c8b8a0"); // 温暖的米黄色
+                rend.themes.override("background", "#1a1612"); // 温暖的深棕色
               } else if (theme === "light") {
                 rend.themes.override("color", "#333333");
                 rend.themes.override("background", "#ffffff");
@@ -1534,21 +1538,20 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
                     style.id = "force-color-override";
                     style.textContent = `
                       :root {
-                        --darkreader-text-51606b: #51606b !important;
-                        --darkreader-background-0a0a0a: #0a0a0a !important;
-                        --darkreader-background-0d0d0d: #0a0a0a !important;
-                        --darkreader-inline-color: #51606b !important;
-                        --darkreader-inline-bgcolor: #0a0a0a !important;
+                        --darkreader-text-c8b8a0: #c8b8a0 !important;
+                        --darkreader-background-1a1612: #1a1612 !important;
+                        --darkreader-inline-color: #c8b8a0 !important;
+                        --darkreader-inline-bgcolor: #1a1612 !important;
                       }
                       * {
-                        color: #51606b !important;
-                        background-color: #0a0a0a !important;
+                        color: #c8b8a0 !important;
+                        background-color: #1a1612 !important;
                       }
                       [data-darkreader-inline-color] {
-                        color: #51606b !important;
+                        color: #c8b8a0 !important;
                       }
                       [data-darkreader-inline-bgcolor] {
-                        background-color: #0a0a0a !important;
+                        background-color: #1a1612 !important;
                       }
                     `;
                     iframeDoc.head.appendChild(style);
