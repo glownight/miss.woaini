@@ -180,6 +180,68 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
           <div className="nav-right">
             {/* 工具栏按钮组 */}
             <div className="nav-toolbar-buttons">
+              {/* 搜索 */}
+              <button
+                className="toolbar-btn"
+                title="搜索"
+                onClick={() => setShowSearchPanel(true)}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <circle
+                    cx="11"
+                    cy="11"
+                    r="8"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    fill="none"
+                  />
+                  <path
+                    d="m21 21-4.35-4.35"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+              {/* 一键熄灯 */}
+              <button
+                className="toolbar-btn"
+                title={theme === "dark" ? "切换到明亮模式" : "切换到暗黑模式"}
+                onClick={() => changeTheme(theme === "dark" ? "light" : "dark")}
+              >
+                {theme === "dark" ? (
+                  // 月亮图标（暗黑模式时显示）
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      fill="none"
+                    />
+                  </svg>
+                ) : (
+                  // 太阳图标（明亮模式时显示）
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="4"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      fill="none"
+                    />
+                    <path
+                      d="M12 2v1m0 18v1M4.93 4.93l.707.707m12.728 12.728l.707.707M2 12h1m18 0h1M4.93 19.07l.707-.707m12.728-12.728l.707-.707"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                )}
+              </button>
+
               {/* 字体大小 */}
               <button
                 className="toolbar-btn"
@@ -821,33 +883,33 @@ const EpubReader: React.FC<EpubReaderProps> = ({ bookUrl, bookTitle }) => {
               manager: "continuous",
             }}
             getRendition={(rend) => {
-                // 保存rendition引用
-                setRendition(rend);
+              // 保存rendition引用
+              setRendition(rend);
 
-                // 应用字体大小
-                rend.themes.fontSize(`${fontSize}px`);
+              // 应用字体大小
+              rend.themes.fontSize(`${fontSize}px`);
 
-                // 应用行间距
-                rend.themes.override("line-height", `${lineHeight}`);
+              // 应用行间距
+              rend.themes.override("line-height", `${lineHeight}`);
 
-                // 应用字间距
-                rend.themes.override("letter-spacing", `${letterSpacing}px`);
+              // 应用字间距
+              rend.themes.override("letter-spacing", `${letterSpacing}px`);
 
-                // 应用字体
-                rend.themes.override("font-family", fontFamily);
+              // 应用字体
+              rend.themes.override("font-family", fontFamily);
 
-                // 应用主题样式
-                if (theme === "dark") {
-                  rend.themes.override("color", "#787165");
-                  rend.themes.override("background", "#0d0d0d");
-                } else if (theme === "light") {
-                  rend.themes.override("color", "#333333");
-                  rend.themes.override("background", "#ffffff");
-                } else if (theme === "sepia") {
-                  rend.themes.override("color", "#5c4b37");
-                  rend.themes.override("background", "#f4f1e8");
-                }
-              }}
+              // 应用主题样式
+              if (theme === "dark") {
+                rend.themes.override("color", "#787165");
+                rend.themes.override("background", "#0d0d0d");
+              } else if (theme === "light") {
+                rend.themes.override("color", "#333333");
+                rend.themes.override("background", "#ffffff");
+              } else if (theme === "sepia") {
+                rend.themes.override("color", "#5c4b37");
+                rend.themes.override("background", "#f4f1e8");
+              }
+            }}
             tocChanged={(toc) => console.log(toc)}
           />
         </div>
