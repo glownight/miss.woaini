@@ -54,14 +54,6 @@ const EpubTest: React.FC = () => {
             });
 
             if (partialResponse.ok || partialResponse.status === 206) {
-              const blob = await partialResponse.blob();
-
-              // 验证文件头
-              const arrayBuffer = await blob.arrayBuffer();
-              const uint8 = new Uint8Array(arrayBuffer.slice(0, 4));
-              const header = Array.from(uint8)
-                .map((b) => b.toString(16).padStart(2, "0"))
-                .join("");
             } else {
               setError(`部分下载失败，状态码: ${partialResponse.status}`);
             }

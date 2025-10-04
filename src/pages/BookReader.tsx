@@ -30,7 +30,6 @@ const BookReader: React.FC<BookReaderProps> = ({ books }) => {
     if (book.format === "epub" && book.epubUrl) {
       // 验证URL格式
       try {
-        const url = new URL(book.epubUrl, window.location.origin);
         setSelectedEpubBook(book);
         setShowEpubReader(true);
       } catch (error) {
